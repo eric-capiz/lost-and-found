@@ -28,6 +28,10 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: false, // Optional
     },
+    postCount: {
+      type: Number,
+      default: 0,
+    },
     isAdmin: {
       type: Boolean,
       default: false,

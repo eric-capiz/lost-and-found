@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Post = require("../../models/posts/Post");
+const User = require("../../models/users/User");
 const {
   verifyToken,
   verifyTokenAndAdmin,
@@ -22,6 +23,11 @@ router.post("/", verifyToken, async (req, res) => {
     });
 
     const savedPost = await newPost.save();
+    await User.findByIdAndUpdate(
+      req.user.id,
+      { $inc: { postCount: 1 } },
+      { new: true }
+    );
     res.status(201).json(savedPost);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -107,6 +113,7 @@ router.delete("/:id", verifyToken, async (req, res) => {
     }
 
     await Post.findByIdAndDelete(req.params.id);
+    await User.findByIdAndUpdate(post.userId, { $inc: { postCount: -1 } });
     res.status(200).json({ message: "Post has been deleted" });
   } catch (err) {
     res.status(500).json({ error: err.message });
