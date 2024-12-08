@@ -2,7 +2,10 @@ const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/users/User");
-const { verifyTokenAndAdmin } = require("../../middleware/verifyToken");
+const {
+  verifyTokenAndAdmin,
+  verifyToken,
+} = require("../../middleware/verifyToken");
 
 // Register a new user
 router.post("/register", async (req, res) => {
@@ -77,6 +80,7 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(
       {
         id: user._id,
+        username: user.username,
         isAdmin: user.isAdmin,
       },
       process.env.JWT_SECRET,
@@ -139,6 +143,18 @@ router.post("/create-admin", verifyTokenAndAdmin, async (req, res) => {
     const savedAdmin = await newAdmin.save();
     const { password: _, ...adminData } = savedAdmin._doc;
     res.status(201).json(adminData);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Logout route
+router.post("/logout", verifyToken, async (req, res) => {
+  try {
+    res.status(200).clearCookie("token").json({
+      message: "Successfully logged out",
+      success: true,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
