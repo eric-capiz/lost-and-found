@@ -31,9 +31,7 @@ router.post("/", verifyToken, async (req, res) => {
 // Get all posts
 router.get("/", async (req, res) => {
   try {
-    const posts = await Post.find({ status: "unresolved" }).sort({
-      createdAt: -1,
-    });
+    const posts = await Post.find().sort({ createdAt: -1 });
     res.status(200).json(posts);
   } catch (err) {
     res.status(500).json({ error: err.message });
