@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const helmet = require("helmet");
 const authRoutes = require("./routes/auth/auth");
+const adminRoutes = require("./routes/admin/admin");
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
 
 // 404 handler
 app.use((req, res, next) => {
