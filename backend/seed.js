@@ -55,6 +55,7 @@ const seedDatabase = async () => {
           status: "unresolved",
           comments: [],
           commentCount: 0,
+          tags: ["Urgent", "LastSeen", "Electronics", "Phone", "HighValue"],
         },
         {
           userId: user._id,
@@ -68,6 +69,13 @@ const seedDatabase = async () => {
           status: "unresolved",
           comments: [],
           commentCount: 0,
+          tags: [
+            "FoundToday",
+            "TurnedIn",
+            "Jewelry",
+            "Unclaimed",
+            "SafeKeeping",
+          ],
         },
       ]);
 

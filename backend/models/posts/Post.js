@@ -64,11 +64,10 @@ const PostSchema = new mongoose.Schema(
       enum: ["resolved", "unresolved"],
       default: "unresolved",
     },
-    tags: [
-      {
-        type: String,
-      },
-    ],
+    tags: {
+      type: [String],
+      default: [],
+    },
     views: {
       type: Number,
       default: 0,
