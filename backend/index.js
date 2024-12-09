@@ -6,21 +6,21 @@ const helmet = require("helmet");
 const authRoutes = require("./routes/auth/auth");
 const adminRoutes = require("./routes/admin/admin");
 const postRoutes = require("./routes/posts/posts");
-
+const commentsRoutes = require("./routes/comments/comments");
 dotenv.config();
 
 const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
-app.use(helmet());
+app.use(cors()); //allows cross-origin requests
+app.use(helmet()); //prevents various attacks
 
 // Additional security headers
 app.use((req, res, next) => {
-  res.setHeader("X-Content-Type-Options", "nosniff");
-  res.setHeader("X-Frame-Options", "DENY");
-  res.setHeader("X-XSS-Protection", "1; mode=block");
+  res.setHeader("X-Content-Type-Options", "nosniff"); //prevents MIME type sniffing
+  res.setHeader("X-Frame-Options", "DENY"); //stops clickjacking and no embedding
+  res.setHeader("X-XSS-Protection", "1; mode=block"); //prevents XSS attacks
   next();
 });
 
@@ -28,6 +28,7 @@ app.use((req, res, next) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/posts", commentsRoutes);
 
 // 404 handler
 app.use((req, res, next) => {
