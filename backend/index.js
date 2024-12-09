@@ -7,6 +7,7 @@ const authRoutes = require("./routes/auth/auth");
 const adminRoutes = require("./routes/admin/admin");
 const postRoutes = require("./routes/posts/posts");
 const commentsRoutes = require("./routes/comments/comments");
+// const userRoutes = require("./routes/users/users");
 dotenv.config();
 
 const app = express();
@@ -26,8 +27,10 @@ app.use((req, res, next) => {
 
 // Routes
 app.use("/api/auth", authRoutes);
+// app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/posts", postRoutes);
+
 app.use("/api/posts", commentsRoutes);
 
 // 404 handler
