@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const User = require("../../models/users/User");
+const Post = require("../../models/posts/Post");
+const Comment = require("../../models/comments/Comment");
 const { verifyTokenAndAdmin } = require("../../middleware/verifyToken");
 
 // Get all users
@@ -12,16 +14,18 @@ router.get("/users", verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
-// Get total counts
-router.get("/counts", verifyTokenAndAdmin, async (req, res) => {
+//GET ADMIN STATS
+router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
   try {
-    const userCount = await User.countDocuments();
-    // const postCount = await Post.countDocuments();
+    const stats = {
+      users: await User.countDocuments(),
+      totalPosts: await Post.countDocuments(),
+      resolvedPosts: await Post.countDocuments({ status: "resolved" }),
+      unresolvedPosts: await Post.countDocuments({ status: "unresolved" }),
+      totalComments: await Comment.countDocuments(),
+    };
 
-    res.status(200).json({
-      users: userCount,
-      // posts: postCount
-    });
+    res.status(200).json(stats);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

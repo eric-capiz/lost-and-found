@@ -20,6 +20,7 @@ router.post("/", verifyToken, async (req, res) => {
       itemType: req.body.itemType,
       image: req.body.image,
       tags: req.body.tags,
+      status: req.body.status,
     });
 
     const savedPost = await newPost.save();
@@ -35,9 +36,17 @@ router.post("/", verifyToken, async (req, res) => {
 });
 
 // Get all posts
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
-    const posts = await Post.find().sort({ createdAt: -1 });
+    let posts = await Post.find()
+      .sort({ createdAt: -1 })
+      .populate("userId", "username email");
+
+    // If not admin and not viewing own profile, filter out resolved posts
+    if (!req.user?.isAdmin) {
+      posts = posts.filter((post) => post.status === "unresolved");
+    }
+
     res.status(200).json(posts);
   } catch (err) {
     res.status(500).json({ error: err.message });
