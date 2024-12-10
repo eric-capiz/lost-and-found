@@ -51,14 +51,25 @@ A full-stack application for managing lost and found items. Users can post items
 - `POST /api/admin/create` - Create new admin
 - `DELETE /api/admin/users/:id` - Delete user
 
+#### Notification Routes
+
+- `GET /api/notifications/user/:id` - Get user's notifications
+- `PUT /api/notifications/user/:id/viewed` - Mark notifications as viewed
+- `DELETE /api/notifications/:id` - Delete specific notification
+
 ### Database Models
 
 - User
 - Post
 - Comment
+- Notification
 
 ### Notification System
 
-- Push notifications for new comments
+- Automatic notifications when users receive comments on their posts
+- Notification count tracking
+- Auto-cleanup of old notifications (3-day TTL)
+- Cascade deletion with posts and comments
+- Last viewed timestamp tracking
 
 [Frontend documentation to be added after completion]

@@ -2,6 +2,8 @@ const router = require("express").Router();
 const Comment = require("../../models/comments/Comment");
 const Post = require("../../models/posts/Post");
 const { verifyToken } = require("../../middleware/verifyToken");
+const Notification = require("../../models/notifications/Notifications");
+const User = require("../../models/users/User");
 
 // Add comment to post
 router.post("/:id/comments", verifyToken, async (req, res) => {
@@ -16,6 +18,24 @@ router.post("/:id/comments", verifyToken, async (req, res) => {
 
     // Save the comment
     const savedComment = await newComment.save();
+
+    // Get post to check owner
+    const post = await Post.findById(req.params.id);
+
+    // Create notification if commenter isn't post owner
+    if (post.userId.toString() !== req.user.id) {
+      await Notification.create({
+        userId: post.userId,
+        postId: req.params.id,
+        commentId: savedComment._id,
+        message: `${req.user.username} left a comment on your post: ${post.title}`,
+      });
+
+      // Increment notification count for post owner
+      await User.findByIdAndUpdate(post.userId, {
+        $inc: { notificationCount: 1 },
+      });
+    }
 
     // Update the post with matching structure
     await Post.findByIdAndUpdate(req.params.id, {
@@ -60,6 +80,9 @@ router.delete("/:id/comments/:commentId", verifyToken, async (req, res) => {
         .status(403)
         .json({ message: "You can only delete your own comments" });
     }
+
+    // Delete the notification associated with this comment
+    await Notification.deleteMany({ commentId: req.params.commentId });
 
     // Delete from Comments collection
     await Comment.findByIdAndDelete(req.params.commentId);

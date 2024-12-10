@@ -5,6 +5,8 @@ const {
   verifyToken,
   verifyTokenAndAdmin,
 } = require("../../middleware/verifyToken");
+const Comment = require("../../models/comments/Comment");
+const Notification = require("../../models/notifications/Notifications");
 
 // Create a post
 router.post("/", verifyToken, async (req, res) => {
@@ -115,15 +117,23 @@ router.delete("/:id", verifyToken, async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
+    // Check authorization
     if (post.userId.toString() !== req.user.id && !req.user.isAdmin) {
       return res
         .status(403)
         .json({ message: "You can only delete your own posts" });
     }
 
+    // Delete all comments for this post
+    await Comment.deleteMany({ postId: req.params.id });
+
+    // Delete all notifications related to this post
+    await Notification.deleteMany({ postId: req.params.id });
+
+    // Delete the post
     await Post.findByIdAndDelete(req.params.id);
-    await User.findByIdAndUpdate(post.userId, { $inc: { postCount: -1 } });
-    res.status(200).json({ message: "Post has been deleted" });
+
+    res.status(200).json({ message: "Post deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

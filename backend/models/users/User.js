@@ -32,6 +32,14 @@ const UserSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    lastViewedNotifications: {
+      type: Date,
+      default: Date.now,
+    },
+    notificationCount: {
+      type: Number,
+      default: 0,
+    },
     isAdmin: {
       type: Boolean,
       default: false,
