@@ -9,6 +9,7 @@ const postRoutes = require("./routes/posts/posts");
 const commentsRoutes = require("./routes/comments/comments");
 const userRoutes = require("./routes/users/users");
 const notificationsRoutes = require("./routes/notifications/notifications");
+const uploadRoutes = require("./routes/upload/upload");
 dotenv.config();
 
 const app = express();
@@ -32,7 +33,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/notifications", notificationsRoutes);
-
+app.use("/api/upload", uploadRoutes);
 app.use("/api/posts", commentsRoutes);
 
 // 404 handler
