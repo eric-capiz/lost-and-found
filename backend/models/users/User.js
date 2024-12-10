@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema(
     },
     profilePic: {
       type: String,
-      default: undefined, // Optional
+      default: "", // Optional
     },
     city: {
       type: String,

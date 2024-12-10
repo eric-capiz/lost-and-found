@@ -6,6 +6,7 @@ const {
   verifyTokenAndAdmin,
   verifyToken,
 } = require("../../middleware/verifyToken");
+const bcrypt = require("bcryptjs");
 
 // Get all users
 router.get("/users", verifyTokenAndAdmin, async (req, res) => {
@@ -90,13 +91,47 @@ router.delete("/users/:id", verifyToken, async (req, res) => {
     await Comment.deleteMany({ userId: user._id });
     await User.findByIdAndDelete(req.params.id);
 
-    res
-      .status(200)
-      .json({
-        message: "Account and all associated content deleted successfully",
-      });
+    res.status(200).json({
+      message: "Account and all associated content deleted successfully",
+    });
   } catch (err) {
     console.log("Error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Create new admin
+router.post("/create", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+
+    // Check if username or email already exists
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
+      return res.status(400).json({ message: "Username already taken" });
+    }
+
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      return res.status(400).json({ message: "Email already registered" });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new admin
+    const newAdmin = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+      isAdmin: true,
+      profilePic: "",
+    });
+
+    // Return new admin without password
+    const { password: _, ...adminData } = newAdmin._doc;
+    res.status(201).json(adminData);
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });

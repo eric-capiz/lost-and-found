@@ -25,6 +25,7 @@ const seedDatabase = async () => {
         email: "admin@admin.com",
         password: adminPassword,
         isAdmin: true,
+        profilePic: "",
       },
       {
         username: "testAdmin",
