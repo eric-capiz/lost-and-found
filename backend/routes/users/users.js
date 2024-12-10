@@ -3,6 +3,7 @@ const User = require("../../models/users/User");
 const Post = require("../../models/posts/Post");
 const { verifyToken } = require("../../middleware/verifyToken");
 const bcrypt = require("bcryptjs");
+const { deleteFromCloudinary } = require("../../utils/cloudinary");
 
 // Get user profile (protected - only their own)
 router.get("/:id", verifyToken, async (req, res) => {
@@ -79,6 +80,14 @@ router.put("/:id", verifyToken, async (req, res) => {
         if (existingEmail && existingEmail._id.toString() !== req.params.id) {
           return res.status(400).json({ message: "Email already registered" });
         }
+      }
+    }
+
+    // Handle profile picture update
+    if (updates.profilePic) {
+      const user = await User.findById(req.params.id);
+      if (user.profilePic.publicId) {
+        await deleteFromCloudinary(user.profilePic.publicId);
       }
     }
 

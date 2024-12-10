@@ -44,7 +44,7 @@ router.post("/register", async (req, res) => {
       email: req.body.email,
       username: req.body.username,
       password: hashedPassword,
-      profilePic: req.body.profilePic || "",
+      profilePic: req.body.profilePic || { url: "", publicId: "" },
       city: req.body.city,
       state: req.body.state,
     });
@@ -133,7 +133,7 @@ router.post("/create-admin", verifyTokenAndAdmin, async (req, res) => {
       email,
       username,
       password: hashedPassword,
-      profilePic: req.body.profilePic || "",
+      profilePic: req.body.profilePic || { url: "", publicId: "" },
       city: req.body.city,
       state: req.body.state,
       isAdmin: true, // Explicitly set admin status

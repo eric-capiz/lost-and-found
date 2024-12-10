@@ -7,10 +7,26 @@ const {
 } = require("../../middleware/verifyToken");
 const Comment = require("../../models/comments/Comment");
 const Notification = require("../../models/notifications/Notifications");
+const { deleteFromCloudinary } = require("../../utils/cloudinary");
 
 // Create a post
 router.post("/", verifyToken, async (req, res) => {
   try {
+    // Validate images (max 3)
+    if (req.body.images && req.body.images.length > 3) {
+      return res.status(400).json({ message: "Maximum 3 images allowed" });
+    }
+
+    // Validate image structure
+    if (req.body.images) {
+      const validImages = req.body.images.every(
+        (img) => img.url && img.publicId
+      );
+      if (!validImages) {
+        return res.status(400).json({ message: "Invalid image structure" });
+      }
+    }
+
     const newPost = new Post({
       userId: req.user.id,
       username: req.user.username,
@@ -20,7 +36,7 @@ router.post("/", verifyToken, async (req, res) => {
       city: req.body.city,
       state: req.body.state,
       itemType: req.body.itemType,
-      image: req.body.image,
+      images: req.body.images || [],
       tags: req.body.tags,
       status: req.body.status,
     });
@@ -98,6 +114,18 @@ router.put("/:id", verifyToken, async (req, res) => {
         .json({ message: "You can only update your own posts" });
     }
 
+    // Validate new images if provided
+    if (req.body.images) {
+      if (req.body.images.length > 3) {
+        return res.status(400).json({ message: "Maximum 3 images allowed" });
+      }
+
+      // Delete old images from Cloudinary
+      for (const image of post.images) {
+        await deleteFromCloudinary(image.publicId);
+      }
+    }
+
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
@@ -122,6 +150,11 @@ router.delete("/:id", verifyToken, async (req, res) => {
       return res
         .status(403)
         .json({ message: "You can only delete your own posts" });
+    }
+
+    // Delete all images from Cloudinary
+    for (const image of post.images) {
+      await deleteFromCloudinary(image.publicId);
     }
 
     // Delete all comments for this post

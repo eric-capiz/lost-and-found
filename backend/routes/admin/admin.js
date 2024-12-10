@@ -2,6 +2,7 @@ const router = require("express").Router();
 const User = require("../../models/users/User");
 const Post = require("../../models/posts/Post");
 const Comment = require("../../models/comments/Comment");
+const { deleteFromCloudinary } = require("../../utils/cloudinary");
 const {
   verifyTokenAndAdmin,
   verifyToken,
@@ -61,6 +62,11 @@ router.delete("/users/:id", verifyToken, async (req, res) => {
         .json({ message: "You can only delete your own account" });
     }
 
+    // Delete profile picture if exists
+    if (user.profilePic.publicId) {
+      await deleteFromCloudinary(user.profilePic.publicId);
+    }
+
     // 1. Find all posts that have comments by this user
     const postsWithUserComments = await Post.find({
       "comments.commenterId": user._id,
@@ -78,11 +84,13 @@ router.delete("/users/:id", verifyToken, async (req, res) => {
       });
     }
 
-    // 2. Find all posts by the user
+    // 2. Find all posts by the user and delete their images
     const userPosts = await Post.find({ userId: user._id });
-
-    // Delete all comments on user's posts
     for (const post of userPosts) {
+      // Delete post images from Cloudinary
+      for (const image of post.images) {
+        await deleteFromCloudinary(image.publicId);
+      }
       await Comment.deleteMany({ postId: post._id });
     }
 
@@ -125,7 +133,7 @@ router.post("/create", verifyTokenAndAdmin, async (req, res) => {
       email,
       password: hashedPassword,
       isAdmin: true,
-      profilePic: "",
+      profilePic: { url: "", publicId: "" },
     });
 
     // Return new admin without password

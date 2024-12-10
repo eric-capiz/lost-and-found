@@ -55,10 +55,18 @@ const PostSchema = new mongoose.Schema(
       enum: ["lost", "found"],
       required: true,
     },
-    image: {
-      type: String,
-      default: "",
-    },
+    images: [
+      {
+        url: {
+          type: String,
+          required: true,
+        },
+        publicId: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
     status: {
       type: String,
       enum: ["resolved", "unresolved"],
