@@ -57,4 +57,8 @@ A full-stack application for managing lost and found items. Users can post items
 - Post
 - Comment
 
+### Notification System
+
+- Push notifications for new comments
+
 [Frontend documentation to be added after completion]
