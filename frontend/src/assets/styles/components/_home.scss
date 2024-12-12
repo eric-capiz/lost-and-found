@@ -2,6 +2,8 @@
   display: grid;
   gap: 2rem;
   padding: 1rem;
+  background-color: #f3f4f6;
+  width: 100%;
 
   // Mobile First (375px)
   .mobile-category-filter {
@@ -43,6 +45,7 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
+    gap: 2rem;
 
     .mobile-category-filter {
       display: none;
@@ -52,6 +55,14 @@
     .sidebar-right {
       display: block;
     }
+  }
+
+  // Larger screens (1440px+)
+  @media (min-width: 1440px) {
+    grid-template-columns: 280px minmax(600px, 2fr) 280px;
+    max-width: 2100px;
+    gap: 4rem;
+    padding: 2rem 4rem;
   }
 }
 
@@ -72,7 +83,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.4); // Dark overlay
+    background: rgba(0, 0, 0, 0.4);
   }
 
   h1 {
@@ -80,7 +91,7 @@
     color: white;
     font-size: 3.5rem;
     text-align: center;
-    padding-top: 120px; // Center vertically
+    padding-top: 120px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   }
 }
