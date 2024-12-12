@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
+import Footer from "./components/layout/Footer";
 
 const AuthWrapper = () => {
   const isAuthenticated = false; // This will come from auth context
@@ -45,6 +46,7 @@ function App() {
             </Route>
           </Routes>
         </div>
+        <Footer />
       </div>
     </Router>
   );
