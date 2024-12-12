@@ -1,0 +1,187 @@
+.post {
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  // Post Header
+  .post-header {
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+
+      .profile-pic {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .user-details {
+        h3 {
+          font-size: 1rem;
+          margin: 0;
+        }
+
+        .post-meta {
+          font-size: 0.875rem;
+          color: #666;
+
+          span {
+            margin-right: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+
+  // Post Content
+  .post-content {
+    p {
+      margin-bottom: 1rem;
+      font-size: 0.9375rem;
+      line-height: 1.5;
+    }
+
+    .post-image {
+      width: 100%;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+  }
+
+  // Post Footer
+  .post-footer {
+    border-top: 1px solid #eee;
+    padding-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .comment-count {
+      color: #666;
+      font-size: 0.875rem;
+    }
+
+    .comment-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 0.875rem;
+      padding: 0.5rem;
+      cursor: pointer;
+
+      .comment-icon {
+        font-size: 1rem;
+      }
+
+      &:hover {
+        color: #333;
+      }
+    }
+  }
+
+  // Comments Section
+  .comments-section {
+    margin-top: 1rem;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+
+    .comment {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+
+      .profile-pic {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .comment-content {
+        flex: 1;
+
+        h4 {
+          font-size: 0.875rem;
+          margin: 0;
+        }
+
+        p {
+          font-size: 0.875rem;
+          margin: 0.25rem 0;
+        }
+
+        .comment-timestamp {
+          font-size: 0.75rem;
+          color: #666;
+        }
+      }
+    }
+
+    .comment-input {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+
+      input {
+        flex: 1;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        font-size: 0.875rem;
+
+        &:focus {
+          outline: none;
+          border-color: #999;
+        }
+      }
+
+      button {
+        padding: 0.5rem 1rem;
+        background: #0066cc;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        cursor: pointer;
+
+        &:hover {
+          background: #0052a3;
+        }
+      }
+    }
+  }
+}
+
+// Tablet (768px)
+@media (min-width: 768px) {
+  .post {
+    max-width: 100%;
+    margin: 0 auto 1.5rem;
+    padding: 1.5rem;
+
+    .post-header {
+      .user-info {
+        .profile-pic {
+          width: 48px;
+          height: 48px;
+        }
+      }
+    }
+  }
+}
+
+// Desktop (1024px)
+@media (min-width: 1024px) {
+  .post {
+    max-width: 100%;
+    margin: 0 auto 2rem;
+  }
+}

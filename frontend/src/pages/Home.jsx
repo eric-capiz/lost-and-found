@@ -1,5 +1,6 @@
 import LeftSidebar from "../components/layout/LeftSidebar";
 import RightSidebar from "../components/layout/RightSidebar";
+import Posts from "../components/posts/Posts";
 
 function Home() {
   return (
@@ -9,7 +10,9 @@ function Home() {
       </div>
       <div className="home-layout">
         <LeftSidebar />
-        <main className="main-content">{/* Post content will go here */}</main>
+        <main className="main-content">
+          <Posts />
+        </main>
         <RightSidebar />
       </div>
     </>

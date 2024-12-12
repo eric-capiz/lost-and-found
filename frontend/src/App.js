@@ -32,15 +32,13 @@ function App() {
         <div className="page-container">
           <Routes>
             {/* Public Routes */}
-            {/* <Route path="/" element={<Home />} /> */}
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-
             {/* Protected User Routes */}
             <Route element={<AuthWrapper />}>
               <Route path="/profile" element={<Profile />} />
             </Route>
-
             {/* Protected Admin Routes */}
             <Route element={<AdminWrapper />}>
               <Route path="/admin" element={<Admin />} />

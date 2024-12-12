@@ -67,7 +67,7 @@ function Navbar() {
 
       <div className="search-bar">
         <FiSearch className="search-icon" />
-        <input type="text" placeholder="Search for lost or found items..." />
+        <input type="text" placeholder="Search for items..." />
       </div>
     </nav>
   );
