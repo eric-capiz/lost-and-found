@@ -12,7 +12,6 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
 
-// Later we'll get this from auth context/state management
 const AuthWrapper = () => {
   const isAuthenticated = false; // This will come from auth context
 
