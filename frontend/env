@@ -1,0 +1,233 @@
+# API Configuration
+REACT_APP_API_URL=http://localhost:5000/api
+
+# Layout Configuration
+REACT_APP_POST_FEED_CONFIG={
+  "maxImagesPerPost": 3,
+  "characterLimit": 500,
+  "commentsPerLoad": 10,
+  "postsPerPage": 10
+}
+
+# Image Configuration
+REACT_APP_IMAGE_CONFIG={
+  "maxFileSize": 5242880,
+  "acceptedTypes": "image/jpeg,image/png,image/webp",
+  "thumbnailSize": "300x300",
+  "fullSize": "1080x1080"
+}
+
+# UI Configuration
+REACT_APP_UI_CONFIG={
+  "animationDuration": 300,
+  "loadingTimeout": 2000,
+  "toastDuration": 3000
+}
+
+# Theme Configuration
+REACT_APP_THEME={
+  "colors": {
+    "primary": "#2C3E50",
+    "secondary": "#E74C3C",
+    "accent": "#3498DB",
+    "background": "#F8F9FA",
+    "text": "#2C3E50",
+    "border": "#E9ECEF"
+  },
+  "typography": {
+    "fontFamily": "Inter, system-ui, sans-serif",
+    "headerSize": "1.5rem",
+    "bodySize": "1rem",
+    "smallSize": "0.875rem"
+  },
+  "spacing": {
+    "cardPadding": "1.5rem",
+    "gridGap": "1rem",
+    "containerPadding": "1rem"
+  },
+  "borderRadius": {
+    "card": "12px",
+    "button": "8px",
+    "input": "6px"
+  },
+  "shadows": {
+    "card": "0 2px 8px rgba(0,0,0,0.05)",
+    "hover": "0 4px 12px rgba(0,0,0,0.1)"
+  }
+}
+
+# Previous configurations remain the same...
+
+# Responsive Breakpoints
+REACT_APP_BREAKPOINTS={
+  "mobile": "320px",
+  "tablet": "768px",
+  "desktop": "1024px",
+  "largeDesktop": "1440px"
+}
+
+# Mobile Layout Config
+REACT_APP_MOBILE_CONFIG={
+  "navHeight": "60px",
+  "bottomNavHeight": "56px",
+  "headerHeight": "56px",
+  "maxImageHeight": "300px",
+  "touchTargetSize": "44px"
+}
+# Previous configurations remain the same...
+
+# Navbar Configuration
+REACT_APP_NAVBAR_CONFIG={
+  "height": "60px",
+  "layout": {
+    "left": {
+      "logo": "Lost & Found",
+      "logoFont": "Poppins, sans-serif"
+    },
+    "center": {
+      "searchBarWidth": "400px",
+      "searchBarMobileWidth": "100%"
+    },
+    "right": {
+      "profilePicSize": "32px",
+      "greetingText": "Hi, {username}",
+      "settingsIcon": "20px"
+    }
+  },
+  "colors": {
+    "background": "#FFFFFF",
+    "text": "#2C3E50",
+    "searchBar": "#F8F9FA",
+    "searchBarBorder": "#E9ECEF",
+    "icons": "#2C3E50"
+  },
+  "shadow": "0 2px 4px rgba(0,0,0,0.05)"
+}
+
+┌─────────────────────────────────────────────────────┐
+│  Lost & Found    🔍 Search...    Hi, Breezy ⚙️     │
+└─────────────────────────────────────────────────────┘
+
+┌─────────────────────────┐
+│ ⚫ Username │
+│ 📍 Location • 2h ago │
+├─────────────────────────┤
+│ Lost my phone at... │
+│ ┌─────────────────┐ │
+│ │ Image │ │
+│ │ Gallery │ │
+│ └─────────────────┘ │
+├─────────────────────────┤
+│ 💬 12 Comments │
+└─────────────────────────┘
+
+# Previous configurations remain the same...
+
+# Public Home Configuration
+REACT_APP_PUBLIC_HOME={
+  "layout": {
+    "mainContent": {
+      "width": "70%",
+      "mobileWidth": "100%"
+    },
+    "sidebar": {
+      "width": "25%",
+      "mobilePosition": "bottom"
+    }
+  },
+  "posts": {
+    "previewCount": 10,
+    "showStatus": true,
+    "showCategory": true,
+    "showTimestamp": true,
+    "restrictedActions": [
+      "comment",
+      "create",
+      "contact"
+    ]
+  },
+  "aboutUs": {
+    "title": "About Us",
+    "image": "/assets/about-banner.jpg",
+    "description": "Welcome to the community lost & found. Lost something incredibly valuable? Fear not, people are always willingly to report items that have been found. Please create a post describing in detail, the item, and upload an image of the item if you have one. If not, upload an image that closely resembles the lost item. Please include a way of contact, email would be just fine.",
+    "callToAction": {
+      "text": "Join the Community",
+      "link": "/register"
+    }
+  }
+}
+
+┌──────────────────────────────[#FFFFFF]───────────────────────────────┐
+│ Lost & Found    🔍 Search...    Login / Register                     │
+└──────────────────────────────────────────────────────────────────────┘
+
+┌────────────────┐ ┌─────────────────┐ ┌────────────────┐
+│   Left Nav     │ │   Post Feed     │ │   About Us     │
+│ [20% width]    │ │  [60% width]    │ │  [20% width]   │
+│                │ │                  │ │                │
+│ Quick Filters: │ │ ┌──────────┐    │ │ ┌──────────┐  │
+│ ○ All Items    │ │ │Post Card │    │ │ │  Image   │  │
+│ ○ Lost Items   │ │ └──────────┘    │ │ └──────────┘  │
+│ ○ Found Items  │ │                  │ │                │
+│                │ │ ┌──────────┐    │ │ Welcome to     │
+│ Categories:    │ │ │Post Card │    │ │ the community  │
+│ ⚫ Keys        │ │ └──────────┘    │ │ lost & found...│
+│ ⚫ Wallets     │ │                  │ │                │
+│ ⚫ Phones      │ │ ┌──────────┐    │ │                │
+│ ⚫ Other       │ │ │Post Card │    │ │                │
+│                │ │ └──────────┘    │ │                │
+└────────────────┘ └─────────────────┘ └────────────────┘
+
+# Layout Configuration
+REACT_APP_LAYOUT_CONFIG={
+  "columns": {
+    "leftSidebar": {
+      "width": "20%",
+      "mobileDisplay": "modal",
+      "filters": {
+        "quickFilters": [
+          "All Items",
+          "Lost Items",
+          "Found Items"
+        ],
+        "categories": [
+          "Keys",
+          "Wallets",
+          "Phones",
+          "Electronics",
+          "Jewelry",
+          "Documents",
+          "Other"
+        ]
+      }
+    },
+    "mainContent": {
+      "width": "60%",
+      "mobileWidth": "100%",
+      "spacing": "1rem"
+    },
+    "rightSidebar": {
+      "width": "20%",
+      "mobilePosition": "bottom"
+    }
+  },
+  "responsive": {
+    "breakpoint": {
+      "mobile": "768px",
+      "tablet": "1024px"
+    },
+    "mobileLayout": {
+      "filterTrigger": "dropdown",
+      "sidebarTransition": "slide"
+    }
+  }
+}
+
+# Notes for tomorrow:
+# - Implement Facebook-style post feed
+# - Mobile-first design
+# - Custom CSS/SASS over Material UI
+# - Image carousel for posts
+# - Pull-to-refresh
+# - Infinite scroll
+# - Toast notifications
