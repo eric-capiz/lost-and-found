@@ -30,10 +30,10 @@ function App() {
     <Router>
       <div className="app">
         <Navbar />
-        <main className="main-content">
+        <div className="page-container">
           <Routes>
             {/* Public Routes */}
-            <Route path="/" element={<Home />} />
+            {/* <Route path="/" element={<Home />} /> */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
@@ -47,7 +47,7 @@ function App() {
               <Route path="/admin" element={<Admin />} />
             </Route>
           </Routes>
-        </main>
+        </div>
       </div>
     </Router>
   );
