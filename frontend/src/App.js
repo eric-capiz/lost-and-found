@@ -1,24 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
+import Navbar from "./components/layout/Navbar";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Profile from "./pages/Profile";
+import Admin from "./pages/Admin";
+
+// Later we'll get this from auth context/state management
+const AuthWrapper = () => {
+  const isAuthenticated = false; // This will come from auth context
+
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+};
+
+const AdminWrapper = () => {
+  const isAdmin = false; // This will come from auth context
+
+  return isAdmin ? <Outlet /> : <Navigate to="/" />;
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="app">
+        <Navbar />
+        <main className="main-content">
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+
+            {/* Protected User Routes */}
+            <Route element={<AuthWrapper />}>
+              <Route path="/profile" element={<Profile />} />
+            </Route>
+
+            {/* Protected Admin Routes */}
+            <Route element={<AdminWrapper />}>
+              <Route path="/admin" element={<Admin />} />
+            </Route>
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 }
 
