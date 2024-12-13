@@ -265,4 +265,21 @@
       margin: 0 auto;
     }
   }
+
+  @media screen and (min-width: 1440px) {
+    .navbar-content {
+      a,
+      .logo {
+        font-size: 2rem;
+      }
+      .icon-wrapper svg {
+        width: 2rem;
+        height: 2rem;
+      }
+      .user-profile .avatar {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  }
 }
