@@ -55,7 +55,8 @@
       display: flex;
       gap: 1rem;
 
-      .edit-profile-button {
+      .edit-profile-button,
+      .create-post-button {
         display: flex;
         align-items: center;
         padding: 0.5rem 1rem;
@@ -88,6 +89,7 @@
       border-radius: 8px;
       color: white;
       margin-bottom: 1rem;
+      max-height: fit-content;
 
       h3 {
         margin-bottom: 1rem;
@@ -148,7 +150,8 @@
 
       .profile-info {
         .button-group {
-          .edit-profile-button {
+          .edit-profile-button,
+          .create-post-button {
             font-size: 2.5rem;
           }
         }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaUserEdit, FaFilter, FaCog } from "react-icons/fa"; // Removed FaPlus
+import { FaUserEdit, FaFilter, FaCog, FaPlus } from "react-icons/fa"; // Removed FaPlus
 import Posts from "../components/posts/Posts"; // Import the Posts component
 
 function Profile() {
@@ -22,6 +22,9 @@ function Profile() {
         <div className="button-group">
           <button className="edit-profile-button">
             <FaUserEdit /> Edit Profile
+          </button>
+          <button className="create-post-button">
+            <FaPlus /> Create Post
           </button>
         </div>
       </div>
