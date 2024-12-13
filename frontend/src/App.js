@@ -14,7 +14,7 @@ import Admin from "./pages/Admin";
 import Footer from "./components/layout/Footer";
 
 const AuthWrapper = () => {
-  const isAuthenticated = false; // This will come from auth context
+  const isAuthenticated = true; // This will come from auth context
 
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
 };
