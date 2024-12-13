@@ -31,14 +31,6 @@
     display: none;
   }
 
-  .main-content {
-    width: 100%;
-    background-color: #1f2937;
-    border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-
   // Desktop (1024px)
   @media (min-width: 1024px) {
     grid-template-columns: 240px 1fr 240px;

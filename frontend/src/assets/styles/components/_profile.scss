@@ -69,4 +69,105 @@
       }
     }
   }
+
+  .intro-section {
+    background: #1f2937;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    color: white;
+
+    h3 {
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+    }
+
+    p {
+      margin: 0.5rem 0;
+    }
+  }
+
+  .create-post-section {
+    margin-top: 1rem;
+    cursor: pointer;
+
+    .create-post-input {
+      width: 100%;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: #f9f9f9;
+      font-size: 1rem;
+    }
+  }
+
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+
+      .close {
+        cursor: pointer;
+        float: right;
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  .posts-section {
+    margin-top: 2rem;
+    background-color: #f3f4f6;
+    padding: 1rem;
+    border-radius: 8px;
+
+    h3 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: #333;
+    }
+
+    .posts-controls {
+      display: flex;
+      gap: 1rem;
+
+      .filter-button,
+      .manage-posts-button {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        background-color: #1f2937;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: #0056b3;
+        }
+
+        svg {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+
+    .posts-container {
+      margin-top: 1rem;
+    }
+  }
 }

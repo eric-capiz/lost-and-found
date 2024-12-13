@@ -21,9 +21,7 @@ function Home() {
         </div>
 
         <LeftSidebar />
-        <main className="main-content">
-          <Posts />
-        </main>
+        <Posts />
         <RightSidebar />
       </div>
     </>

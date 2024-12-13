@@ -1,20 +1,24 @@
-.posts-container {
+.posts-wrapper {
   width: 100%;
   padding: 1rem;
+  background-color: #1f2937;
+  border-radius: 8px;
 
-  // Mobile First (375px)
   max-width: 100%;
   margin: 0 auto;
 
-  // Tablet (768px)
   @media (min-width: 768px) {
     padding: 1.5rem;
     max-width: 600px;
   }
 
-  // Desktop (1024px)
   @media (min-width: 1024px) {
     padding: 2rem;
     max-width: 800px;
   }
+}
+
+.posts-container {
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
