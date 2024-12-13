@@ -1,13 +1,9 @@
 import React, { useState } from "react";
-import { FaPlus, FaUserEdit, FaFilter, FaCog } from "react-icons/fa"; // Import icons
+import { FaUserEdit, FaFilter, FaCog } from "react-icons/fa"; // Removed FaPlus
 import Posts from "../components/posts/Posts"; // Import the Posts component
 
 function Profile() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -30,9 +26,6 @@ function Profile() {
         />
         <h2>Breezy</h2>
         <div className="button-group">
-          <button className="create-post-button">
-            <FaPlus /> Create Post
-          </button>
           <button className="edit-profile-button">
             <FaUserEdit /> Edit Profile
           </button>
@@ -46,25 +39,6 @@ function Profile() {
         <p>Location: Chicago, Illinois</p>
         <p>Email: breezy@example.com</p>
       </div>
-      <div className="create-post-section" onClick={handleOpenModal}>
-        <input
-          type="text"
-          placeholder="Create Post"
-          className="create-post-input"
-          readOnly
-        />
-      </div>
-
-      {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={handleCloseModal}>
-              &times;
-            </span>
-            <h2>Create Post</h2>
-          </div>
-        </div>
-      )}
 
       {/* Posts Section */}
       <div className="posts-section">
@@ -77,9 +51,7 @@ function Profile() {
             <FaCog /> Manage Posts
           </button>
         </div>
-      </div>
-      <div className="">
-        <Posts />
+        <Posts /> {/* Importing the Posts component */}
       </div>
     </div>
   );
