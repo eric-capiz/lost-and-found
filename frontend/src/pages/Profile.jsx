@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaUserEdit, FaFilter, FaCog, FaPlus } from "react-icons/fa";
 import Posts from "../components/posts/Posts";
+import PostItem from "../components/modals/PostItem";
 
 function Profile() {
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div className="profile-page">
       <div className="profile-info">
@@ -23,7 +33,7 @@ function Profile() {
           <button className="edit-profile-button">
             <FaUserEdit /> Edit Profile
           </button>
-          <button className="create-post-button">
+          <button className="create-post-button" onClick={openModal}>
             <FaPlus /> Create Post
           </button>
         </div>
@@ -68,6 +78,7 @@ function Profile() {
           <Posts />
         </div>
       </div>
+      <PostItem isOpen={isModalOpen} onClose={closeModal} />
     </div>
   );
 }
