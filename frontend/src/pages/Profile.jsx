@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { FaUserEdit, FaFilter, FaCog, FaPlus } from "react-icons/fa"; // Removed FaPlus
-import Posts from "../components/posts/Posts"; // Import the Posts component
+import React from "react";
+import { FaUserEdit, FaFilter, FaCog, FaPlus } from "react-icons/fa";
+import Posts from "../components/posts/Posts";
 
 function Profile() {
   return (
@@ -29,13 +29,30 @@ function Profile() {
         </div>
       </div>
       <div className="subsections">
-        <div className="intro-section">
-          <h3>Intro</h3>
-          <p>Total Posts: 10</p>
-          <p>Unresolved Posts: 2</p>
-          <p>Resolved Posts: 8</p>
-          <p>Location: Chicago, Illinois</p>
-          <p>Email: breezy@example.com</p>
+        <div className="user-stats">
+          <h3>User Stats</h3>
+          <div className="stats-grid">
+            <div className="stat-card">
+              <h4>Total Posts</h4>
+              <p>10</p>
+            </div>
+            <div className="stat-card">
+              <h4>Unresolved</h4>
+              <p>2</p>
+            </div>
+            <div className="stat-card">
+              <h4>Resolved</h4>
+              <p>8</p>
+            </div>
+            <div className="stat-card">
+              <h4>Location</h4>
+              <p>Chicago, Illinois</p>
+            </div>
+            <div className="stat-card">
+              <h4>Email</h4>
+              <p>breezy@example.com</p>
+            </div>
+          </div>
         </div>
 
         <div className="posts-section">
