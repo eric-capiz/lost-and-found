@@ -36,17 +36,20 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signup = async (userData) => {
+  const signup = async (formData) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.post("/api/auth/register", userData);
+      const response = await axios.post("/api/auth/register", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       setUser(response.data);
       setIsAuthenticated(true);
       localStorage.setItem("token", response.data.token);
 
-      // Set default authorization header for future requests
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${response.data.token}`;

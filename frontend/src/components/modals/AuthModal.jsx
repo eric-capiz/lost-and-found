@@ -12,6 +12,7 @@ const AuthModal = ({ isOpen, onClose }) => {
     name: "",
     location: "",
   });
+  const [profilePic, setProfilePic] = useState(null);
 
   useEffect(() => {
     if (error) {
@@ -36,11 +37,27 @@ const AuthModal = ({ isOpen, onClose }) => {
     }));
   };
 
+  const handleFileChange = (e) => {
+    if (e.target.files[0]) {
+      setProfilePic(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (isSignup) {
-        await signup(formData);
+        const formDataToSend = new FormData();
+
+        Object.keys(formData).forEach((key) => {
+          formDataToSend.append(key, formData[key]);
+        });
+
+        if (profilePic) {
+          formDataToSend.append("profilePic", profilePic);
+        }
+
+        await signup(formDataToSend);
       } else {
         await login({
           username: formData.username,
@@ -96,7 +113,11 @@ const AuthModal = ({ isOpen, onClose }) => {
               </label>
               <label>
                 Profile Picture:
-                <input type="file" accept="image/*" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
               </label>
               <label>
                 Location:

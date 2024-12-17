@@ -2,13 +2,18 @@ const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/users/User");
+const multer = require("multer");
+const { uploadToCloudinary } = require("../../utils/cloudinary");
 const {
   verifyTokenAndAdmin,
   verifyToken,
 } = require("../../middleware/verifyToken");
 
+// Configure multer for memory storage
+const upload = multer({ storage: multer.memoryStorage() });
+
 // Register a new user
-router.post("/register", async (req, res) => {
+router.post("/register", upload.single("profilePic"), async (req, res) => {
   try {
     // Validate required fields
     const { email, username, password } = req.body;
@@ -36,6 +41,16 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Username already exists" });
     }
 
+    // Handle profile picture upload
+    let profilePic = { url: "", publicId: "" };
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file, "profiles");
+      profilePic = {
+        url: result.secure_url,
+        publicId: result.public_id,
+      };
+    }
+
     // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -44,7 +59,7 @@ router.post("/register", async (req, res) => {
       email: req.body.email,
       username: req.body.username,
       password: hashedPassword,
-      profilePic: req.body.profilePic || { url: "", publicId: "" },
+      profilePic,
       city: req.body.city,
       state: req.body.state,
     });

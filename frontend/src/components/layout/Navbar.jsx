@@ -11,20 +11,19 @@ import {
   FiLogOut,
 } from "react-icons/fi";
 import AuthModal from "../modals/AuthModal";
-import PostItem from "../modals/PostItem"; // Add this import
+import PostItem from "../modals/PostItem";
 
 function Navbar() {
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, logout, user } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [isPostModalOpen, setIsPostModalOpen] = useState(false); // Add this state
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
 
   const closeAuthModal = () => {
     setIsAuthModalOpen(false);
   };
 
   const closePostModal = () => {
-    // Add this function
     setIsPostModalOpen(false);
   };
 
@@ -78,11 +77,17 @@ function Navbar() {
                 <span className="notification-badge">3</span>
               </div>
               <Link to="/profile" className="user-profile">
-                <img
-                  src="https://images.unsplash.com/photo-1640960543409-dbe56ccc30e2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
-                  alt="Profile"
-                  className="avatar"
-                />
+                {user?.profilePic?.url ? (
+                  <img
+                    src={user.profilePic.url}
+                    alt="Profile"
+                    className="avatar"
+                  />
+                ) : (
+                  <span className="view-profile">
+                    <FiUser /> View Profile
+                  </span>
+                )}
               </Link>
               <button onClick={handleLogout} className="logout-button">
                 <FiLogOut />
