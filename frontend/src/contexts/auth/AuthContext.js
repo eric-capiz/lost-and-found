@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
 // Set base URL for all axios requests
@@ -9,8 +9,36 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const verifyToken = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+          // Set default axios header
+          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+          // Verify token with backend
+          const response = await axios.get("/api/auth/verify");
+
+          setUser(response.data);
+          setIsAuthenticated(true);
+        } else {
+          console.log("No token found"); // Debug log
+        }
+      } catch (err) {
+        console.error("Token verification failed:", err); // Debug log
+        localStorage.removeItem("token");
+        delete axios.defaults.headers.common["Authorization"];
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    verifyToken();
+  }, []);
 
   const login = async (credentials) => {
     try {
@@ -18,18 +46,26 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       const response = await axios.post("/api/auth/login", credentials);
 
-      setUser(response.data);
-      setIsAuthenticated(true);
-      localStorage.setItem("token", response.data.token);
+      console.log("Login response:", response.data); // Debug log
 
-      // Set default authorization header for future requests
-      axios.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${response.data.token}`;
+      if (response.data.token) {
+        console.log("Saving token to localStorage"); // Debug log
+        localStorage.setItem("token", response.data.token);
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${response.data.token}`;
+        setUser(response.data);
+        setIsAuthenticated(true);
+
+        // Verify token was saved
+        const savedToken = localStorage.getItem("token");
+        console.log("Verified saved token:", savedToken); // Debug log
+      }
 
       return response.data;
     } catch (err) {
-      setError(err.response?.data?.message || "An error occurred");
+      console.error("Login error:", err);
+      setError(err.response?.data?.message || "Login failed");
       throw err;
     } finally {
       setLoading(false);
@@ -46,16 +82,23 @@ export const AuthProvider = ({ children }) => {
         },
       });
 
-      setUser(response.data);
-      setIsAuthenticated(true);
-      localStorage.setItem("token", response.data.token);
+      // Log to verify data
+      console.log("Signup response:", response.data);
 
-      axios.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${response.data.token}`;
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${response.data.token}`;
+        setUser(response.data);
+        setIsAuthenticated(true);
+      } else {
+        throw new Error("No token received");
+      }
 
       return response.data;
     } catch (err) {
+      console.error("Signup error:", err);
       setError(err.response?.data?.message || "Registration failed");
       throw err;
     } finally {

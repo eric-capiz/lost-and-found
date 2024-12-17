@@ -67,7 +67,16 @@ router.post("/register", upload.single("profilePic"), async (req, res) => {
     // Save the user to the database
     const savedUser = await newUser.save();
     const { password: _, ...userWithoutPassword } = savedUser._doc;
-    res.status(201).json(userWithoutPassword);
+    const token = jwt.sign(
+      {
+        id: savedUser._id,
+        username: savedUser.username,
+        isAdmin: savedUser.isAdmin,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+    res.status(201).json({ ...userWithoutPassword, token });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -171,6 +180,22 @@ router.post("/logout", verifyToken, async (req, res) => {
       success: true,
     });
   } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get("/verify", verifyToken, async (req, res) => {
+  try {
+    console.log("Verifying token for user:", req.user); // Debug log
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      console.log("User not found"); // Debug log
+      return res.status(404).json({ message: "User not found" });
+    }
+    console.log("User verified:", user); // Debug log
+    res.json(user);
+  } catch (err) {
+    console.error("Verify route error:", err); // Debug log
     res.status(500).json({ error: err.message });
   }
 });
