@@ -2,17 +2,18 @@ import React, { useState } from "react";
 import { FaUserEdit, FaFilter, FaCog, FaPlus } from "react-icons/fa";
 import Posts from "../components/posts/Posts";
 import PostItem from "../components/modals/PostItem";
+import EditProfile from "../components/modals/EditProfile";
 
 function Profile() {
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
+  const [isPostModalOpen, setPostModalOpen] = useState(false);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
+  const openPostModal = () => setPostModalOpen(true);
+  const closePostModal = () => setPostModalOpen(false);
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const openEditModal = () => setEditModalOpen(true);
+  const closeEditModal = () => setEditModalOpen(false);
+
   return (
     <div className="profile-page">
       <div className="profile-info">
@@ -30,10 +31,10 @@ function Profile() {
         />
         <h2>Breezy</h2>
         <div className="button-group">
-          <button className="edit-profile-button">
+          <button className="edit-profile-button" onClick={openEditModal}>
             <FaUserEdit /> Edit Profile
           </button>
-          <button className="create-post-button" onClick={openModal}>
+          <button className="create-post-button" onClick={openPostModal}>
             <FaPlus /> Create Post
           </button>
         </div>
@@ -78,7 +79,8 @@ function Profile() {
           <Posts />
         </div>
       </div>
-      <PostItem isOpen={isModalOpen} onClose={closeModal} />
+      <PostItem isOpen={isPostModalOpen} onClose={closePostModal} />
+      <EditProfile isOpen={isEditModalOpen} onClose={closeEditModal} />
     </div>
   );
 }
