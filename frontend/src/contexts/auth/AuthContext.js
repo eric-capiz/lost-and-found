@@ -36,6 +36,30 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const signup = async (userData) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await axios.post("/api/auth/register", userData);
+
+      setUser(response.data);
+      setIsAuthenticated(true);
+      localStorage.setItem("token", response.data.token);
+
+      // Set default authorization header for future requests
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${response.data.token}`;
+
+      return response.data;
+    } catch (err) {
+      setError(err.response?.data?.message || "Registration failed");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
@@ -50,8 +74,10 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         loading,
         error,
+        setError,
         login,
         logout,
+        signup,
       }}
     >
       {children}
