@@ -3,21 +3,19 @@ import { Link } from "react-router-dom";
 import {
   FiSearch,
   FiBell,
-  FiSettings,
   FiMenu,
   FiX,
-  FiCompass,
   FiPlusCircle,
   FiUser,
 } from "react-icons/fi";
-import PostItem from "../modals/PostItem";
+import AuthModal from "../modals/AuthModal"; // Import the new AuthModal
 
-function Navbar() {
+function Navbar({ isAuthenticated }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const closeAuthModal = () => {
+    setIsAuthModalOpen(false);
   };
 
   return (
@@ -34,41 +32,45 @@ function Navbar() {
         </div>
 
         <div className={`mobile-menu ${isMenuOpen ? "open" : ""}`}>
-          {/* <Link to="/browse">
-            <FiCompass /> Browse
-          </Link> */}
-          <span onClick={() => setIsModalOpen(true)}>
-            <FiPlusCircle /> Post Item
-          </span>
-          {/* <Link to="/settings">
-            <FiSettings /> Settings
-          </Link> */}
-          <Link to="/profile">
-            <FiUser /> Profile
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <Link to="/profile">
+                <FiUser /> Profile
+              </Link>
+              <span onClick={() => setIsAuthModalOpen(true)}>
+                <FiPlusCircle /> Post Item
+              </span>
+            </>
+          ) : (
+            <button onClick={() => setIsAuthModalOpen(true)}>
+              Login / Signup
+            </button>
+          )}
         </div>
 
         <div className="navbar-content">
           <Link to="/" className="logo">
             Lost & Found
           </Link>
-          {/* <Link to="/browse">Browse</Link> */}
-          <span onClick={() => setIsModalOpen(true)}>Post Item</span>
-
-          <div className="icon-wrapper">
-            <FiBell />
-            <span className="notification-badge">3</span>
-          </div>
-          {/* <div className="icon-wrapper">
-            <FiSettings />
-          </div> */}
-          <Link to="/profile" className="user-profile">
-            <img
-              src="https://images.unsplash.com/photo-1640960543409-dbe56ccc30e2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
-              alt="Profile"
-              className="avatar"
-            />
-          </Link>
+          {!isAuthenticated ? (
+            <>
+              <span onClick={() => setIsAuthModalOpen(true)}>Post Item</span>
+              <Link to="/profile" className="user-profile">
+                <img
+                  src="https://images.unsplash.com/photo-1640960543409-dbe56ccc30e2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
+                  alt="Profile"
+                  className="avatar"
+                />
+              </Link>
+            </>
+          ) : (
+            <button
+              className="login-signup-button"
+              onClick={() => setIsAuthModalOpen(true)}
+            >
+              Login / Signup
+            </button>
+          )}
         </div>
 
         <div className="search-bar">
@@ -77,7 +79,7 @@ function Navbar() {
         </div>
       </nav>
 
-      <PostItem isOpen={isModalOpen} onClose={closeModal} />
+      <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} />
     </>
   );
 }
