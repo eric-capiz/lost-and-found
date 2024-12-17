@@ -117,4 +117,13 @@
       transform: translateY(0);
     }
   }
+  .location-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+
+    label {
+      flex: 1;
+    }
+  }
 }

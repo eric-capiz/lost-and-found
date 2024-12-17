@@ -11,14 +11,21 @@ import {
   FiLogOut,
 } from "react-icons/fi";
 import AuthModal from "../modals/AuthModal";
+import PostItem from "../modals/PostItem"; // Add this import
 
 function Navbar() {
   const { isAuthenticated, logout } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false); // Add this state
 
   const closeAuthModal = () => {
     setIsAuthModalOpen(false);
+  };
+
+  const closePostModal = () => {
+    // Add this function
+    setIsPostModalOpen(false);
   };
 
   const handleLogout = () => {
@@ -45,11 +52,10 @@ function Navbar() {
               <Link to="/profile">
                 <FiUser /> Profile
               </Link>
-              <span onClick={() => setIsAuthModalOpen(true)}>
+              <span onClick={() => setIsPostModalOpen(true)}>
                 <FiPlusCircle /> Post Item
               </span>
               <span onClick={handleLogout}>
-                Log Out
                 <FiLogOut /> Logout
               </span>
             </>
@@ -66,7 +72,7 @@ function Navbar() {
           </Link>
           {isAuthenticated ? (
             <>
-              <span onClick={() => setIsAuthModalOpen(true)}>Post Item</span>
+              <span onClick={() => setIsPostModalOpen(true)}>Post Item</span>
               <div className="icon-wrapper">
                 <FiBell />
                 <span className="notification-badge">3</span>
@@ -99,6 +105,7 @@ function Navbar() {
       </nav>
 
       <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} />
+      <PostItem isOpen={isPostModalOpen} onClose={closePostModal} />
     </>
   );
 }
