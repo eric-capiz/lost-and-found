@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 // Set base URL for all axios requests
 axios.defaults.baseURL =
-  process.env.REACT_APP_API_URL || "http://localhost:5000";
+  (process.env.REACT_APP_API_URL || "http://localhost:5000") + "/api";
 
 export const AuthContext = createContext();
 
@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.post("/api/auth/register", formData, {
+      const response = await axios.post("/auth/register", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

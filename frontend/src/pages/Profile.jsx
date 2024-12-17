@@ -1,12 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FaUserEdit, FaFilter, FaCog, FaPlus } from "react-icons/fa";
 import Posts from "../components/posts/Posts";
 import PostItem from "../components/modals/PostItem";
 import EditProfile from "../components/modals/EditProfile";
+import { UserContext } from "../contexts/user/UserContext";
+import { AuthContext } from "../contexts/auth/AuthContext";
 
 function Profile() {
   const [isPostModalOpen, setPostModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const { userProfile, getUserStats } = useContext(UserContext);
+  const { user } = useContext(AuthContext);
+
+  const stats = getUserStats();
+
+  console.log("Auth user:", user);
 
   const openPostModal = () => setPostModalOpen(true);
   const closePostModal = () => setPostModalOpen(false);
@@ -25,11 +33,11 @@ function Profile() {
           />
         </div>
         <img
-          src="https://images.unsplash.com/photo-1640960543409-dbe56ccc30e2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
+          src={user?.profilePic?.url}
           alt="User Avatar"
           className="user-avatar"
         />
-        <h2>Breezy</h2>
+        <h2>{user?.username}</h2>
         <div className="button-group">
           <button className="edit-profile-button" onClick={openEditModal}>
             <FaUserEdit /> Edit Profile
@@ -45,23 +53,27 @@ function Profile() {
           <div className="stats-grid">
             <div className="stat-card">
               <h4>Total Posts</h4>
-              <p>10</p>
+              <p>{user?.postCount}</p>
             </div>
             <div className="stat-card">
               <h4>Unresolved</h4>
-              <p>2</p>
+              <p>{stats.unresolved}</p>
             </div>
             <div className="stat-card">
               <h4>Resolved</h4>
-              <p>8</p>
+              <p>{stats.resolved}</p>
             </div>
             <div className="stat-card">
               <h4>Location</h4>
-              <p>Chicago, Illinois</p>
+              <p>
+                {user?.city && user?.state
+                  ? `${user.city}, ${user.state}`
+                  : "Location not set"}
+              </p>
             </div>
             <div className="stat-card">
               <h4>Email</h4>
-              <p>breezy@example.com</p>
+              <p>{userProfile?.email || "Loading..."}</p>
             </div>
           </div>
         </div>

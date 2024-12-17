@@ -10,7 +10,8 @@ const AuthModal = ({ isOpen, onClose }) => {
     password: "",
     email: "",
     name: "",
-    location: "",
+    city: "",
+    state: "",
   });
   const [profilePic, setProfilePic] = useState(null);
 
@@ -98,7 +99,6 @@ const AuthModal = ({ isOpen, onClose }) => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  required
                 />
               </label>
               <label>
@@ -120,13 +120,21 @@ const AuthModal = ({ isOpen, onClose }) => {
                 />
               </label>
               <label>
-                Location:
+                City:
                 <input
                   type="text"
-                  name="location"
-                  value={formData.location}
+                  name="city"
+                  value={formData.city}
                   onChange={handleChange}
-                  required
+                />
+              </label>
+              <label>
+                State:
+                <input
+                  type="text"
+                  name="state"
+                  value={formData.state}
+                  onChange={handleChange}
                 />
               </label>
               <label>
