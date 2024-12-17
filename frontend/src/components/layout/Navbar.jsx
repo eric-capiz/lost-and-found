@@ -14,7 +14,7 @@ import AuthModal from "../modals/AuthModal";
 import PostItem from "../modals/PostItem";
 
 function Navbar() {
-  const { isAuthenticated, logout, user } = useContext(AuthContext);
+  const { isAuthenticated, logout, user, loading } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
@@ -54,7 +54,7 @@ function Navbar() {
               <span onClick={() => setIsPostModalOpen(true)}>
                 <FiPlusCircle /> Post Item
               </span>
-              <span onClick={handleLogout}>
+              <span className="logout-button" onClick={handleLogout}>
                 <FiLogOut /> Logout
               </span>
             </>
@@ -69,7 +69,11 @@ function Navbar() {
           <Link to="/" className="logo">
             Lost & Found
           </Link>
-          {isAuthenticated ? (
+          {loading ? (
+            <div className="loading-spinner">
+              {/* You can add a spinner component here */}
+            </div>
+          ) : isAuthenticated ? (
             <>
               <span onClick={() => setIsPostModalOpen(true)}>Post Item</span>
               <div className="icon-wrapper">
