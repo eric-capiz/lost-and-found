@@ -35,6 +35,9 @@ app.use("/api/posts", postRoutes);
 app.use("/api/notifications", notificationsRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/posts", commentsRoutes);
+app.get("/", (req, res) => {
+  res.json({ message: "Lost and Found API is running" });
+});
 
 // 404 handler
 app.use((req, res, next) => {

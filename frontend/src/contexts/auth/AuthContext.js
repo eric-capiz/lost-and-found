@@ -1,8 +1,17 @@
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
+// Add this at the top to debug
+console.log("Environment:", {
+  nodeEnv: process.env.NODE_ENV,
+  apiUrl: process.env.REACT_APP_API_URL,
+});
+
 // Set base URL for all axios requests
-axios.defaults.baseURL = "http://localhost:5000";
+axios.defaults.baseURL =
+  process.env.REACT_APP_API_URL || "http://localhost:5000";
+
+console.log("Using API URL:", axios.defaults.baseURL); // Debug log
 
 export const AuthContext = createContext();
 
