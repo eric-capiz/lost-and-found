@@ -5,6 +5,8 @@ import {
   Navigate,
   Outlet,
 } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "./contexts/auth/AuthContext";
 import Navbar from "./components/layout/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -14,14 +16,13 @@ import Admin from "./pages/Admin";
 import Footer from "./components/layout/Footer";
 
 const AuthWrapper = () => {
-  const isAuthenticated = true; // This will come from auth context
-
+  const { isAuthenticated } = useContext(AuthContext);
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
 };
 
 const AdminWrapper = () => {
-  const isAdmin = false; // This will come from auth context
-
+  const { user } = useContext(AuthContext);
+  const isAdmin = user && user.isAdmin;
   return isAdmin ? <Outlet /> : <Navigate to="/" />;
 };
 
@@ -32,15 +33,12 @@ function App() {
         <Navbar />
         <div className="page-container">
           <Routes>
-            {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            {/* Protected User Routes */}
             <Route element={<AuthWrapper />}>
               <Route path="/profile" element={<Profile />} />
             </Route>
-            {/* Protected Admin Routes */}
             <Route element={<AdminWrapper />}>
               <Route path="/admin" element={<Admin />} />
             </Route>

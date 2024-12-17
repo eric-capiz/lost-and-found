@@ -1,10 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FiX } from "react-icons/fi";
+import { AuthContext } from "../../contexts/auth/AuthContext";
 
 const AuthModal = ({ isOpen, onClose }) => {
+  const { login, error, loading } = useContext(AuthContext);
   const [isSignup, setIsSignup] = useState(false);
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
 
   if (!isOpen) return null;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await login(formData);
+      onClose(); // Close modal on successful login
+    } catch (err) {
+      console.error("Login failed:", err);
+    }
+  };
 
   return (
     <div className="modal-overlay">
@@ -14,60 +38,38 @@ const AuthModal = ({ isOpen, onClose }) => {
           <FiX className="close-button" onClick={onClose} />
         </div>
 
-        <form>
-          {isSignup && (
-            <>
-              <label>
-                Name:
-                <input type="text" required />
-              </label>
-              <label>
-                Username:
-                <input type="text" required />
-              </label>
-              <label>
-                Profile Picture:
-                <input type="file" accept="image/*" />
-              </label>
-              <label>
-                Location:
-                <input type="text" required />
-              </label>
-            </>
-          )}
+        <form onSubmit={handleSubmit}>
           <label>
             Username:
-            <input type="text" required />
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
           </label>
           <label>
-            Create Password:
-            <input type="password" required />
+            Password:
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
           </label>
-          <button type="submit">{isSignup ? "Sign Up" : "Login"}</button>
+          {error && <div className="error-message">{error}</div>}
+          <button type="submit" disabled={loading}>
+            {loading ? "Loading..." : isSignup ? "Sign Up" : "Login"}
+          </button>
         </form>
 
-        <p style={{ color: "white" }}>
-          {isSignup ? (
-            <>
-              Already have an account?{" "}
-              <span
-                onClick={() => setIsSignup(false)}
-                style={{ cursor: "pointer", color: "#60a5fa" }}
-              >
-                Login
-              </span>
-            </>
-          ) : (
-            <>
-              Don't have an account?{" "}
-              <span
-                onClick={() => setIsSignup(true)}
-                style={{ cursor: "pointer", color: "#60a5fa" }}
-              >
-                Sign Up
-              </span>
-            </>
-          )}
+        <p className="toggle-form">
+          {isSignup ? "Already have an account?" : "Don't have an account?"}{" "}
+          <span onClick={() => setIsSignup(!isSignup)}>
+            {isSignup ? "Login" : "Sign Up"}
+          </span>
         </p>
       </div>
     </div>

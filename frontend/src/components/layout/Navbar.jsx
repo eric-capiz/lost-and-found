@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../contexts/auth/AuthContext";
 import {
   FiSearch,
   FiBell,
@@ -7,15 +8,22 @@ import {
   FiX,
   FiPlusCircle,
   FiUser,
+  FiLogOut,
 } from "react-icons/fi";
-import AuthModal from "../modals/AuthModal"; // Import the new AuthModal
+import AuthModal from "../modals/AuthModal";
 
-function Navbar({ isAuthenticated }) {
+function Navbar() {
+  const { isAuthenticated, logout } = useContext(AuthContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const closeAuthModal = () => {
     setIsAuthModalOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    window.location.href = "/";
   };
 
   return (
@@ -40,6 +48,10 @@ function Navbar({ isAuthenticated }) {
               <span onClick={() => setIsAuthModalOpen(true)}>
                 <FiPlusCircle /> Post Item
               </span>
+              <span onClick={handleLogout}>
+                Log Out
+                <FiLogOut /> Logout
+              </span>
             </>
           ) : (
             <button onClick={() => setIsAuthModalOpen(true)}>
@@ -52,9 +64,13 @@ function Navbar({ isAuthenticated }) {
           <Link to="/" className="logo">
             Lost & Found
           </Link>
-          {!isAuthenticated ? (
+          {isAuthenticated ? (
             <>
               <span onClick={() => setIsAuthModalOpen(true)}>Post Item</span>
+              <div className="icon-wrapper">
+                <FiBell />
+                <span className="notification-badge">3</span>
+              </div>
               <Link to="/profile" className="user-profile">
                 <img
                   src="https://images.unsplash.com/photo-1640960543409-dbe56ccc30e2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
@@ -62,6 +78,9 @@ function Navbar({ isAuthenticated }) {
                   className="avatar"
                 />
               </Link>
+              <button onClick={handleLogout} className="logout-button">
+                <FiLogOut />
+              </button>
             </>
           ) : (
             <button
