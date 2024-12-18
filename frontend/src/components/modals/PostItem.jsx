@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FiX } from "react-icons/fi";
 import axios from "axios";
+import { Spinner, Alert } from "../common";
 
 const PostItem = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
@@ -204,11 +205,9 @@ const PostItem = ({ isOpen, onClose }) => {
             />
           </label>
           <div className="submit-section">
-            {alert.show && (
-              <div className={`alert alert-${alert.type}`}>{alert.message}</div>
-            )}
+            {alert.show && <Alert type={alert.type} message={alert.message} />}
             <button type="submit" disabled={isLoading}>
-              {isLoading ? <div className="spinner"></div> : "Submit"}
+              {isLoading ? <Spinner /> : "Submit"}
             </button>
           </div>
         </form>
