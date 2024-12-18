@@ -9,13 +9,10 @@ const {
   verifyToken,
 } = require("../../middleware/verifyToken");
 
-// Configure multer for memory storage
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Register a new user
 router.post("/register", upload.single("profilePic"), async (req, res) => {
   try {
-    // Validate required fields
     const { email, username, password } = req.body;
     if (!email || !username || !password) {
       return res
@@ -23,35 +20,61 @@ router.post("/register", upload.single("profilePic"), async (req, res) => {
         .json({ message: "All required fields must be provided" });
     }
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ message: "Invalid email format" });
     }
 
-    // Check if email already exists
     const existingEmail = await User.findOne({ email: req.body.email });
     if (existingEmail) {
       return res.status(400).json({ message: "Email already registered" });
     }
 
-    // Check if username already exists
     const existingUser = await User.findOne({ username: req.body.username });
     if (existingUser) {
       return res.status(400).json({ message: "Username already exists" });
     }
 
-    // Handle profile picture upload
     let profilePic = { url: "", publicId: "" };
     if (req.file) {
-      const result = await uploadToCloudinary(req.file, "profiles");
-      profilePic = {
-        url: result.secure_url,
-        publicId: result.public_id,
-      };
+      try {
+        console.log("Cloudinary config check:", {
+          hasCloudName: !!process.env.CLOUDINARY_CLOUD_NAME,
+          hasApiKey: !!process.env.CLOUDINARY_API_KEY,
+          hasApiSecret: !!process.env.CLOUDINARY_API_SECRET,
+        });
+
+        console.log("Attempting to upload file:", {
+          mimetype: req.file.mimetype,
+          size: req.file.size,
+          originalname: req.file.originalname,
+        });
+
+        const result = await uploadToCloudinary(req.file, "profiles");
+
+        if (!result) {
+          throw new Error("No result from Cloudinary upload");
+        }
+
+        profilePic = {
+          url: result.secure_url,
+          publicId: result.public_id,
+        };
+
+        console.log("Cloudinary upload successful:", {
+          url: profilePic.url,
+          publicId: profilePic.publicId,
+        });
+      } catch (uploadError) {
+        console.error("Cloudinary upload error details:", uploadError);
+        return res.status(500).json({
+          message: "Profile picture upload failed",
+          error: uploadError.message,
+          details: uploadError.stack,
+        });
+      }
     }
 
-    // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
@@ -64,7 +87,6 @@ router.post("/register", upload.single("profilePic"), async (req, res) => {
       state: req.body.state,
     });
 
-    // Save the user to the database
     const savedUser = await newUser.save();
     const { password: _, ...userWithoutPassword } = savedUser._doc;
     const token = jwt.sign(
@@ -82,16 +104,13 @@ router.post("/register", upload.single("profilePic"), async (req, res) => {
   }
 });
 
-// Login
 router.post("/login", async (req, res) => {
   try {
-    // Check if username exists
     const user = await User.findOne({ username: req.body.username });
     if (!user) {
       return res.status(400).json({ message: "Invalid username or password" });
     }
 
-    // Compare passwords
     const validPassword = await bcrypt.compare(
       req.body.password,
       user.password
@@ -100,7 +119,6 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid username or password" });
     }
 
-    // Create and sign JWT token
     const token = jwt.sign(
       {
         id: user._id,
@@ -111,7 +129,6 @@ router.post("/login", async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    // Login successful - exclude sensitive data
     const { password, ...others } = user._doc;
     res.status(200).json({ ...others, token });
   } catch (err) {
@@ -119,10 +136,8 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Create new admin (protected route)
 router.post("/create-admin", verifyTokenAndAdmin, async (req, res) => {
   try {
-    // Validate required fields
     const { email, username, password } = req.body;
     if (!email || !username || !password) {
       return res
@@ -130,29 +145,24 @@ router.post("/create-admin", verifyTokenAndAdmin, async (req, res) => {
         .json({ message: "All required fields must be provided" });
     }
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ message: "Invalid email format" });
     }
 
-    // Check if email already exists
     const existingEmail = await User.findOne({ email });
     if (existingEmail) {
       return res.status(400).json({ message: "Email already registered" });
     }
 
-    // Check if username already exists
     const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ message: "Username already exists" });
     }
 
-    // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create new admin user
     const newAdmin = new User({
       email,
       username,
@@ -160,10 +170,9 @@ router.post("/create-admin", verifyTokenAndAdmin, async (req, res) => {
       profilePic: req.body.profilePic || { url: "", publicId: "" },
       city: req.body.city,
       state: req.body.state,
-      isAdmin: true, // Explicitly set admin status
+      isAdmin: true,
     });
 
-    // Save the admin to the database
     const savedAdmin = await newAdmin.save();
     const { password: _, ...adminData } = savedAdmin._doc;
     res.status(201).json(adminData);
@@ -172,7 +181,6 @@ router.post("/create-admin", verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
-// Logout route
 router.post("/logout", verifyToken, async (req, res) => {
   try {
     res.status(200).clearCookie("token").json({
@@ -186,16 +194,16 @@ router.post("/logout", verifyToken, async (req, res) => {
 
 router.get("/verify", verifyToken, async (req, res) => {
   try {
-    console.log("Verifying token for user:", req.user); // Debug log
+    console.log("Verifying token for user:", req.user);
     const user = await User.findById(req.user.id).select("-password");
     if (!user) {
-      console.log("User not found"); // Debug log
+      console.log("User not found");
       return res.status(404).json({ message: "User not found" });
     }
-    console.log("User verified:", user); // Debug log
+    console.log("User verified:", user);
     res.json(user);
   } catch (err) {
-    console.error("Verify route error:", err); // Debug log
+    console.error("Verify route error:", err);
     res.status(500).json({ error: err.message });
   }
 });
