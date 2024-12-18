@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FiX } from "react-icons/fi";
+import axios from "axios";
 
 const PostItem = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ const PostItem = ({ isOpen, onClose }) => {
     tags: "",
     images: [],
   });
+  const [selectedImages, setSelectedImages] = useState([]);
 
   if (!isOpen) return null;
 
@@ -23,10 +25,44 @@ const PostItem = ({ isOpen, onClose }) => {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files).slice(0, 3);
+    setSelectedImages(files);
+    setFormData((prev) => ({
+      ...prev,
+      images: files,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Implement form submission
-    console.log(formData);
+    try {
+      const formDataToSend = new FormData();
+
+      Object.keys(formData).forEach((key) => {
+        if (key !== "images") {
+          formDataToSend.append(key, formData[key]);
+        }
+      });
+
+      selectedImages.forEach((image) => {
+        formDataToSend.append("images", image);
+      });
+
+      const response = await axios.post("/api/posts", formDataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("Post created:", response.data);
+      onClose();
+    } catch (error) {
+      console.error(
+        "Error creating post:",
+        error.response?.data || error.message
+      );
+    }
   };
 
   return (
@@ -109,10 +145,18 @@ const PostItem = ({ isOpen, onClose }) => {
           <label>
             Category:
             <select
-              multiple
               name="category"
               value={formData.category}
-              onChange={handleChange}
+              onChange={(e) => {
+                const selectedOptions = Array.from(
+                  e.target.selectedOptions
+                ).map((option) => option.value);
+                setFormData((prev) => ({
+                  ...prev,
+                  category: selectedOptions,
+                }));
+              }}
+              multiple
             >
               <option value="electronic">Electronic</option>
               <option value="jewelry">Jewelry</option>
@@ -137,10 +181,8 @@ const PostItem = ({ isOpen, onClose }) => {
             <input
               type="file"
               accept="image/*"
-              onChange={(e) => {
-                // TODO: Handle image upload
-                console.log(e.target.files);
-              }}
+              multiple
+              onChange={handleImageChange}
             />
           </label>
           <button type="submit">Submit</button>

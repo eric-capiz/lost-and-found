@@ -14,8 +14,6 @@ function Profile() {
 
   const stats = getUserStats();
 
-  console.log("Auth user:", user);
-
   const openPostModal = () => setPostModalOpen(true);
   const closePostModal = () => setPostModalOpen(false);
 

@@ -8,49 +8,64 @@ const {
 const Comment = require("../../models/comments/Comment");
 const Notification = require("../../models/notifications/Notifications");
 const { deleteFromCloudinary } = require("../../utils/cloudinary");
+const multer = require("multer");
+const { uploadToCloudinary } = require("../../utils/cloudinary");
+
+const upload = multer({ storage: multer.memoryStorage() }).array("images", 3); // Max 3 images
 
 // Create a post
-router.post("/", verifyToken, async (req, res) => {
-  try {
-    // Validate images (max 3)
-    if (req.body.images && req.body.images.length > 3) {
-      return res.status(400).json({ message: "Maximum 3 images allowed" });
+router.post("/", verifyToken, (req, res, next) => {
+  upload(req, res, async (err) => {
+    if (err instanceof multer.MulterError) {
+      return res.status(400).json({ message: err.message });
+    } else if (err) {
+      return res.status(500).json({ message: "Error uploading files" });
     }
 
-    // Validate image structure
-    if (req.body.images) {
-      const validImages = req.body.images.every(
-        (img) => img.url && img.publicId
-      );
-      if (!validImages) {
-        return res.status(400).json({ message: "Invalid image structure" });
+    try {
+      // Handle image uploads
+      const uploadedImages = [];
+      if (req.files) {
+        for (const file of req.files) {
+          const result = await uploadToCloudinary(file, "posts");
+          uploadedImages.push({
+            url: result.secure_url,
+            publicId: result.public_id,
+          });
+        }
       }
+
+      // Process tags
+      const tags = req.body.tags
+        ? req.body.tags.split(",").map((tag) => tag.trim())
+        : [];
+
+      const newPost = new Post({
+        userId: req.user.id,
+        username: req.user.username,
+        title: req.body.title,
+        description: req.body.description,
+        category: req.body.category,
+        city: req.body.city,
+        state: req.body.state,
+        itemType: req.body.itemType,
+        images: uploadedImages,
+        tags: tags,
+        status: "unresolved", // Default status
+      });
+
+      const savedPost = await newPost.save();
+      await User.findByIdAndUpdate(
+        req.user.id,
+        { $inc: { postCount: 1 } },
+        { new: true }
+      );
+
+      res.status(201).json(savedPost);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
     }
-
-    const newPost = new Post({
-      userId: req.user.id,
-      username: req.user.username,
-      title: req.body.title,
-      description: req.body.description,
-      category: req.body.category,
-      city: req.body.city,
-      state: req.body.state,
-      itemType: req.body.itemType,
-      images: req.body.images || [],
-      tags: req.body.tags,
-      status: req.body.status,
-    });
-
-    const savedPost = await newPost.save();
-    await User.findByIdAndUpdate(
-      req.user.id,
-      { $inc: { postCount: 1 } },
-      { new: true }
-    );
-    res.status(201).json(savedPost);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  });
 });
 
 // Get all posts
