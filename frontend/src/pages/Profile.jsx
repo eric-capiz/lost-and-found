@@ -27,7 +27,10 @@ function Profile() {
       <div className="profile-info">
         <div className="cover-photo">
           <img
-            src="https://media.istockphoto.com/id/2082196734/photo/man-walking-in-abstract-maze.webp?a=1&b=1&s=612x612&w=0&k=20&c=hqU7aS1vh_0iz2JV2F-qzKXmR_9Vx6V-QSmeE-7fWtg="
+            src={
+              user?.coverPic?.url ||
+              "https://media.istockphoto.com/id/2082196734/photo/man-walking-in-abstract-maze.webp?b=1&s=612x612&w=0&k=20&c=hqU7aS1vh_0iz2JV2F-qzKXmR_9Vx6V-QSmeE-7fWtg="
+            }
             alt="Cover"
             className="cover-image"
           />

@@ -3,12 +3,19 @@ const User = require("../../models/users/User");
 const Post = require("../../models/posts/Post");
 const { verifyToken } = require("../../middleware/verifyToken");
 const bcrypt = require("bcryptjs");
-const { deleteFromCloudinary } = require("../../utils/cloudinary");
+const multer = require("multer");
+const {
+  uploadToCloudinary,
+  deleteFromCloudinary,
+} = require("../../utils/cloudinary");
 
-// Get user profile (protected - only their own)
+const upload = multer({ storage: multer.memoryStorage() }).fields([
+  { name: "profilePic", maxCount: 1 },
+  { name: "coverPic", maxCount: 1 },
+]);
+
 router.get("/:id", verifyToken, async (req, res) => {
   try {
-    // Check if user is requesting their own profile
     if (req.user.id !== req.params.id) {
       return res
         .status(403)
@@ -20,7 +27,6 @@ router.get("/:id", verifyToken, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Get user's posts
     const posts = await Post.find({ userId: user._id });
 
     res.status(200).json({ user, posts });
@@ -29,77 +35,84 @@ router.get("/:id", verifyToken, async (req, res) => {
   }
 });
 
-// Update user profile
-router.put("/:id", verifyToken, async (req, res) => {
+router.put("/update", verifyToken, upload, async (req, res) => {
   try {
-    // Check if user is updating their own profile
-    if (req.user.id !== req.params.id) {
-      return res
-        .status(403)
-        .json({ message: "You can only update your own profile" });
-    }
-
-    // Only allow specific fields to be updated
-    const allowedUpdates = ["username", "email", "password", "profilePic"];
+    const userId = req.user.id;
     const updates = {};
 
+    const allowedUpdates = ["username", "email", "password", "city", "state"];
     Object.keys(req.body).forEach((key) => {
-      if (allowedUpdates.includes(key)) {
+      if (allowedUpdates.includes(key) && req.body[key]) {
         updates[key] = req.body[key];
       }
     });
 
-    // If no valid updates provided
-    if (Object.keys(updates).length === 0) {
-      return res.status(400).json({ message: "No valid fields to update" });
+    // Check username uniqueness if being updated
+    if (updates.username) {
+      const existingUsername = await User.findOne({
+        username: updates.username,
+        _id: { $ne: userId }, // Exclude current user
+      });
+      if (existingUsername) {
+        return res.status(400).json({ message: "Username already taken" });
+      }
     }
 
-    // If password is being updated, hash it
+    // Check email uniqueness if being updated
+    if (updates.email) {
+      const existingEmail = await User.findOne({
+        email: updates.email,
+        _id: { $ne: userId }, // Exclude current user
+      });
+      if (existingEmail) {
+        return res.status(400).json({ message: "Email already registered" });
+      }
+    }
+
+    if (req.files?.profilePic) {
+      const user = await User.findById(userId);
+      if (user.profilePic?.publicId) {
+        await deleteFromCloudinary(user.profilePic.publicId);
+      }
+      const result = await uploadToCloudinary(
+        req.files.profilePic[0],
+        "profiles"
+      );
+      updates.profilePic = {
+        url: result.secure_url,
+        publicId: result.public_id,
+      };
+    }
+
+    if (req.files?.coverPic) {
+      const user = await User.findById(userId);
+      if (user.coverPic?.publicId) {
+        await deleteFromCloudinary(user.coverPic.publicId);
+      }
+      const result = await uploadToCloudinary(req.files.coverPic[0], "covers");
+      updates.coverPic = {
+        url: result.secure_url,
+        publicId: result.public_id,
+      };
+    }
+
     if (updates.password) {
       updates.password = await bcrypt.hash(updates.password, 10);
     }
 
-    // Check if username or email is being changed
-    if (updates.username || updates.email) {
-      // Check if new username already exists
-      if (updates.username) {
-        const existingUsername = await User.findOne({
-          username: updates.username,
-        });
-        if (
-          existingUsername &&
-          existingUsername._id.toString() !== req.params.id
-        ) {
-          return res.status(400).json({ message: "Username already taken" });
-        }
-      }
-
-      // Check if new email already exists
-      if (updates.email) {
-        const existingEmail = await User.findOne({ email: updates.email });
-        if (existingEmail && existingEmail._id.toString() !== req.params.id) {
-          return res.status(400).json({ message: "Email already registered" });
-        }
-      }
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({ message: "No valid fields to update" });
     }
 
-    // Handle profile picture update
-    if (updates.profilePic) {
-      const user = await User.findById(req.params.id);
-      if (user.profilePic.publicId) {
-        await deleteFromCloudinary(user.profilePic.publicId);
-      }
-    }
-
-    // Update user
     const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
+      userId,
       { $set: updates },
       { new: true }
     ).select("-password");
 
     res.status(200).json(updatedUser);
   } catch (err) {
+    console.error("Update error:", err);
     res.status(500).json({ error: err.message });
   }
 });

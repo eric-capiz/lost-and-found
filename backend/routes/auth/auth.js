@@ -9,7 +9,10 @@ const {
   verifyToken,
 } = require("../../middleware/verifyToken");
 
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ storage: multer.memoryStorage() }).fields([
+  { name: "profilePic", maxCount: 1 },
+  { name: "coverPic", maxCount: 1 },
+]);
 
 router.post("/register", upload.single("profilePic"), async (req, res) => {
   try {

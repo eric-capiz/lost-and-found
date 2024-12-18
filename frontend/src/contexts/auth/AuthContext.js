@@ -119,6 +119,20 @@ export const AuthProvider = ({ children }) => {
     delete axios.defaults.headers.common["Authorization"];
   };
 
+  const updateUser = async (formData) => {
+    try {
+      const response = await axios.put("/users/update", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setUser(response.data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -130,6 +144,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         signup,
+        updateUser,
       }}
     >
       {children}

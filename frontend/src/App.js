@@ -9,15 +9,13 @@ import { useContext } from "react";
 import { AuthContext } from "./contexts/auth/AuthContext";
 import Navbar from "./components/layout/Navbar";
 import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
 import Footer from "./components/layout/Footer";
 
 const AuthWrapper = () => {
   const { isAuthenticated } = useContext(AuthContext);
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/" />;
 };
 
 const AdminWrapper = () => {
@@ -34,8 +32,6 @@ function App() {
         <div className="page-container">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
             <Route element={<AuthWrapper />}>
               <Route path="/profile" element={<Profile />} />
             </Route>

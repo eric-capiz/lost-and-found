@@ -26,6 +26,16 @@ const UserSchema = new mongoose.Schema(
         default: "", // Optional
       },
     },
+    coverPic: {
+      url: {
+        type: String,
+        default: "", // Optional
+      },
+      publicId: {
+        type: String,
+        default: "", // Optional
+      },
+    },
     city: {
       type: String,
       required: false, // Optional

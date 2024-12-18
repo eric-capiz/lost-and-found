@@ -13,6 +13,7 @@ const AuthModal = ({ isOpen, onClose }) => {
     state: "",
   });
   const [profilePic, setProfilePic] = useState(null);
+  const [coverPic, setCoverPic] = useState(null);
 
   useEffect(() => {
     if (error) {
@@ -57,6 +58,10 @@ const AuthModal = ({ isOpen, onClose }) => {
 
         if (profilePic) {
           formDataToSend.append("profilePic", profilePic);
+        }
+
+        if (coverPic) {
+          formDataToSend.append("coverPic", coverPic);
         }
 
         for (let pair of formDataToSend.entries()) {
@@ -141,6 +146,14 @@ const AuthModal = ({ isOpen, onClose }) => {
                   value={formData.password}
                   onChange={handleChange}
                   required
+                />
+              </label>
+              <label>
+                Cover Photo:
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setCoverPic(e.target.files[0])}
                 />
               </label>
             </>
