@@ -48,6 +48,14 @@ const UserSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    resolvedCount: {
+      type: Number,
+      default: 0,
+    },
+    unresolvedCount: {
+      type: Number,
+      default: 0,
+    },
     lastViewedNotifications: {
       type: Date,
       default: Date.now,

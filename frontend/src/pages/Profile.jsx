@@ -5,14 +5,16 @@ import PostItem from "../components/modals/PostItem";
 import EditProfile from "../components/modals/EditProfile";
 import { UserContext } from "../contexts/user/UserContext";
 import { AuthContext } from "../contexts/auth/AuthContext";
+import { Spinner } from "../components/common";
+import { Navigate } from "react-router-dom";
+import defaultAvatar from "../assets/images/avatar.png";
+import defaultCover from "../assets/images/maze.jpg";
 
 function Profile() {
   const [isPostModalOpen, setPostModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const { userProfile, getUserStats } = useContext(UserContext);
-  const { user } = useContext(AuthContext);
-
-  const stats = getUserStats();
+  const { loading: userLoading } = useContext(UserContext);
+  const { user, loading: authLoading } = useContext(AuthContext);
 
   const openPostModal = () => setPostModalOpen(true);
   const closePostModal = () => setPostModalOpen(false);
@@ -20,21 +22,30 @@ function Profile() {
   const openEditModal = () => setEditModalOpen(true);
   const closeEditModal = () => setEditModalOpen(false);
 
+  if (authLoading || userLoading) {
+    return (
+      <div className="loading-container">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <div className="profile-page">
       <div className="profile-info">
         <div className="cover-photo">
           <img
-            src={
-              user?.coverPic?.url ||
-              "https://media.istockphoto.com/id/2082196734/photo/man-walking-in-abstract-maze.webp?b=1&s=612x612&w=0&k=20&c=hqU7aS1vh_0iz2JV2F-qzKXmR_9Vx6V-QSmeE-7fWtg="
-            }
+            src={user?.coverPic?.url || defaultCover}
             alt="Cover"
             className="cover-image"
           />
         </div>
         <img
-          src={user?.profilePic?.url}
+          src={user?.profilePic?.url || defaultAvatar}
           alt="User Avatar"
           className="user-avatar"
         />
@@ -54,15 +65,15 @@ function Profile() {
           <div className="stats-grid">
             <div className="stat-card">
               <h4>Total Posts</h4>
-              <p>{user?.postCount}</p>
+              <p>{user?.postCount || 0}</p>
             </div>
             <div className="stat-card">
               <h4>Unresolved</h4>
-              <p>{stats.unresolved}</p>
+              <p>{user?.unresolvedCount || 0}</p>
             </div>
             <div className="stat-card">
               <h4>Resolved</h4>
-              <p>{stats.resolved}</p>
+              <p>{user?.resolvedCount || 0}</p>
             </div>
             <div className="stat-card">
               <h4>Location</h4>

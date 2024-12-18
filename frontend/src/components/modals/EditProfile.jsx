@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { FiX } from "react-icons/fi";
 import { AuthContext } from "../../contexts/auth/AuthContext";
+import defaultAvatar from "../../assets/images/avatar.png";
+import defaultCover from "../../assets/images/maze.jpg";
 
 const EditProfile = ({ isOpen, onClose }) => {
   const { user, updateUser } = useContext(AuthContext);
@@ -14,17 +16,6 @@ const EditProfile = ({ isOpen, onClose }) => {
   const [coverPic, setCoverPic] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        username: user.username || "",
-        city: user.city || "",
-        state: user.state || "",
-        password: "",
-      });
-    }
-  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,7 +44,7 @@ const EditProfile = ({ isOpen, onClose }) => {
       const updateData = new FormData();
 
       Object.keys(formData).forEach((key) => {
-        if (formData[key] && formData[key] !== user[key]) {
+        if (formData[key]) {
           updateData.append(key, formData[key]);
         }
       });
@@ -68,6 +59,14 @@ const EditProfile = ({ isOpen, onClose }) => {
 
       if ([...updateData.entries()].length > 0) {
         await updateUser(updateData);
+        setFormData({
+          username: "",
+          city: "",
+          state: "",
+          password: "",
+        });
+        setProfilePic(null);
+        setCoverPic(null);
         onClose();
       }
     } catch (err) {
@@ -95,23 +94,22 @@ const EditProfile = ({ isOpen, onClose }) => {
               name="username"
               value={formData.username}
               onChange={handleChange}
+              placeholder={user?.username || "Enter new username"}
             />
           </label>
 
           <label>
             Profile Picture:
             <div className="image-preview">
-              {user?.profilePic?.url && (
-                <img
-                  src={user.profilePic.url}
-                  alt="Current profile"
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    objectFit: "cover",
-                  }}
-                />
-              )}
+              <img
+                src={user?.profilePic?.url || defaultAvatar}
+                alt="Current profile"
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  objectFit: "cover",
+                }}
+              />
             </div>
             <input
               type="file"
@@ -123,17 +121,15 @@ const EditProfile = ({ isOpen, onClose }) => {
           <label>
             Cover Photo:
             <div className="image-preview">
-              {user?.coverPic?.url && (
-                <img
-                  src={user.coverPic.url}
-                  alt="Current cover"
-                  style={{
-                    width: "200px",
-                    height: "100px",
-                    objectFit: "cover",
-                  }}
-                />
-              )}
+              <img
+                src={user?.coverPic?.url || defaultCover}
+                alt="Current cover"
+                style={{
+                  width: "200px",
+                  height: "100px",
+                  objectFit: "cover",
+                }}
+              />
             </div>
             <input
               type="file"
@@ -149,7 +145,7 @@ const EditProfile = ({ isOpen, onClose }) => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Leave blank to keep current password"
+              placeholder="Enter new password"
             />
           </label>
 
@@ -160,6 +156,7 @@ const EditProfile = ({ isOpen, onClose }) => {
               name="city"
               value={formData.city}
               onChange={handleChange}
+              placeholder={user?.city || "Enter city"}
             />
           </label>
 
@@ -170,6 +167,7 @@ const EditProfile = ({ isOpen, onClose }) => {
               name="state"
               value={formData.state}
               onChange={handleChange}
+              placeholder={user?.state || "Enter state"}
             />
           </label>
 

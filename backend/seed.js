@@ -17,87 +17,143 @@ const seedDatabase = async () => {
     await Comment.deleteMany({});
     await Notification.deleteMany({});
 
-    // Create users
-    const adminPassword = await bcrypt.hash("admin123", 10);
-    const regularPassword = await bcrypt.hash("password123", 10);
+    // Create passwords
+    const adminPassword = await bcrypt.hash("admin", 10);
+    const regularPassword = await bcrypt.hash("demo", 10);
 
-    const users = await User.insertMany([
-      {
-        username: "admin",
-        email: "admin@admin.com",
-        password: adminPassword,
-        isAdmin: true,
-        profilePic: "",
-      },
-      {
-        username: "testAdmin",
-        email: "admin2@test.com",
-        password: regularPassword,
-        isAdmin: true,
-      },
-      { username: "user1", email: "user1@test.com", password: regularPassword },
-      { username: "user2", email: "user2@test.com", password: regularPassword },
-      { username: "user3", email: "user3@test.com", password: regularPassword },
-    ]);
-
-    // Get regular users
-    const regularUsers = users.filter((user) => !user.isAdmin);
-    const [postOwner, commenter1, commenter2] = regularUsers;
-
-    // Create one post by user1
-    const post = await Post.create({
-      userId: postOwner._id,
-      username: postOwner.username,
-      title: `${postOwner.username}'s Lost Item`,
-      description: "Test description for lost item",
-      category: "Electronics",
-      city: "New York",
-      state: "NY",
-      itemType: "lost",
-      status: "unresolved",
-      comments: [],
-      commentCount: 0,
-      tags: ["Test", "Seed", "Data"],
+    // Create admin user
+    const adminUser = await User.create({
+      username: "admin",
+      email: "admin@admin.com",
+      password: adminPassword,
+      isAdmin: true,
+      postCount: 0,
+      resolvedCount: 0,
+      unresolvedCount: 0,
     });
 
-    // Create 3 comments from other regular users
-    const commenters = [commenter1, commenter2, commenter1]; // user2, user3, user2 again
+    // Create regular users
+    const usernames = [
+      "breezy",
+      "user1",
+      "user2",
+      "user3",
+      "user4",
+      "user5",
+      "user6",
+      "user7",
+      "user8",
+      "user9",
+    ];
+    const regularUsers = await Promise.all(
+      usernames.map((username, index) =>
+        User.create({
+          username,
+          email: `${username}@test.com`,
+          password: regularPassword,
+          postCount: 0,
+          resolvedCount: 0,
+          unresolvedCount: 0,
+        })
+      )
+    );
 
-    for (let i = 0; i < 3; i++) {
-      const commenter = commenters[i];
+    // Create 2 posts per user (1 resolved, 1 unresolved)
+    for (const user of regularUsers) {
+      const itemTypes = ["lost", "found"];
 
-      // Create comment
-      const comment = await Comment.create({
-        postId: post._id,
-        userId: commenter._id,
-        username: commenter.username,
-        text: `test comment by ${commenter.username}`,
+      // Create resolved post
+      const resolvedPost = await Post.create({
+        userId: user._id,
+        username: user.username,
+        title: `${user.username}'s ${itemTypes[0]} Item (Resolved)`,
+        description: `Test description for ${itemTypes[0]} item`,
+        category: "Electronics",
+        city: "New York",
+        state: "NY",
+        itemType: itemTypes[0],
+        status: "resolved",
+        comments: [],
+        commentCount: 0,
+        tags: ["Test", "Seed", "Data"],
       });
 
-      // Update post
-      await Post.findByIdAndUpdate(post._id, {
-        $push: {
-          comments: {
-            commenterId: commenter._id,
-            commenterUsername: commenter.username,
-            content: `text comment by ${commenter.username}`,
-          },
+      // Create unresolved post
+      const unresolvedPost = await Post.create({
+        userId: user._id,
+        username: user.username,
+        title: `${user.username}'s ${itemTypes[1]} Item (Unresolved)`,
+        description: `Test description for ${itemTypes[1]} item`,
+        category: "Electronics",
+        city: "New York",
+        state: "NY",
+        itemType: itemTypes[1],
+        status: "unresolved",
+        comments: [],
+        commentCount: 0,
+        tags: ["Test", "Seed", "Data"],
+      });
+
+      // Update user's post counts
+      await User.findByIdAndUpdate(user._id, {
+        $inc: {
+          postCount: 2,
+          resolvedCount: 1,
+          unresolvedCount: 1,
         },
-        $inc: { commentCount: 1 },
       });
 
-      // Create notification for post owner
-      await Notification.create({
-        userId: post.userId,
-        postId: post._id,
-        commentId: comment._id,
-        message: `${commenter.username} left a comment on your post: ${post.title}`,
-      });
+      // Create 5 comments per post from random users
+      const posts = [resolvedPost, unresolvedPost];
+      for (const post of posts) {
+        for (let i = 0; i < 5; i++) {
+          // Pick a random commenter (excluding post owner)
+          const availableCommenters = regularUsers.filter(
+            (u) => u._id.toString() !== user._id.toString()
+          );
+          const randomCommenter =
+            availableCommenters[
+              Math.floor(Math.random() * availableCommenters.length)
+            ];
 
-      // Increment notification count for post owner
-      await User.findByIdAndUpdate(post.userId, {
-        $inc: { notificationCount: 1 },
-      });
+          // Create comment
+          const comment = await Comment.create({
+            postId: post._id,
+            userId: randomCommenter._id,
+            username: randomCommenter.username,
+            text: `Comment ${i + 1} by ${randomCommenter.username} on ${
+              post.title
+            }`,
+          });
+
+          // Update post
+          await Post.findByIdAndUpdate(post._id, {
+            $push: {
+              comments: {
+                commenterId: randomCommenter._id,
+                commenterUsername: randomCommenter.username,
+                content: `Comment ${i + 1} by ${randomCommenter.username} on ${
+                  post.title
+                }`,
+              },
+            },
+            $inc: { commentCount: 1 },
+          });
+
+          // Create notification for post owner
+          await Notification.create({
+            userId: post.userId,
+            postId: post._id,
+            commentId: comment._id,
+            message: `${randomCommenter.username} commented on your post: ${post.title}`,
+          });
+
+          // Increment notification count for post owner
+          await User.findByIdAndUpdate(post.userId, {
+            $inc: { notificationCount: 1 },
+          });
+        }
+      }
     }
 
     console.log("Database seeded successfully!");

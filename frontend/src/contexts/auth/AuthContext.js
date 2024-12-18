@@ -1,8 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import axios from "axios";
-// Set base URL for all axios requests
-axios.defaults.baseURL =
-  process.env.REACT_APP_API_URL || "http://localhost:5000";
+import { authService } from "../../services/authService";
 
 export const AuthContext = createContext();
 
@@ -15,23 +12,14 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        const token = localStorage.getItem("token");
-
-        if (token) {
-          // Set default axios header
-          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-          // Verify token with backend
-          const response = await axios.get("/api/auth/verify");
-
-          setUser(response.data);
+        const userData = await authService.verifyToken();
+        if (userData) {
+          setUser(userData);
           setIsAuthenticated(true);
-        } else {
-          console.log("No token found"); // Debug log
         }
       } catch (err) {
-        console.error("Token verification failed:", err); // Debug log
-        localStorage.removeItem("token");
-        delete axios.defaults.headers.common["Authorization"];
+        console.error("Token verification failed:", err);
+        authService.logout();
       } finally {
         setLoading(false);
       }
@@ -44,26 +32,11 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.post("/api/auth/login", credentials);
-
-      console.log("Login response:", response.data); // Debug log
-
-      if (response.data.token) {
-        console.log("Saving token to localStorage"); // Debug log
-        localStorage.setItem("token", response.data.token);
-        axios.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${response.data.token}`;
-        setUser(response.data);
-        setIsAuthenticated(true);
-
-        // Verify token was saved
-        const savedToken = localStorage.getItem("token");
-      }
-
-      return response.data;
+      const data = await authService.login(credentials);
+      setUser(data);
+      setIsAuthenticated(true);
+      return data;
     } catch (err) {
-      console.error("Login error:", err);
       setError(err.response?.data?.message || "Login failed");
       throw err;
     } finally {
@@ -75,36 +48,11 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-
-      // Debug: Log the full URL being used
-      console.log(
-        "Making request to:",
-        axios.defaults.baseURL + "/api/auth/register"
-      );
-
-      const response = await axios.post("api/auth/register", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      console.log("Signup response:", response.data);
-
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
-        axios.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${response.data.token}`;
-        setUser(response.data);
-        setIsAuthenticated(true);
-      } else {
-        throw new Error("No token received");
-      }
-
-      return response.data;
+      const data = await authService.signup(formData);
+      setUser(data);
+      setIsAuthenticated(true);
+      return data;
     } catch (err) {
-      console.error("Full error object:", err);
-      console.error("Error response data:", err.response?.data);
       setError(err.response?.data?.message || "Registration failed");
       throw err;
     } finally {
@@ -113,24 +61,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    authService.logout();
     setUser(null);
     setIsAuthenticated(false);
-    localStorage.removeItem("token");
-    delete axios.defaults.headers.common["Authorization"];
-  };
-
-  const updateUser = async (formData) => {
-    try {
-      const response = await axios.put("/api/users/update", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      setUser(response.data);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
   };
 
   return (
@@ -144,7 +77,6 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         signup,
-        updateUser,
       }}
     >
       {children}
