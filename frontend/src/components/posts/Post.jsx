@@ -1,12 +1,15 @@
-import { useState } from "react";
-import { FaRegComment } from "react-icons/fa";
+import { useState, useContext } from "react";
+import { FaRegComment, FaEdit, FaTrash } from "react-icons/fa";
+import { AuthContext } from "../../contexts/auth/AuthContext";
 
 function Post({ post }) {
   const [showComments, setShowComments] = useState(false);
+  const { user } = useContext(AuthContext);
+
+  const isOwner = user?._id === post.userId;
 
   return (
     <article className="post">
-      {/* Post Header */}
       <div className="post-header">
         <div className="user-info">
           <img
@@ -23,15 +26,23 @@ function Post({ post }) {
             </div>
           </div>
         </div>
+        {isOwner && (
+          <div className="post-actions">
+            <button className="icon-button">
+              <FaEdit className="edit-icon" />
+            </button>
+            <button className="icon-button">
+              <FaTrash className="delete-icon" />
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Post Content */}
       <div className="post-content">
         <p>{post.content}</p>
         <img src={post.image} alt="Post" className="post-image" />
       </div>
 
-      {/* Updated Post Footer */}
       <div className="post-footer">
         <span className="comment-count">{post.commentCount} Comments</span>
         <button
@@ -43,7 +54,6 @@ function Post({ post }) {
         </button>
       </div>
 
-      {/* Comments Section */}
       {showComments && (
         <div className="comments-section">
           {post.comments.map((comment) => (
@@ -61,7 +71,6 @@ function Post({ post }) {
             </div>
           ))}
 
-          {/* Comment Input */}
           <div className="comment-input">
             <input type="text" placeholder="Write a comment..." />
             <button>Post</button>

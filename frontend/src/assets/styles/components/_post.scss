@@ -7,6 +7,10 @@
 
   // Post Header
   .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
     .user-info {
       display: flex;
       align-items: center;
@@ -32,6 +36,32 @@
 
           span {
             margin-right: 0.5rem;
+          }
+        }
+      }
+    }
+
+    // Add post actions styles
+    .post-actions {
+      display: flex;
+      gap: 0.5rem;
+
+      .icon-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.5rem;
+        color: #666;
+        transition: color 0.2s;
+        font-size: 1rem;
+
+        &:hover {
+          &.edit-icon {
+            color: #0095f6;
+          }
+
+          &.delete-icon {
+            color: #dc3545;
           }
         }
       }

@@ -97,9 +97,6 @@ function Profile() {
             <button className="filter-button">
               <FaFilter /> Filters
             </button>
-            <button className="manage-posts-button">
-              <FaCog /> Manage Posts
-            </button>
           </div>
           <Posts />
         </div>

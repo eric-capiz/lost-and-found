@@ -3,6 +3,7 @@ import { FiX } from "react-icons/fi";
 import axios from "axios";
 import { Spinner, Alert } from "../common";
 import { AuthContext } from "../../contexts/auth/AuthContext";
+import { postService } from "../../services/postService";
 
 const PostItem = ({ isOpen, onClose }) => {
   const { updateUserCounts } = useContext(AuthContext);
@@ -62,12 +63,7 @@ const PostItem = ({ isOpen, onClose }) => {
         formDataToSend.append("images", image);
       });
 
-      await axios.post("/api/posts", formDataToSend, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
+      await postService.createPost(formDataToSend);
       updateUserCounts("post", "create");
       showAlert("Post created successfully!", "success");
       setTimeout(() => {
