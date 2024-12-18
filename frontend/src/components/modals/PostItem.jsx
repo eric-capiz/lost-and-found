@@ -14,8 +14,17 @@ const PostItem = ({ isOpen, onClose }) => {
     images: [],
   });
   const [selectedImages, setSelectedImages] = useState([]);
+  const [alert, setAlert] = useState({ show: false, message: "", type: "" });
+  const [isLoading, setIsLoading] = useState(false);
 
   if (!isOpen) return null;
+
+  const showAlert = (message, type) => {
+    setAlert({ show: true, message, type });
+    setTimeout(() => {
+      setAlert({ show: false, message: "", type: "" });
+    }, 9000);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,6 +45,7 @@ const PostItem = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const formDataToSend = new FormData();
 
@@ -49,19 +59,27 @@ const PostItem = ({ isOpen, onClose }) => {
         formDataToSend.append("images", image);
       });
 
-      const response = await axios.post("/api/posts", formDataToSend, {
+      await axios.post("/api/posts", formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-      console.log("Post created:", response.data);
-      onClose();
+      showAlert("Post created successfully!", "success");
+      setTimeout(() => {
+        onClose();
+      }, 1500);
     } catch (error) {
+      showAlert(
+        error.response?.data?.message || "Error creating post",
+        "error"
+      );
       console.error(
         "Error creating post:",
         error.response?.data || error.message
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -185,7 +203,14 @@ const PostItem = ({ isOpen, onClose }) => {
               onChange={handleImageChange}
             />
           </label>
-          <button type="submit">Submit</button>
+          <div className="submit-section">
+            {alert.show && (
+              <div className={`alert alert-${alert.type}`}>{alert.message}</div>
+            )}
+            <button type="submit" disabled={isLoading}>
+              {isLoading ? <div className="spinner"></div> : "Submit"}
+            </button>
+          </div>
         </form>
       </div>
     </div>
