@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FiX } from "react-icons/fi";
 import axios from "axios";
 import { Spinner, Alert } from "../common";
+import { AuthContext } from "../../contexts/auth/AuthContext";
 
 const PostItem = ({ isOpen, onClose }) => {
+  const { updateUserCounts } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -66,6 +68,7 @@ const PostItem = ({ isOpen, onClose }) => {
         },
       });
 
+      updateUserCounts("post", "create");
       showAlert("Post created successfully!", "success");
       setTimeout(() => {
         onClose();

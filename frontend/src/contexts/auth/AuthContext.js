@@ -29,6 +29,17 @@ export const AuthProvider = ({ children }) => {
     verifyToken();
   }, []);
 
+  const updateUserCounts = (type, action) => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      postCount: type === "post" ? prevUser.postCount + 1 : prevUser.postCount,
+      unresolvedCount:
+        type === "post"
+          ? prevUser.unresolvedCount + 1
+          : prevUser.unresolvedCount,
+    }));
+  };
+
   const login = async (credentials) => {
     try {
       setLoading(true);
@@ -89,6 +100,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         signup,
         updateUser,
+        updateUserCounts,
       }}
     >
       {children}

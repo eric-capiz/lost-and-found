@@ -14,12 +14,22 @@ import Admin from "./pages/Admin";
 import Footer from "./components/layout/Footer";
 
 const AuthWrapper = () => {
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return null;
+  }
+
   return isAuthenticated ? <Outlet /> : <Navigate to="/" />;
 };
 
 const AdminWrapper = () => {
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return null;
+  }
+
   const isAdmin = user && user.isAdmin;
   return isAdmin ? <Outlet /> : <Navigate to="/" />;
 };

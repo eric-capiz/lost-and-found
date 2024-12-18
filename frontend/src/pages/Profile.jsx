@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { Navigate, useLocation } from "react-router-dom";
 import { FaUserEdit, FaFilter, FaCog, FaPlus } from "react-icons/fa";
 import Posts from "../components/posts/Posts";
 import PostItem from "../components/modals/PostItem";
@@ -6,11 +7,11 @@ import EditProfile from "../components/modals/EditProfile";
 import { UserContext } from "../contexts/user/UserContext";
 import { AuthContext } from "../contexts/auth/AuthContext";
 import { Spinner } from "../components/common";
-import { Navigate } from "react-router-dom";
 import defaultAvatar from "../assets/images/avatar.png";
 import defaultCover from "../assets/images/maze.jpg";
 
 function Profile() {
+  const location = useLocation();
   const [isPostModalOpen, setPostModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const { loading: userLoading } = useContext(UserContext);
@@ -31,7 +32,7 @@ function Profile() {
   }
 
   if (!user) {
-    return <Navigate to="/" />;
+    return <Navigate to="/" state={{ from: location }} replace />;
   }
 
   return (
