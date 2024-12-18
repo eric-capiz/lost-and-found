@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 // Set base URL for all axios requests
 axios.defaults.baseURL =
-  (process.env.REACT_APP_API_URL || "http://localhost:5000") + "/api";
+  process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 export const AuthContext = createContext();
 
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.post("/auth/login", credentials);
+      const response = await axios.post("/api/auth/login", credentials);
 
       console.log("Login response:", response.data); // Debug log
 
@@ -79,10 +79,10 @@ export const AuthProvider = ({ children }) => {
       // Debug: Log the full URL being used
       console.log(
         "Making request to:",
-        axios.defaults.baseURL + "/auth/register"
+        axios.defaults.baseURL + "/api/auth/register"
       );
 
-      const response = await axios.post("auth/register", formData, {
+      const response = await axios.post("api/auth/register", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -121,7 +121,7 @@ export const AuthProvider = ({ children }) => {
 
   const updateUser = async (formData) => {
     try {
-      const response = await axios.put("/users/update", formData, {
+      const response = await axios.put("/api/users/update", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

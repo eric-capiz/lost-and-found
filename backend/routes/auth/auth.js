@@ -14,7 +14,7 @@ const upload = multer({ storage: multer.memoryStorage() }).fields([
   { name: "coverPic", maxCount: 1 },
 ]);
 
-router.post("/register", upload.single("profilePic"), async (req, res) => {
+router.post("/register", upload, async (req, res) => {
   try {
     const { email, username, password } = req.body;
     if (!email || !username || !password) {
