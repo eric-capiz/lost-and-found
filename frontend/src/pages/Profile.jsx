@@ -37,7 +37,7 @@ function Profile() {
           alt="User Avatar"
           className="user-avatar"
         />
-        <h2>{user?.username}</h2>
+        <h2>{user?.username.toUpperCase()}</h2>
         <div className="button-group">
           <button className="edit-profile-button" onClick={openEditModal}>
             <FaUserEdit /> Edit Profile
@@ -73,7 +73,7 @@ function Profile() {
             </div>
             <div className="stat-card">
               <h4>Email</h4>
-              <p>{userProfile?.email || "Loading..."}</p>
+              <p>{user?.email || "Loading..."}</p>
             </div>
           </div>
         </div>

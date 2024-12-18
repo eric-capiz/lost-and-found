@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.post("/api/auth/login", credentials);
+      const response = await axios.post("/auth/login", credentials);
 
       console.log("Login response:", response.data); // Debug log
 
