@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const User = require("../../models/users/User");
 const Post = require("../../models/posts/Post");
+const Notification = require("../../models/notifications/Notifications");
 const { verifyToken } = require("../../middleware/verifyToken");
 const bcrypt = require("bcryptjs");
 const multer = require("multer");
@@ -102,6 +103,31 @@ router.put("/update", verifyToken, upload, async (req, res) => {
 
     if (Object.keys(updates).length === 0) {
       return res.status(400).json({ message: "No valid fields to update" });
+    }
+
+    // If username is being updated, update it in all related collections
+    if (updates.username) {
+      const oldUsername = req.user.username;
+      const newUsername = updates.username;
+
+      // Update username in all posts
+      await Post.updateMany(
+        { userId: userId },
+        { $set: { username: newUsername } }
+      );
+
+      // Update username in all comments across all posts
+      await Post.updateMany(
+        { "comments.commenterId": userId },
+        { $set: { "comments.$[comment].commenterUsername": newUsername } },
+        { arrayFilters: [{ "comment.commenterId": userId }] }
+      );
+
+      // Update username in notifications if you have any
+      await Notification.updateMany(
+        { userId: userId },
+        { $set: { username: newUsername } }
+      );
     }
 
     const updatedUser = await User.findByIdAndUpdate(
