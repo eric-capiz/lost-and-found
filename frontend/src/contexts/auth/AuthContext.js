@@ -75,13 +75,19 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.post("/auth/register", formData, {
+
+      // Debug: Log the full URL being used
+      console.log(
+        "Making request to:",
+        axios.defaults.baseURL + "/auth/register"
+      );
+
+      const response = await axios.post("auth/register", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-      // Log to verify data
       console.log("Signup response:", response.data);
 
       if (response.data.token) {
@@ -97,7 +103,8 @@ export const AuthProvider = ({ children }) => {
 
       return response.data;
     } catch (err) {
-      console.error("Signup error:", err);
+      console.error("Full error object:", err);
+      console.error("Error response data:", err.response?.data);
       setError(err.response?.data?.message || "Registration failed");
       throw err;
     } finally {

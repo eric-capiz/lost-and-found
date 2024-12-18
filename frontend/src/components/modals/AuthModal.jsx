@@ -9,7 +9,6 @@ const AuthModal = ({ isOpen, onClose }) => {
     username: "",
     password: "",
     email: "",
-    name: "",
     city: "",
     state: "",
   });
@@ -51,11 +50,17 @@ const AuthModal = ({ isOpen, onClose }) => {
         const formDataToSend = new FormData();
 
         Object.keys(formData).forEach((key) => {
-          formDataToSend.append(key, formData[key]);
+          if (formData[key]) {
+            formDataToSend.append(key, formData[key]);
+          }
         });
 
         if (profilePic) {
           formDataToSend.append("profilePic", profilePic);
+        }
+
+        for (let pair of formDataToSend.entries()) {
+          console.log(pair[0], pair[1]);
         }
 
         await signup(formDataToSend);
@@ -83,22 +88,13 @@ const AuthModal = ({ isOpen, onClose }) => {
           {isSignup ? (
             <>
               <label>
-                Name:
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                />
-              </label>
-              <label>
                 Email:
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
+                  required
                 />
               </label>
               <label>
