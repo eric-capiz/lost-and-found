@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { authService } from "../../services/authService";
+import { userService } from "../../services/userService";
 
 export const AuthContext = createContext();
 
@@ -66,6 +67,16 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
   };
 
+  const updateUser = async (formData) => {
+    try {
+      const updatedUser = await userService.updateProfile(formData);
+      setUser(updatedUser);
+      return updatedUser;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -77,6 +88,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         signup,
+        updateUser,
       }}
     >
       {children}
