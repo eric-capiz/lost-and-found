@@ -66,8 +66,9 @@ const EditPost = ({ isOpen, onClose, post }) => {
           );
           if (key === "tags") {
             const tagsArray = formData.tags
-              ? formData.tags.split(",").map((tag) => tag.trim())
-              : [];
+              .split(",")
+              .map((tag) => tag.trim())
+              .filter((tag) => tag); // Remove empty tags
             formDataToSend.append("tags", JSON.stringify(tagsArray));
           } else {
             formDataToSend.append(key, formData[key]);

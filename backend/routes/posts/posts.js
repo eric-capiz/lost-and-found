@@ -185,9 +185,24 @@ router.put("/:id", verifyToken, upload, async (req, res) => {
       }
     }
 
-    // Update post data
-    const updateData = { ...req.body, images: updatedImages };
-    delete updateData.existingImages; // Remove existingImages from update data
+    // Handle tags specially
+    let updateData = { ...req.body };
+    if (updateData.tags) {
+      try {
+        // Parse the JSON string back into an array
+        updateData.tags = JSON.parse(updateData.tags);
+      } catch (e) {
+        console.error("Error parsing tags:", e);
+        // If parsing fails, split by comma as fallback
+        updateData.tags = updateData.tags.split(",").map((tag) => tag.trim());
+      }
+    }
+
+    // Handle images
+    if (updateData.existingImages) {
+      updateData.images = JSON.parse(updateData.existingImages);
+      delete updateData.existingImages;
+    }
 
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.id,
