@@ -42,7 +42,7 @@ function Profile() {
   if (!user) {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
-  console.log("breezy", user?.profilePic?.url);
+
   return (
     <div className="profile-page">
       <div className="profile-info">

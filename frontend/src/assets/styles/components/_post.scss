@@ -28,14 +28,48 @@
         h3 {
           font-size: 1rem;
           margin: 0;
+          margin-bottom: 0.25rem;
         }
 
         .post-meta {
-          font-size: 0.875rem;
+          font-size: 0.75rem;
           color: #666;
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
 
-          span {
-            margin-right: 0.5rem;
+          .meta-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+
+            span {
+              display: inline-flex;
+              align-items: center;
+
+              &.date {
+                color: #666;
+              }
+
+              &.location {
+                color: #0095f6;
+              }
+
+              &.status {
+                color: #f59e0b;
+              }
+
+              &.category {
+                color: #10b981;
+              }
+
+              &:not(:last-child)::after {
+                content: "•";
+                margin-left: 0.5rem;
+                color: #666;
+              }
+            }
           }
         }
       }
@@ -75,10 +109,46 @@
       line-height: 1.5;
     }
 
-    .post-image {
+    .post-images {
+      margin: 1rem 0;
       width: 100%;
-      border-radius: 4px;
-      margin-bottom: 1rem;
+      gap: 0.5rem;
+
+      .post-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+
+      // Single image
+      &.image-grid-1 {
+        display: block;
+
+        .post-image {
+          margin-bottom: 1rem;
+        }
+      }
+
+      // Two images
+      &.image-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        margin-bottom: 1rem;
+      }
+
+      // Three images
+      &.image-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 200px);
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+
+        .post-image:first-child {
+          grid-column: 1 / 3;
+        }
+      }
     }
   }
 
@@ -230,6 +300,26 @@
         .profile-pic {
           width: 48px;
           height: 48px;
+        }
+
+        .user-details {
+          .post-meta {
+            font-size: 0.875rem;
+            flex-direction: row;
+            gap: 1rem;
+
+            .meta-row {
+              gap: 0.75rem;
+            }
+          }
+        }
+      }
+    }
+
+    .post-content {
+      .post-images {
+        .post-image {
+          height: 250px;
         }
       }
     }

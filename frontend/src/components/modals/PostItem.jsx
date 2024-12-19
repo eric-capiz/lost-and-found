@@ -192,7 +192,7 @@ const PostItem = ({ isOpen, onClose }) => {
             />
           </label>
           <label>
-            Upload Image:
+            Upload Image (Max 3):
             <input
               type="file"
               accept="image/*"

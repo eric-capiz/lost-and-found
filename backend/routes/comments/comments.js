@@ -8,11 +8,20 @@ const User = require("../../models/users/User");
 // Add comment to post
 router.post("/:id/comments", verifyToken, async (req, res) => {
   try {
+    // Get user to access profile picture
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     // Create new comment
     const newComment = new Comment({
       postId: req.params.id,
       userId: req.user.id,
       username: req.user.username,
+      userProfilePic: {
+        url: user.profilePic?.url || "",
+      },
       text: req.body.text,
     });
 
@@ -37,15 +46,8 @@ router.post("/:id/comments", verifyToken, async (req, res) => {
       });
     }
 
-    // Update the post with matching structure
+    // Update the post's comment count
     await Post.findByIdAndUpdate(req.params.id, {
-      $push: {
-        comments: {
-          commenterId: req.user.id,
-          commenterUsername: req.user.username,
-          content: req.body.text,
-        },
-      },
       $inc: { commentCount: 1 },
     });
 
@@ -54,6 +56,7 @@ router.post("/:id/comments", verifyToken, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
 // Get all comments for a post
 router.get("/:id/comments", async (req, res) => {
   try {
@@ -87,15 +90,8 @@ router.delete("/:id/comments/:commentId", verifyToken, async (req, res) => {
     // Delete from Comments collection
     await Comment.findByIdAndDelete(req.params.commentId);
 
-    // Update the post - remove comment and decrement count
+    // Update the post's comment count
     await Post.findByIdAndUpdate(req.params.id, {
-      $pull: {
-        comments: {
-          commenterId: comment.userId,
-          commenterUsername: comment.username,
-          content: comment.text,
-        },
-      },
       $inc: { commentCount: -1 },
     });
 

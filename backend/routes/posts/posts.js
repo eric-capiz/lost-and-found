@@ -24,6 +24,12 @@ router.post("/", verifyToken, (req, res, next) => {
     }
 
     try {
+      // Get user to access profile picture
+      const user = await User.findById(req.user.id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
       // Handle image uploads
       const uploadedImages = [];
       if (req.files) {
@@ -44,6 +50,9 @@ router.post("/", verifyToken, (req, res, next) => {
       const newPost = new Post({
         userId: req.user.id,
         username: req.user.username,
+        userProfilePic: {
+          url: user.profilePic?.url || "",
+        },
         title: req.body.title,
         description: req.body.description,
         category: req.body.category,

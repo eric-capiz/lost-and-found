@@ -9,27 +9,50 @@ function Post({ post }) {
 
   const isOwner = user?._id === post.userId._id;
 
+  const renderImages = () => {
+    if (!post.images || post.images.length === 0) return null;
+
+    const imageCount = post.images.length;
+    const gridClass = `image-grid-${imageCount}`;
+
+    return (
+      <div className={`post-images ${gridClass}`}>
+        {post.images.map((image, index) => (
+          <img
+            key={index}
+            src={image.url}
+            alt={`Post ${index + 1}`}
+            className="post-image"
+          />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <article className="post">
       <div className="post-header">
         <div className="user-info">
           <img
-            src={user?.profilePic?.url}
+            src={post?.userId?.profilePic?.url}
             alt={post.userId.username}
             className="profile-pic"
           />
           <div className="user-details">
             <h3>{post.userId.username.toUpperCase()}</h3>
             <div className="post-meta">
-              <span>{format(new Date(post.createdAt), "MM/dd/yyyy")}</span>
-              <span>•</span>
-              <span>
-                {post.city}, {post.state}
-              </span>
-              <span>•</span>
-              <span>{post.status.toUpperCase()}</span>
-              <span>•</span>
-              <span>{post.category.toUpperCase()}</span>
+              <div className="meta-row">
+                <span className="date">
+                  {format(new Date(post.createdAt), "MM/dd/yyyy")}
+                </span>
+                <span className="location">
+                  {post.city}, {post.state}
+                </span>
+              </div>
+              <div className="meta-row">
+                <span className="status">{post.status.toUpperCase()}</span>
+                <span className="category">{post.category.toUpperCase()}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -48,9 +71,7 @@ function Post({ post }) {
       <div className="post-content">
         <h2>{post.title}</h2>
         <p>{post.description}</p>
-        {post.images && post.images.length > 0 && (
-          <img src={post.images[0].url} alt="Post" className="post-image" />
-        )}
+        {renderImages()}
         {post.tags && post.tags.length > 0 && (
           <div className="post-tags">
             <span className="tags-label">Tags:</span>
