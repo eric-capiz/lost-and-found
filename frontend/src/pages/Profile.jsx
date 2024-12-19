@@ -132,7 +132,7 @@ function Profile() {
         </div>
 
         <div className="posts-section">
-          <h3>Posts ({userPosts.length})</h3>
+          <h3>Posts</h3>
           <div className="posts-controls">
             <div className="filter-container">
               <button
