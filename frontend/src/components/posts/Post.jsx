@@ -5,7 +5,7 @@ import { usePosts } from "../../contexts/post/PostContext";
 import { format } from "date-fns";
 import ImageModal from "../modals/ImageModal";
 import ConfirmModal from "../modals/ConfirmModal";
-
+import defaultAvatar from "../../assets/images/avatar.png";
 function Post({ post }) {
   const [showComments, setShowComments] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -47,7 +47,7 @@ function Post({ post }) {
       <div className="post-header">
         <div className="user-info">
           <img
-            src={post?.userId?.profilePic?.url}
+            src={post?.userId?.profilePic?.url || defaultAvatar}
             alt={post.userId.username}
             className="profile-pic"
           />
