@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/auth/AuthContext";
+import { useSearch } from "../../contexts/search/SearchContext";
 import {
   FiSearch,
   FiBell,
@@ -15,9 +16,26 @@ import PostItem from "../modals/PostItem";
 
 function Navbar() {
   const { isAuthenticated, logout, user, loading } = useContext(AuthContext);
+  const { setSearchQuery } = useSearch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+
+  const debounce = (func, wait) => {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  };
+
+  const handleSearch = debounce((value) => {
+    setSearchQuery(value);
+  }, 300);
 
   const closeAuthModal = () => {
     setIsAuthModalOpen(false);
@@ -109,7 +127,11 @@ function Navbar() {
 
         <div className="search-bar">
           <FiSearch className="search-icon" />
-          <input type="text" placeholder="Search for items..." />
+          <input
+            type="text"
+            placeholder="Search for items..."
+            onChange={(e) => handleSearch(e.target.value)}
+          />
         </div>
       </nav>
 

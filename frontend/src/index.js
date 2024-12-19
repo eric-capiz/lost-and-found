@@ -5,6 +5,7 @@ import App from "./App";
 import { AuthProvider } from "./contexts/auth/AuthContext";
 import { UserProvider } from "./contexts/user/UserContext";
 import { PostProvider } from "./contexts/post/PostContext";
+import { SearchProvider } from "./contexts/search/SearchContext";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -13,7 +14,9 @@ root.render(
     <AuthProvider>
       <UserProvider>
         <PostProvider>
-          <App />
+          <SearchProvider>
+            <App />
+          </SearchProvider>
         </PostProvider>
       </UserProvider>
     </AuthProvider>
