@@ -147,7 +147,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Update post
-router.put("/:id", verifyToken, async (req, res) => {
+router.put("/:id", verifyToken, upload, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     if (!post) {
@@ -160,37 +160,44 @@ router.put("/:id", verifyToken, async (req, res) => {
         .json({ message: "You can only update your own posts" });
     }
 
-    // Validate new images if provided
-    if (req.body.images) {
-      if (req.body.images.length > 3) {
-        return res.status(400).json({ message: "Maximum 3 images allowed" });
-      }
+    // Handle existing images
+    let updatedImages = [];
+    if (req.body.existingImages) {
+      const existingImages = JSON.parse(req.body.existingImages);
+      updatedImages = existingImages;
 
-      // Delete old images from Cloudinary
+      // Delete removed images from Cloudinary
       for (const image of post.images) {
-        await deleteFromCloudinary(image.publicId);
+        if (!existingImages.find((img) => img.publicId === image.publicId)) {
+          await deleteFromCloudinary(image.publicId);
+        }
       }
     }
 
-    // If status is being updated, update the user's counts
-    if (req.body.status && req.body.status !== post.status) {
-      const update = {};
-      if (req.body.status === "resolved") {
-        update.$inc = { resolvedCount: 1, unresolvedCount: -1 };
-      } else {
-        update.$inc = { resolvedCount: -1, unresolvedCount: 1 };
+    // Handle new images
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const result = await uploadToCloudinary(file, "posts");
+        updatedImages.push({
+          url: result.secure_url,
+          publicId: result.public_id,
+        });
       }
-      await User.findByIdAndUpdate(post.userId, update);
     }
+
+    // Update post data
+    const updateData = { ...req.body, images: updatedImages };
+    delete updateData.existingImages; // Remove existingImages from update data
 
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.id,
-      { $set: req.body },
+      { $set: updateData },
       { new: true }
     ).populate("userId", "username profilePic");
 
     res.status(200).json(updatedPost);
   } catch (err) {
+    console.error("Update error:", err);
     res.status(500).json({ error: err.message });
   }
 });
