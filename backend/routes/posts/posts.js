@@ -160,8 +160,10 @@ router.put("/:id", verifyToken, upload, async (req, res) => {
         .json({ message: "You can only update your own posts" });
     }
 
-    // Handle existing images
+    // Handle images
     let updatedImages = [];
+
+    // First handle existing images
     if (req.body.existingImages) {
       const existingImages = JSON.parse(req.body.existingImages);
       updatedImages = existingImages;
@@ -174,7 +176,7 @@ router.put("/:id", verifyToken, upload, async (req, res) => {
       }
     }
 
-    // Handle new images
+    // Then handle new uploads
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
         const result = await uploadToCloudinary(file, "posts");
@@ -185,24 +187,21 @@ router.put("/:id", verifyToken, upload, async (req, res) => {
       }
     }
 
-    // Handle tags specially
+    // Prepare update data
     let updateData = { ...req.body };
+
+    // Handle tags
     if (updateData.tags) {
       try {
-        // Parse the JSON string back into an array
         updateData.tags = JSON.parse(updateData.tags);
       } catch (e) {
-        console.error("Error parsing tags:", e);
-        // If parsing fails, split by comma as fallback
         updateData.tags = updateData.tags.split(",").map((tag) => tag.trim());
       }
     }
 
-    // Handle images
-    if (updateData.existingImages) {
-      updateData.images = JSON.parse(updateData.existingImages);
-      delete updateData.existingImages;
-    }
+    // Remove existingImages from updateData and set the final images array
+    delete updateData.existingImages;
+    updateData.images = updatedImages;
 
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.id,
