@@ -157,7 +157,7 @@ const seedDatabase = async () => {
       const unresolvedPost = await Post.create({
         userId: user._id,
         username: user.username,
-        title: `${user.username}'s ${itemTypes[1]} ${unresolvedCategory}`,
+        title: ` ${itemTypes[1]} ${unresolvedCategory}`,
         description: categoryDescriptions[unresolvedCategory][1],
         category: unresolvedCategory,
         city: "New York",
