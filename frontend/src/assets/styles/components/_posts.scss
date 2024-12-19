@@ -4,7 +4,6 @@
   background-color: #1f2937;
   border-radius: 8px;
 
-  max-width: 100%;
   margin: 0 auto;
 
   @media (min-width: 768px) {
@@ -16,9 +15,14 @@
     padding: 2rem;
     max-width: 800px;
   }
+
+  @media (min-width: 1440px) {
+    max-width: 900px;
+  }
 }
 
 .posts-container {
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
 }

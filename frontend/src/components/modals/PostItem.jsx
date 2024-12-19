@@ -3,10 +3,12 @@ import { FiX } from "react-icons/fi";
 import axios from "axios";
 import { Spinner, Alert } from "../common";
 import { AuthContext } from "../../contexts/auth/AuthContext";
+import { usePosts } from "../../contexts/post/PostContext";
 import { postService } from "../../services/postService";
 
 const PostItem = ({ isOpen, onClose }) => {
   const { updateUserCounts } = useContext(AuthContext);
+  const { addPost } = usePosts();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -63,7 +65,8 @@ const PostItem = ({ isOpen, onClose }) => {
         formDataToSend.append("images", image);
       });
 
-      await postService.createPost(formDataToSend);
+      const newPost = await postService.createPost(formDataToSend);
+      addPost(newPost);
       updateUserCounts("post", "create");
       showAlert("Post created successfully!", "success");
       setTimeout(() => {

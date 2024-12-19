@@ -2,27 +2,31 @@ import { useState, useContext } from "react";
 import { FaRegComment, FaEdit, FaTrash } from "react-icons/fa";
 import { AuthContext } from "../../contexts/auth/AuthContext";
 import { format } from "date-fns";
+import ImageModal from "../modals/ImageModal";
 
 function Post({ post }) {
   const [showComments, setShowComments] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
   const { user } = useContext(AuthContext);
 
   const isOwner = user?._id === post.userId._id;
 
+  const handleImageClick = (imageUrl) => {
+    setSelectedImage(imageUrl);
+  };
+
   const renderImages = () => {
     if (!post.images || post.images.length === 0) return null;
 
-    const imageCount = post.images.length;
-    const gridClass = `image-grid-${imageCount}`;
-
     return (
-      <div className={`post-images ${gridClass}`}>
+      <div className="post-images">
         {post.images.map((image, index) => (
           <img
             key={index}
             src={image.url}
             alt={`Post ${index + 1}`}
             className="post-image"
+            onClick={() => handleImageClick(image.url)}
           />
         ))}
       </div>
@@ -39,7 +43,7 @@ function Post({ post }) {
             className="profile-pic"
           />
           <div className="user-details">
-            <h3>{post.userId.username.toUpperCase()}</h3>
+            <h3>{post?.userId?.username?.toUpperCase()}</h3>
             <div className="post-meta">
               <div className="meta-row">
                 <span className="date">
@@ -96,6 +100,13 @@ function Post({ post }) {
           <span>Comment</span>
         </button>
       </div>
+
+      {selectedImage && (
+        <ImageModal
+          image={selectedImage}
+          onClose={() => setSelectedImage(null)}
+        />
+      )}
     </article>
   );
 }

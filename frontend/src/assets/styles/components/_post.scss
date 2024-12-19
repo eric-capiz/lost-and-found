@@ -110,43 +110,22 @@
     }
 
     .post-images {
-      margin: 1rem 0;
-      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
       gap: 0.5rem;
+      margin: 1rem 0;
+      justify-content: center;
 
       .post-image {
-        width: 100%;
+        max-width: 100%;
         height: 200px;
-        object-fit: cover;
-        border-radius: 8px;
-      }
+        object-fit: contain;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: opacity 0.2s;
 
-      // Single image
-      &.image-grid-1 {
-        display: block;
-
-        .post-image {
-          margin-bottom: 1rem;
-        }
-      }
-
-      // Two images
-      &.image-grid-2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        margin-bottom: 1rem;
-      }
-
-      // Three images
-      &.image-grid-3 {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(2, 200px);
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-
-        .post-image:first-child {
-          grid-column: 1 / 3;
+        &:hover {
+          opacity: 0.9;
         }
       }
     }
@@ -186,75 +165,7 @@
     }
   }
 
-  // Comments Section
-  .comments-section {
-    margin-top: 1rem;
-    border-top: none;
-
-    .comment {
-      display: flex;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-
-      .profile-pic {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-
-      .comment-content {
-        flex: 1;
-
-        h4 {
-          font-size: 0.875rem;
-          margin: 0;
-        }
-
-        p {
-          font-size: 0.875rem;
-          margin: 0.25rem 0;
-        }
-
-        .comment-timestamp {
-          font-size: 0.75rem;
-          color: #666;
-        }
-      }
-    }
-
-    .comment-input {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 1rem;
-
-      input {
-        flex: 1;
-        padding: 0.75rem;
-        border: none;
-        background: #f0f2f5;
-        border-radius: 20px;
-        font-size: 0.875rem;
-
-        &::placeholder {
-          color: #65676b;
-        }
-      }
-
-      button {
-        padding: 0.5rem 1rem;
-        background: #0095f6;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        font-weight: 600;
-        font-size: 0.875rem;
-      }
-    }
-  }
-
-  // Add this new section for tags
+  // Post Tags
   .post-tags {
     margin-top: 1rem;
     padding-top: 0.75rem;
@@ -318,9 +229,7 @@
 
     .post-content {
       .post-images {
-        .post-image {
-          height: 250px;
-        }
+        gap: 0.75rem;
       }
     }
   }
@@ -331,5 +240,105 @@
   .post {
     max-width: 100%;
     margin: 0 auto 2rem;
+  }
+}
+
+// Image Modal Styles
+.image-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+
+  .image-modal-content {
+    position: relative;
+    width: 95%;
+    max-width: 90vw;
+    max-height: 90vh;
+
+    img {
+      width: 100%;
+      max-height: 70vh;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+
+    .close-button {
+      position: absolute;
+      top: -3rem;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        color: #ddd;
+      }
+      @media (min-width: 768px) {
+        left: 1rem;
+      }
+      @media (min-width: 1024px) {
+        left: 8rem;
+      }
+      @media (min-width: 1440px) {
+        left: 20rem;
+      }
+      @media (min-width: 1900px) {
+        left: 30rem;
+      }
+    }
+  }
+}
+
+// Tablet breakpoint
+@media (min-width: 768px) {
+  .post-content {
+    .post-images {
+      .post-image {
+        height: 250px;
+      }
+    }
+  }
+
+  .image-modal-content {
+    width: 90%;
+
+    img {
+      max-height: 80vh;
+    }
+  }
+}
+
+// Desktop breakpoint
+@media (min-width: 1024px) {
+  .image-modal-content {
+    width: 85%;
+
+    img {
+      max-height: 85vh;
+    }
+  }
+}
+
+// Large Desktop breakpoint
+@media (min-width: 1440px) {
+  .image-modal-content {
+    width: 80%;
+
+    img {
+      max-height: 90vh;
+    }
   }
 }
