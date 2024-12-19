@@ -1,15 +1,24 @@
 import { useState, useContext } from "react";
 import { FaRegComment, FaEdit, FaTrash } from "react-icons/fa";
 import { AuthContext } from "../../contexts/auth/AuthContext";
+import { usePosts } from "../../contexts/post/PostContext";
 import { format } from "date-fns";
 import ImageModal from "../modals/ImageModal";
+import ConfirmModal from "../modals/ConfirmModal";
 
 function Post({ post }) {
   const [showComments, setShowComments] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { user } = useContext(AuthContext);
+  const { deletePost } = usePosts();
 
   const isOwner = user?._id === post.userId._id;
+
+  const handleDelete = () => {
+    deletePost(post._id);
+    setShowDeleteModal(false);
+  };
 
   const handleImageClick = (imageUrl) => {
     setSelectedImage(imageUrl);
@@ -65,7 +74,10 @@ function Post({ post }) {
             <button className="icon-button">
               <FaEdit className="edit-icon" />
             </button>
-            <button className="icon-button">
+            <button
+              className="icon-button"
+              onClick={() => setShowDeleteModal(true)}
+            >
               <FaTrash className="delete-icon" />
             </button>
           </div>
@@ -107,6 +119,14 @@ function Post({ post }) {
           onClose={() => setSelectedImage(null)}
         />
       )}
+
+      <ConfirmModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        title="Delete Post"
+        message={`Are you sure you wish to delete post: ${post.title}?`}
+      />
     </article>
   );
 }
