@@ -17,7 +17,6 @@ function Posts({ view = "all" }) {
     return <div className="error-message">{error}</div>;
   }
 
-  // Filter posts based on view
   const filteredPosts =
     view === "profile"
       ? posts // Show all posts for profile view

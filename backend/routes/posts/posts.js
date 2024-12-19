@@ -10,6 +10,7 @@ const Notification = require("../../models/notifications/Notifications");
 const { deleteFromCloudinary } = require("../../utils/cloudinary");
 const multer = require("multer");
 const { uploadToCloudinary } = require("../../utils/cloudinary");
+const jwt = require("jsonwebtoken");
 
 const upload = multer({ storage: multer.memoryStorage() }).array("images", 3); // Max 3 images
 
@@ -75,15 +76,29 @@ router.post("/", verifyToken, (req, res, next) => {
   });
 });
 
-// Get all posts
-router.get("/", verifyToken, async (req, res) => {
+// Get all posts - Modified version
+router.get("/", async (req, res) => {
   try {
     let posts = await Post.find()
       .sort({ createdAt: -1 })
-      .populate("userId", "username email");
+      .populate("userId", "username profilePic");
 
-    // If not admin and not viewing own profile, filter out resolved posts
-    if (!req.user?.isAdmin) {
+    // If user is logged in and is admin, show all posts
+    // If user is logged in but not admin, show all unresolved posts and their own resolved posts
+    // If user is not logged in, show all unresolved posts
+    if (req.headers.authorization) {
+      const token = req.headers.authorization.split(" ")[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      if (!decoded.isAdmin) {
+        posts = posts.filter(
+          (post) =>
+            post.status === "unresolved" ||
+            post.userId._id.toString() === decoded.id
+        );
+      }
+    } else {
+      // Not logged in - show only unresolved posts
       posts = posts.filter((post) => post.status === "unresolved");
     }
 
