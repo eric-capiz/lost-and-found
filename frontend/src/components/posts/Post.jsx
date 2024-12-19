@@ -19,7 +19,7 @@ function Post({ post }) {
             className="profile-pic"
           />
           <div className="user-details">
-            <h3>{post.userId.username}</h3>
+            <h3>{post.userId.username.toUpperCase()}</h3>
             <div className="post-meta">
               <span>{format(new Date(post.createdAt), "MM/dd/yyyy")}</span>
               <span>•</span>

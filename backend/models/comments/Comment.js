@@ -16,6 +16,12 @@ const CommentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    userProfilePic: {
+      url: {
+        type: String,
+        default: "",
+      },
+    },
     text: {
       type: String,
       required: true,
