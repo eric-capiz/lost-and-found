@@ -41,8 +41,26 @@ export const PostProvider = ({ children }) => {
   };
 
   // Add new post
-  const addPost = (newPost) => {
-    setPosts((prevPosts) => [newPost, ...prevPosts]);
+  const addPost = async (postData) => {
+    try {
+      const newPost = await postService.createPost(postData);
+      // Make sure we're updating the state with the complete post data
+      setPosts((prevPosts) => [
+        {
+          ...newPost,
+          userId: {
+            _id: user._id,
+            username: user.username,
+            profilePic: user.profilePic,
+          },
+        },
+        ...prevPosts,
+      ]);
+      return newPost;
+    } catch (error) {
+      console.error("Error creating post:", error);
+      throw error;
+    }
   };
 
   // Update post

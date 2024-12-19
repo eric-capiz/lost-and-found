@@ -15,8 +15,8 @@ const PostItem = ({ isOpen, onClose }) => {
     city: "",
     state: "",
     itemType: "lost",
-    category: [],
-    tags: "",
+    category: "",
+    tags: [],
     images: [],
   });
   const [selectedImages, setSelectedImages] = useState([]);
@@ -34,10 +34,21 @@ const PostItem = ({ isOpen, onClose }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    if (name === "tags") {
+      const tagsArray = value
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter((tag) => tag);
+      setFormData((prev) => ({
+        ...prev,
+        tags: tagsArray,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleImageChange = (e) => {
@@ -56,7 +67,9 @@ const PostItem = ({ isOpen, onClose }) => {
       const formDataToSend = new FormData();
 
       Object.keys(formData).forEach((key) => {
-        if (key !== "images") {
+        if (key === "tags") {
+          formDataToSend.append("tags", JSON.stringify(formData.tags));
+        } else if (key !== "images") {
           formDataToSend.append(key, formData[key]);
         }
       });
@@ -65,10 +78,24 @@ const PostItem = ({ isOpen, onClose }) => {
         formDataToSend.append("images", image);
       });
 
-      const newPost = await postService.createPost(formDataToSend);
-      addPost(newPost);
-      updateUserCounts("post", "create");
+      const newPost = await addPost(formDataToSend);
+
+      await updateUserCounts("post", "create");
+
       showAlert("Post created successfully!", "success");
+
+      setFormData({
+        title: "",
+        description: "",
+        city: "",
+        state: "",
+        itemType: "lost",
+        category: "",
+        tags: [],
+        images: [],
+      });
+      setSelectedImages([]);
+
       setTimeout(() => {
         onClose();
       }, 1500);
@@ -189,7 +216,7 @@ const PostItem = ({ isOpen, onClose }) => {
             <input
               type="text"
               name="tags"
-              value={formData.tags}
+              value={formData.tags.join(", ")}
               onChange={handleChange}
               placeholder="Enter tags separated by commas"
             />

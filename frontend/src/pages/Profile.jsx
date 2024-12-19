@@ -10,6 +10,7 @@ import { usePosts } from "../contexts/post/PostContext";
 import { Spinner } from "../components/common";
 import defaultAvatar from "../assets/images/avatar.png";
 import defaultCover from "../assets/images/maze.jpg";
+import FilterMenu from "../components/filter/FilterMenu";
 
 function Profile() {
   const location = useLocation();
@@ -18,6 +19,13 @@ function Profile() {
   const { loading: userLoading } = useContext(UserContext);
   const { user, loading: authLoading } = useContext(AuthContext);
   const { posts, loading: postsLoading } = usePosts();
+  const [isFilterMenuOpen, setFilterMenuOpen] = useState(false);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [activeFilters, setActiveFilters] = useState({
+    status: "all",
+    itemType: "all",
+    sortBy: "newest",
+  });
 
   const userPosts = posts.filter((post) => post.userId._id === user?._id);
   const resolvedPosts = userPosts.filter((post) => post.status === "resolved");
@@ -30,6 +38,30 @@ function Profile() {
 
   const openEditModal = () => setEditModalOpen(true);
   const closeEditModal = () => setEditModalOpen(false);
+
+  const handleApplyFilters = (filters) => {
+    let filtered = [...userPosts];
+
+    if (filters.status !== "all") {
+      filtered = filtered.filter((post) => post.status === filters.status);
+    }
+
+    if (filters.itemType !== "all") {
+      filtered = filtered.filter((post) => post.itemType === filters.itemType);
+    }
+
+    filtered.sort((a, b) => {
+      if (filters.sortBy === "newest") {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      } else {
+        return new Date(a.createdAt) - new Date(b.createdAt);
+      }
+    });
+
+    setFilteredPosts(filtered);
+    setActiveFilters(filters);
+    setFilterMenuOpen(false);
+  };
 
   if (authLoading || userLoading || postsLoading) {
     return (
@@ -102,11 +134,26 @@ function Profile() {
         <div className="posts-section">
           <h3>Posts ({userPosts.length})</h3>
           <div className="posts-controls">
-            <button className="filter-button">
-              <FaFilter /> Filters
-            </button>
+            <div className="filter-container">
+              <button
+                className="filter-button"
+                onClick={() => setFilterMenuOpen(!isFilterMenuOpen)}
+              >
+                <FaFilter /> Filters
+              </button>
+              {isFilterMenuOpen && (
+                <FilterMenu
+                  onApplyFilters={handleApplyFilters}
+                  initialFilters={activeFilters}
+                />
+              )}
+            </div>
           </div>
-          {userPosts.length > 0 ? (
+          {filteredPosts.length > 0 ||
+          activeFilters.status !== "all" ||
+          activeFilters.itemType !== "all" ? (
+            <Posts posts={filteredPosts} view="profile" />
+          ) : userPosts.length > 0 ? (
             <Posts posts={userPosts} view="profile" />
           ) : (
             <p>No posts found</p>
