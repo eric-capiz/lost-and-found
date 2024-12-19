@@ -203,15 +203,15 @@
       gap: 0.5rem;
 
       .tag-pill {
-        background: #374151;
+        background: #e5e7eb;
         padding: 0.25rem 0.75rem;
-        border-radius: 16px;
+        border-radius: 999px;
         font-size: 0.875rem;
-        color: #60a5fa;
-        transition: background-color 0.2s;
+        color: #4b5563;
+        cursor: pointer;
 
         &:hover {
-          background: #e4e6eb;
+          background: #d1d5db;
         }
       }
     }

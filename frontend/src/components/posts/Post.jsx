@@ -57,7 +57,7 @@ function Post({ post }) {
             <div className="tags-container">
               {post.tags.map((tag, index) => (
                 <span key={index} className="tag-pill">
-                  {tag.toUpperCase()}
+                  #{tag.toUpperCase()}
                 </span>
               ))}
             </div>
