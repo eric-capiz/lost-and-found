@@ -46,24 +46,22 @@ export const PostProvider = ({ children }) => {
   };
 
   // Update post
-  const updatePost = (updatedPost) => {
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post._id === updatedPost._id ? updatedPost : post
-      )
-    );
+  const updatePost = async (postId, formData) => {
+    try {
+      const updatedPost = await postService.updatePost(postId, formData);
+      // Refetch all posts to ensure we have fresh data
+      const freshPosts = await postService.getAllPosts();
+      setPosts(freshPosts);
+      return updatedPost;
+    } catch (error) {
+      console.error("Error updating post:", error);
+      throw error;
+    }
   };
 
   // Delete post
-  const deletePost = async (postId) => {
-    try {
-      await postService.deletePost(postId);
-      setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
-      return true;
-    } catch (error) {
-      console.error("Error deleting post:", error);
-      throw error;
-    }
+  const deletePost = (postId) => {
+    setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
   };
 
   const value = {

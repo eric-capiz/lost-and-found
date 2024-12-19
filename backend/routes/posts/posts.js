@@ -187,7 +187,8 @@ router.put("/:id", verifyToken, async (req, res) => {
       req.params.id,
       { $set: req.body },
       { new: true }
-    );
+    ).populate("userId", "username profilePic");
+
     res.status(200).json(updatedPost);
   } catch (err) {
     res.status(500).json({ error: err.message });

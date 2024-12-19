@@ -2,7 +2,7 @@ import { usePosts } from "../../contexts/post/PostContext";
 import Post from "./Post";
 import { Spinner } from "../common";
 
-function Posts({ view = "all" }) {
+function Posts({ view = "all", posts: userPosts }) {
   const { posts, loading, error } = usePosts();
 
   if (loading) {
@@ -19,8 +19,8 @@ function Posts({ view = "all" }) {
 
   const filteredPosts =
     view === "profile"
-      ? posts // Show all posts for profile view
-      : posts.filter((post) => post.status === "unresolved"); // Show only unresolved posts for home view
+      ? userPosts
+      : posts.filter((post) => post.status === "unresolved");
 
   return (
     <div className="posts-wrapper">

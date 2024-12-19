@@ -6,10 +6,13 @@ import { format } from "date-fns";
 import ImageModal from "../modals/ImageModal";
 import ConfirmModal from "../modals/ConfirmModal";
 import defaultAvatar from "../../assets/images/avatar.png";
+import EditPost from "../modals/EditPost";
+
 function Post({ post }) {
   const [showComments, setShowComments] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const { user } = useContext(AuthContext);
   const { deletePost } = usePosts();
 
@@ -71,7 +74,10 @@ function Post({ post }) {
         </div>
         {isOwner && (
           <div className="post-actions">
-            <button className="icon-button">
+            <button
+              className="icon-button"
+              onClick={() => setShowEditModal(true)}
+            >
               <FaEdit className="edit-icon" />
             </button>
             <button
@@ -126,6 +132,12 @@ function Post({ post }) {
         onConfirm={handleDelete}
         title="Delete Post"
         message={`Are you sure you wish to delete post: ${post.title}?`}
+      />
+
+      <EditPost
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        post={post}
       />
     </article>
   );
