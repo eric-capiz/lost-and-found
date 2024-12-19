@@ -1,22 +1,11 @@
-import { useState } from "react";
+import { useFilter } from "../../contexts/filter/FilterContext";
 
-const FilterMenu = ({ onApplyFilters }) => {
-  const [filters, setFilters] = useState({
-    status: "all",
-    itemType: "all",
-    sortBy: "newest",
-  });
+const FilterMenu = () => {
+  const { filters, updateFilters } = useFilter();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFilters((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleApply = () => {
-    onApplyFilters(filters);
+    updateFilters({ [name]: value });
   };
 
   return (
@@ -51,15 +40,11 @@ const FilterMenu = ({ onApplyFilters }) => {
         <label>
           Sort By:
           <select name="sortBy" value={filters.sortBy} onChange={handleChange}>
-            <option value="newest">Newest First</option>
+            <option value="recent">Newest First</option>
             <option value="oldest">Oldest First</option>
           </select>
         </label>
       </div>
-
-      <button className="apply-filters" onClick={handleApply}>
-        Apply Filters
-      </button>
     </div>
   );
 };

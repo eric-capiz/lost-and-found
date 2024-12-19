@@ -1,14 +1,32 @@
+import { useFilter } from "../../contexts/filter/FilterContext";
+
 function LeftSidebar() {
+  const { filters, updateFilters } = useFilter();
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    updateFilters({ [name]: value });
+  };
+
+  const handleQuickFilter = (type) => {
+    updateFilters({ itemType: type });
+  };
+
   return (
     <aside className="sidebar sidebar-left">
       <div className="sidebar-section">
         <h3>Categories</h3>
-        <select className="sidebar-select">
-          <option value="">Select Category</option>
+        <select
+          className="sidebar-select"
+          name="category"
+          value={filters.category}
+          onChange={handleFilterChange}
+        >
+          <option value="">All Categories</option>
           <option value="pets">Pets</option>
-          <option value="electronics">Electronics</option>
+          <option value="electronic">Electronic</option>
           <option value="jewelry">Jewelry</option>
-          <option value="accessories">Accessories</option>
+          <option value="accessory">Accessory</option>
           <option value="clothing">Clothing</option>
           <option value="documents">Documents</option>
           <option value="keys">Keys</option>
@@ -18,23 +36,46 @@ function LeftSidebar() {
 
       <div className="sidebar-section">
         <h3>Sort By</h3>
-        <select className="sidebar-select">
-          <option value="">Select Sort Option</option>
+        <select
+          className="sidebar-select"
+          name="sortBy"
+          value={filters.sortBy}
+          onChange={handleFilterChange}
+        >
           <option value="recent">Date Posted (Newest)</option>
           <option value="oldest">Date Posted (Oldest)</option>
           <option value="mostComments">Most Commented</option>
           <option value="nearMe">Near Me</option>
-          <option value="status">Status (Resolved/Unresolved)</option>
         </select>
       </div>
 
       <div className="sidebar-section quick-filters">
         <h3>Quick Filters</h3>
         <div className="filter-buttons">
-          <button className="filter-btn active">All Items</button>
-          <button className="filter-btn">Lost Items</button>
-          <button className="filter-btn">Found Items</button>
-          <button className="filter-btn">Resolved</button>
+          <button
+            className={`filter-btn ${
+              filters.itemType === "all" ? "active" : ""
+            }`}
+            onClick={() => handleQuickFilter("all")}
+          >
+            All Items
+          </button>
+          <button
+            className={`filter-btn ${
+              filters.itemType === "lost" ? "active" : ""
+            }`}
+            onClick={() => handleQuickFilter("lost")}
+          >
+            Lost Items
+          </button>
+          <button
+            className={`filter-btn ${
+              filters.itemType === "found" ? "active" : ""
+            }`}
+            onClick={() => handleQuickFilter("found")}
+          >
+            Found Items
+          </button>
         </div>
       </div>
 

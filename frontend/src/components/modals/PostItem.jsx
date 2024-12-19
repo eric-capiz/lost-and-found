@@ -202,13 +202,15 @@ const PostItem = ({ isOpen, onClose }) => {
                 }));
               }}
             >
-              <option value="">Select a category</option>
+              <option value="">All Categories</option>
+              <option value="pets">Pets</option>
               <option value="electronic">Electronic</option>
               <option value="jewelry">Jewelry</option>
-              <option value="clothing">Clothing</option>
-              <option value="pet">Pet</option>
               <option value="accessory">Accessory</option>
+              <option value="clothing">Clothing</option>
+              <option value="documents">Documents</option>
               <option value="keys">Keys</option>
+              <option value="bags">Bags & Wallets</option>
             </select>
           </label>
           <label>

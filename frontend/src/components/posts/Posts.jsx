@@ -1,11 +1,13 @@
 import { usePosts } from "../../contexts/post/PostContext";
 import { useSearch } from "../../contexts/search/SearchContext";
+import { useFilter } from "../../contexts/filter/FilterContext";
 import Post from "./Post";
 import { Spinner } from "../common";
 
 function Posts({ view = "all", posts: userPosts }) {
   const { posts, loading, error } = usePosts();
   const { searchQuery, searchPosts } = useSearch();
+  const { applyFilters } = useFilter();
 
   if (loading) {
     return (
@@ -26,21 +28,24 @@ function Posts({ view = "all", posts: userPosts }) {
       : posts.filter((post) => post.status === "unresolved");
 
   // Then apply search filter
-  const filteredPosts = searchPosts(viewFilteredPosts, searchQuery);
+  const searchFilteredPosts = searchPosts(viewFilteredPosts, searchQuery);
+
+  // Finally apply sidebar filters
+  const finalFilteredPosts = applyFilters(searchFilteredPosts);
 
   return (
     <div className="posts-wrapper">
       <div className="posts-container">
-        {filteredPosts.length === 0 ? (
+        {finalFilteredPosts.length === 0 ? (
           <div className="no-posts">
             {searchQuery
               ? "No posts found matching your search."
               : view === "profile"
               ? "You haven't created any posts yet."
-              : "No unresolved posts found."}
+              : "No posts found matching your filters."}
           </div>
         ) : (
-          filteredPosts.map((post) => <Post key={post._id} post={post} />)
+          finalFilteredPosts.map((post) => <Post key={post._id} post={post} />)
         )}
       </div>
     </div>
