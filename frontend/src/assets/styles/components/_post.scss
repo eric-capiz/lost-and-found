@@ -41,7 +41,6 @@
       }
     }
 
-    // Add post actions styles
     .post-actions {
       display: flex;
       gap: 0.5rem;
@@ -181,6 +180,39 @@
         border-radius: 6px;
         font-weight: 600;
         font-size: 0.875rem;
+      }
+    }
+  }
+
+  // Add this new section for tags
+  .post-tags {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #eee;
+
+    .tags-label {
+      font-size: 0.875rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+
+      .tag-pill {
+        background: #374151;
+        padding: 0.25rem 0.75rem;
+        border-radius: 16px;
+        font-size: 0.875rem;
+        color: #60a5fa;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background: #e4e6eb;
+        }
       }
     }
   }

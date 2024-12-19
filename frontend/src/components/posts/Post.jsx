@@ -1,28 +1,35 @@
 import { useState, useContext } from "react";
 import { FaRegComment, FaEdit, FaTrash } from "react-icons/fa";
 import { AuthContext } from "../../contexts/auth/AuthContext";
+import { format } from "date-fns";
 
 function Post({ post }) {
   const [showComments, setShowComments] = useState(false);
   const { user } = useContext(AuthContext);
 
-  const isOwner = user?._id === post.userId;
+  const isOwner = user?._id === post.userId._id;
 
   return (
     <article className="post">
       <div className="post-header">
         <div className="user-info">
           <img
-            src={post.user.profilePic}
-            alt={post.user.name}
+            src={user?.profilePic?.url}
+            alt={post.userId.username}
             className="profile-pic"
           />
           <div className="user-details">
-            <h3>{post.user.name}</h3>
+            <h3>{post.userId.username}</h3>
             <div className="post-meta">
-              <span>{post.timestamp}</span>
+              <span>{format(new Date(post.createdAt), "MM/dd/yyyy")}</span>
               <span>•</span>
-              <span>{post.location}</span>
+              <span>
+                {post.city}, {post.state}
+              </span>
+              <span>•</span>
+              <span>{post.status.toUpperCase()}</span>
+              <span>•</span>
+              <span>{post.category.toUpperCase()}</span>
             </div>
           </div>
         </div>
@@ -39,8 +46,23 @@ function Post({ post }) {
       </div>
 
       <div className="post-content">
-        <p>{post.content}</p>
-        <img src={post.image} alt="Post" className="post-image" />
+        <h2>{post.title}</h2>
+        <p>{post.description}</p>
+        {post.images && post.images.length > 0 && (
+          <img src={post.images[0].url} alt="Post" className="post-image" />
+        )}
+        {post.tags && post.tags.length > 0 && (
+          <div className="post-tags">
+            <span className="tags-label">Tags:</span>
+            <div className="tags-container">
+              {post.tags.map((tag, index) => (
+                <span key={index} className="tag-pill">
+                  {tag.toUpperCase()}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="post-footer">
@@ -53,30 +75,6 @@ function Post({ post }) {
           <span>Comment</span>
         </button>
       </div>
-
-      {showComments && (
-        <div className="comments-section">
-          {post.comments.map((comment) => (
-            <div key={comment.id} className="comment">
-              <img
-                src={comment.user.profilePic}
-                alt={comment.user.name}
-                className="profile-pic"
-              />
-              <div className="comment-content">
-                <h4>{comment.user.name}</h4>
-                <p>{comment.content}</p>
-                <span className="comment-timestamp">{comment.timestamp}</span>
-              </div>
-            </div>
-          ))}
-
-          <div className="comment-input">
-            <input type="text" placeholder="Write a comment..." />
-            <button>Post</button>
-          </div>
-        </div>
-      )}
     </article>
   );
 }

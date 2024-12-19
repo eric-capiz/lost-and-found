@@ -21,7 +21,7 @@ function Home() {
         </div>
 
         <LeftSidebar />
-        <Posts />
+        <Posts view="home" />
         <RightSidebar />
       </div>
     </>

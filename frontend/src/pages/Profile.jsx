@@ -6,6 +6,7 @@ import PostItem from "../components/modals/PostItem";
 import EditProfile from "../components/modals/EditProfile";
 import { UserContext } from "../contexts/user/UserContext";
 import { AuthContext } from "../contexts/auth/AuthContext";
+import { usePosts } from "../contexts/post/PostContext";
 import { Spinner } from "../components/common";
 import defaultAvatar from "../assets/images/avatar.png";
 import defaultCover from "../assets/images/maze.jpg";
@@ -16,6 +17,13 @@ function Profile() {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const { loading: userLoading } = useContext(UserContext);
   const { user, loading: authLoading } = useContext(AuthContext);
+  const { posts, loading: postsLoading } = usePosts();
+
+  const userPosts = posts.filter((post) => post.userId._id === user?._id);
+  const resolvedPosts = userPosts.filter((post) => post.status === "resolved");
+  const unresolvedPosts = userPosts.filter(
+    (post) => post.status === "unresolved"
+  );
 
   const openPostModal = () => setPostModalOpen(true);
   const closePostModal = () => setPostModalOpen(false);
@@ -23,7 +31,7 @@ function Profile() {
   const openEditModal = () => setEditModalOpen(true);
   const closeEditModal = () => setEditModalOpen(false);
 
-  if (authLoading || userLoading) {
+  if (authLoading || userLoading || postsLoading) {
     return (
       <div className="loading-container">
         <Spinner />
@@ -34,7 +42,7 @@ function Profile() {
   if (!user) {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
-
+  console.log("breezy", user?.profilePic?.url);
   return (
     <div className="profile-page">
       <div className="profile-info">
@@ -66,15 +74,15 @@ function Profile() {
           <div className="stats-grid">
             <div className="stat-card">
               <h4>Total Posts</h4>
-              <p>{user?.postCount || 0}</p>
+              <p>{userPosts.length}</p>
             </div>
             <div className="stat-card">
               <h4>Unresolved</h4>
-              <p>{user?.unresolvedCount || 0}</p>
+              <p>{unresolvedPosts.length}</p>
             </div>
             <div className="stat-card">
               <h4>Resolved</h4>
-              <p>{user?.resolvedCount || 0}</p>
+              <p>{resolvedPosts.length}</p>
             </div>
             <div className="stat-card">
               <h4>Location</h4>
@@ -92,13 +100,17 @@ function Profile() {
         </div>
 
         <div className="posts-section">
-          <h3>Posts</h3>
+          <h3>Posts ({userPosts.length})</h3>
           <div className="posts-controls">
             <button className="filter-button">
               <FaFilter /> Filters
             </button>
           </div>
-          <Posts />
+          {userPosts.length > 0 ? (
+            <Posts posts={userPosts} view="profile" />
+          ) : (
+            <p>No posts found</p>
+          )}
         </div>
       </div>
       <PostItem isOpen={isPostModalOpen} onClose={closePostModal} />

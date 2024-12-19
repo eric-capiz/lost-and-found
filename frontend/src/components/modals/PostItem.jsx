@@ -166,16 +166,13 @@ const PostItem = ({ isOpen, onClose }) => {
               name="category"
               value={formData.category}
               onChange={(e) => {
-                const selectedOptions = Array.from(
-                  e.target.selectedOptions
-                ).map((option) => option.value);
                 setFormData((prev) => ({
                   ...prev,
-                  category: selectedOptions,
+                  category: e.target.value,
                 }));
               }}
-              multiple
             >
+              <option value="">Select a category</option>
               <option value="electronic">Electronic</option>
               <option value="jewelry">Jewelry</option>
               <option value="clothing">Clothing</option>
