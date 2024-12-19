@@ -91,7 +91,9 @@ function Post({ post }) {
       </div>
 
       <div className="post-content">
-        <h2>{post.title}</h2>
+        <h2>
+          {post.itemType.toUpperCase()}: {post.title}
+        </h2>
         <p>{post.description}</p>
         {renderImages()}
         {post.tags && post.tags.length > 0 && (
