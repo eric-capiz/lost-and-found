@@ -1,10 +1,8 @@
-import axios from "axios";
-axios.defaults.baseURL =
-  process.env.REACT_APP_API_URL || "http://localhost:5000";
+import api from "../config/axiosConfig";
 
 export const userService = {
   updateProfile: async (formData) => {
-    const response = await axios.put("/api/users/update", formData, {
+    const response = await api.put("/api/users/update", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -13,7 +11,7 @@ export const userService = {
   },
 
   getUserProfile: async (userId) => {
-    const response = await axios.get(`/api/users/${userId}`);
+    const response = await api.get(`/api/users/${userId}`);
     return response.data;
   },
 
