@@ -20,7 +20,9 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://lost-and-found-rosy.vercel.app/", // Add your Vercel domain
+      "https://lost-and-found-rosy.vercel.app",
+      "https://lost-and-found-git-main-eric-capizs-projects.vercel.app",
+      "https://lost-and-found-a07korgs9-eric-capizs-projects.vercel.app",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
