@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { FaTrash } from "react-icons/fa";
 import { useNotifications } from "../../contexts/notification/NotificationContext";
+import { useNavigate } from "react-router-dom";
 
 const NotificationMenu = ({ userId, onClose }) => {
   const {
@@ -11,6 +12,7 @@ const NotificationMenu = ({ userId, onClose }) => {
     loading,
   } = useNotifications();
   const [notifications, setNotifications] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -36,6 +38,18 @@ const NotificationMenu = ({ userId, onClose }) => {
     }
   };
 
+  const handleNotificationClick = (notification) => {
+    navigate("/", {
+      state: {
+        scrollToPostId: notification.postId._id,
+        openComments: true,
+        highlightCommentId: notification.commentId._id,
+        includeResolved: true,
+      },
+    });
+    onClose();
+  };
+
   return (
     <div className="notification-menu">
       <div className="notification-header">
@@ -51,7 +65,11 @@ const NotificationMenu = ({ userId, onClose }) => {
 
             return (
               <div key={notification._id} className="notification-item">
-                <div className="notification-content">
+                <div
+                  className="notification-content"
+                  onClick={() => handleNotificationClick(notification)}
+                  style={{ cursor: "pointer" }}
+                >
                   <p>
                     <strong>{username}</strong> left a comment on your post:{" "}
                     <strong>{notification.postId.title}</strong>
@@ -67,7 +85,10 @@ const NotificationMenu = ({ userId, onClose }) => {
                 </div>
                 <button
                   className="delete-notification"
-                  onClick={() => handleDeleteNotification(notification._id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteNotification(notification._id);
+                  }}
                 >
                   <FaTrash />
                 </button>

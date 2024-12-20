@@ -9,8 +9,10 @@ import ConfirmModal from "../modals/ConfirmModal";
 import defaultAvatar from "../../assets/images/avatar.png";
 import EditPost from "../modals/EditPost";
 
-function Post({ post }) {
-  const [isCommentsVisible, setIsCommentsVisible] = useState(false);
+function Post({ post, id, openComments, highlightCommentId }) {
+  const [isCommentsVisible, setIsCommentsVisible] = useState(
+    openComments || false
+  );
   const [hasLoadedComments, setHasLoadedComments] = useState(false);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
@@ -30,19 +32,39 @@ function Post({ post }) {
   const isOwner = user?._id === post.userId._id;
 
   useEffect(() => {
-    if (isCommentsVisible && !hasLoadedComments) {
-      const fetchComments = async () => {
-        try {
-          const fetchedComments = await getComments(post._id);
-          setComments(fetchedComments);
-          setHasLoadedComments(true);
-        } catch (error) {
-          console.error("Error fetching comments:", error);
-        }
-      };
-      fetchComments();
+    console.log("Post mounted with ID:", id);
+    if (openComments) {
+      setIsCommentsVisible(true);
     }
-  }, [isCommentsVisible, hasLoadedComments, post._id, getComments]);
+  }, [id, openComments]);
+
+  useEffect(() => {
+    if (openComments) {
+      setIsCommentsVisible(true);
+      if (!hasLoadedComments) {
+        const fetchComments = async () => {
+          try {
+            const fetchedComments = await getComments(post._id);
+            setComments(fetchedComments);
+            setHasLoadedComments(true);
+
+            if (highlightCommentId) {
+              setTimeout(() => {
+                const commentElement =
+                  document.getElementById(highlightCommentId);
+                if (commentElement) {
+                  commentElement.scrollIntoView({ behavior: "smooth" });
+                }
+              }, 100);
+            }
+          } catch (error) {
+            console.error("Error fetching comments:", error);
+          }
+        };
+        fetchComments();
+      }
+    }
+  }, [openComments, highlightCommentId]);
 
   const handleDelete = () => {
     deletePost(post._id);
@@ -98,7 +120,7 @@ function Post({ post }) {
   };
 
   return (
-    <article className="post">
+    <article className="post" id={id}>
       <div className="post-header">
         <div className="user-info">
           <img
@@ -203,7 +225,15 @@ function Post({ post }) {
               <div className="loading-comments">Loading comments...</div>
             ) : comments.length > 0 ? (
               comments.map((comment) => (
-                <div key={comment._id} className="comment">
+                <div
+                  key={comment._id}
+                  id={comment._id}
+                  className={`comment ${
+                    comment._id === highlightCommentId
+                      ? "highlighted-comment"
+                      : ""
+                  }`}
+                >
                   <div className="comment-header">
                     <div className="comment-user-info-wrapper">
                       <img
