@@ -46,11 +46,24 @@ export const NotificationProvider = ({ children }) => {
     }
   };
 
+  const deleteNotification = async (notificationId) => {
+    setLoading(true);
+    try {
+      await notificationService.deleteNotification(notificationId);
+      setLoading(false);
+    } catch (err) {
+      setError(err.response?.data?.message || "Error deleting notification");
+      setLoading(false);
+      throw err;
+    }
+  };
+
   const value = {
     loading,
     error,
     getUserNotifications,
     markNotificationsAsViewed,
+    deleteNotification,
   };
 
   return (

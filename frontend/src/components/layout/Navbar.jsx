@@ -13,6 +13,7 @@ import {
 } from "react-icons/fi";
 import AuthModal from "../modals/AuthModal";
 import PostItem from "../modals/PostItem";
+import NotificationMenu from "../notification/NotificationMenu";
 
 function Navbar() {
   const { isAuthenticated, logout, user, loading } = useContext(AuthContext);
@@ -20,6 +21,7 @@ function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const debounce = (func, wait) => {
     let timeout;
@@ -123,11 +125,21 @@ function Navbar() {
             <>
               <span onClick={() => setIsPostModalOpen(true)}>Post Item</span>
               <div className="icon-wrapper">
-                <FiBell />
-                {user?.notificationCount > 0 && (
-                  <span className="notification-badge">
-                    {user.notificationCount}
-                  </span>
+                <button
+                  onClick={() => setShowNotifications(!showNotifications)}
+                >
+                  <FiBell />
+                  {user?.notificationCount > 0 && (
+                    <span className="notification-badge">
+                      {user.notificationCount}
+                    </span>
+                  )}
+                </button>
+                {showNotifications && (
+                  <NotificationMenu
+                    userId={user._id}
+                    onClose={() => setShowNotifications(false)}
+                  />
                 )}
               </div>
               <Link to="/profile" className="user-profile">
