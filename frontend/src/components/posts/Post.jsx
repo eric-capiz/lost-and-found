@@ -25,6 +25,7 @@ function Post({ post }) {
     deleteComment,
     loading: commentsLoading,
   } = useComments();
+  const [localCommentCount, setLocalCommentCount] = useState(post.commentCount);
 
   const isOwner = user?._id === post.userId._id;
 
@@ -78,6 +79,7 @@ function Post({ post }) {
       const addedComment = await addComment(post._id, newComment.trim());
       setComments((prevComments) => [addedComment, ...prevComments]);
       setNewComment(""); // Clear input after successful comment
+      setLocalCommentCount((prev) => prev + 1); // Increment comment count
     } catch (error) {
       console.error("Error adding comment:", error);
     }
@@ -89,6 +91,7 @@ function Post({ post }) {
       setComments((prevComments) =>
         prevComments.filter((comment) => comment._id !== commentId)
       );
+      setLocalCommentCount((prev) => prev - 1); // Decrement comment count
     } catch (error) {
       console.error("Error deleting comment:", error);
     }
@@ -160,7 +163,7 @@ function Post({ post }) {
       </div>
 
       <div className="post-footer">
-        <span className="comment-count">{post.commentCount} Comments</span>
+        <span className="comment-count">{localCommentCount} Comments</span>
         <button
           className="comment-button"
           onClick={() => setIsCommentsVisible(!isCommentsVisible)}
