@@ -83,7 +83,7 @@ const seedDatabase = async () => {
 
     // Create passwords
     const adminPassword = await bcrypt.hash("admin", 10);
-    const regularPassword = await bcrypt.hash("demo", 10);
+    const regularPassword = await bcrypt.hash("password123", 10);
 
     // Create admin user with avatar
     const adminUser = await User.create({
