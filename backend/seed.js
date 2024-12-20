@@ -7,153 +7,160 @@ const bcrypt = require("bcryptjs");
 require("dotenv").config();
 
 // Categories array
-const categories = ["electronics", "jewelry", "clothing", "pets", "other"];
+const categories = [
+  "pets",
+  "electronic",
+  "jewelry",
+  "accessory",
+  "clothing",
+  "documents",
+  "keys",
+  "bags",
+];
 
 const seedDatabase = async () => {
   try {
-    // First connect to MongoDB
-    console.log("Connecting to MongoDB...");
     await mongoose.connect(process.env.MONGO_URL);
-    console.log("Connected to MongoDB successfully");
-
-    console.log("Starting database seeding...");
+    console.log("Connected to MongoDB");
 
     // Clear existing data
-    console.log("Clearing existing data...");
-    await Promise.all([
-      User.deleteMany({}),
-      Post.deleteMany({}),
-      Comment.deleteMany({}),
-      Notification.deleteMany({}),
-    ]);
-    console.log("Existing data cleared");
+    await User.deleteMany({});
+    await Post.deleteMany({});
+    await Comment.deleteMany({});
+    await Notification.deleteMany({});
 
     // Create admin user
-    console.log("Creating admin user...");
     const adminUser = await User.create({
       username: "admin",
-      email: "admin@example.com",
-      password: bcrypt.hashSync("admin", 10),
+      email: "admin@admin.com",
+      password: await bcrypt.hash("admin", 10),
       isAdmin: true,
-      city: "New York",
-      state: "NY",
       profilePic: {
         url: `https://picsum.photos/200/200?random=${Math.random()}`,
         publicId: `admin_avatar_${Math.random()}`,
       },
     });
 
-    // Create regular users (1-6)
-    console.log("Creating regular users...");
-    const users = await User.create([
-      {
+    // Create regular users
+    const regularUsers = await Promise.all([
+      User.create({
         username: "user1",
-        email: "user1@example.com",
-        password: bcrypt.hashSync("password123", 10),
-        city: "Los Angeles",
-        state: "CA",
+        email: "user1@test.com",
+        password: await bcrypt.hash("password123", 10),
+        city: "New York",
+        state: "NY",
         profilePic: {
           url: `https://picsum.photos/200/200?random=${Math.random()}`,
           publicId: `user_avatar_${Math.random()}`,
         },
-      },
-      {
+      }),
+      User.create({
         username: "user2",
-        email: "user2@example.com",
-        password: bcrypt.hashSync("password123", 10),
+        email: "user2@test.com",
+        password: await bcrypt.hash("password123", 10),
         city: "Chicago",
         state: "IL",
         profilePic: {
           url: `https://picsum.photos/200/200?random=${Math.random()}`,
           publicId: `user_avatar_${Math.random()}`,
         },
-      },
-      {
+      }),
+      User.create({
         username: "user3",
-        email: "user3@example.com",
-        password: bcrypt.hashSync("password123", 10),
-        city: "Houston",
-        state: "TX",
-        profilePic: {
-          url: `https://picsum.photos/200/200?random=${Math.random()}`,
-          publicId: `user_avatar_${Math.random()}`,
-        },
-      },
-      {
-        username: "user4",
-        email: "user4@example.com",
-        password: bcrypt.hashSync("password123", 10),
-        city: "Phoenix",
-        state: "AZ",
-        profilePic: {
-          url: `https://picsum.photos/200/200?random=${Math.random()}`,
-          publicId: `user_avatar_${Math.random()}`,
-        },
-      },
-      {
-        username: "user5",
-        email: "user5@example.com",
-        password: bcrypt.hashSync("password123", 10),
-        city: "Philadelphia",
-        state: "PA",
-        profilePic: {
-          url: `https://picsum.photos/200/200?random=${Math.random()}`,
-          publicId: `user_avatar_${Math.random()}`,
-        },
-      },
-      {
-        username: "breezy",
-        email: "breezy@example.com",
-        password: bcrypt.hashSync("password123", 10),
+        email: "user3@test.com",
+        password: await bcrypt.hash("password123", 10),
         city: "Miami",
         state: "FL",
         profilePic: {
           url: `https://picsum.photos/200/200?random=${Math.random()}`,
           publicId: `user_avatar_${Math.random()}`,
         },
-      },
+      }),
+      User.create({
+        username: "breezy",
+        email: "breezy@test.com",
+        password: await bcrypt.hash("password123", 10),
+        city: "Los Angeles",
+        state: "CA",
+        profilePic: {
+          url: `https://picsum.photos/200/200?random=${Math.random()}`,
+          publicId: `user_avatar_${Math.random()}`,
+        },
+      }),
     ]);
 
-    // Create 5 posts for breezy only
-    console.log("Creating posts for breezy...");
-    const breezyUser = users[5]; // breezy is the last user in the array
-    const posts = [];
+    console.log("Created users");
 
-    for (let i = 0; i < 5; i++) {
-      const post = await Post.create({
-        userId: breezyUser._id,
-        username: breezyUser.username,
-        title: `${categories[i].toUpperCase()}`,
-        description: `This is a test post ${i + 1} description`,
-        category: categories[i],
-        itemType: ["lost", "found"][i % 2],
-        status: ["unresolved", "resolved"][i % 2],
-        city: breezyUser.city,
-        state: breezyUser.state,
-        tags: ["test", `tag${i + 1}`],
-        images: [
-          {
-            url: `https://picsum.photos/400/300?random=${Math.random()}`,
-            publicId: `seed_image_${Math.random()}`,
-          },
-        ],
-        commentCount: 0,
+    // Create 3 posts for each regular user
+    for (const user of regularUsers) {
+      // Create posts
+      const userPosts = await Promise.all([
+        Post.create({
+          userId: user._id,
+          username: user.username,
+          title: "Lost Item",
+          description: "Test lost item post",
+          category: categories[0],
+          city: user.city,
+          state: user.state,
+          itemType: "lost",
+          status: "unresolved",
+          images: [
+            {
+              url: `https://picsum.photos/400/300?random=${Math.random()}`,
+              publicId: `seed_image_${Math.random()}`,
+            },
+          ],
+        }),
+        Post.create({
+          userId: user._id,
+          username: user.username,
+          title: "Found Item",
+          description: "Test found item post",
+          category: categories[1],
+          city: user.city,
+          state: user.state,
+          itemType: "found",
+          status: "resolved",
+          images: [
+            {
+              url: `https://picsum.photos/400/300?random=${Math.random()}`,
+              publicId: `seed_image_${Math.random()}`,
+            },
+          ],
+        }),
+        Post.create({
+          userId: user._id,
+          username: user.username,
+          title: "Another Lost Item",
+          description: "Another test lost item post",
+          category: categories[2],
+          city: user.city,
+          state: user.state,
+          itemType: "lost",
+          status: "unresolved",
+          images: [
+            {
+              url: `https://picsum.photos/400/300?random=${Math.random()}`,
+              publicId: `seed_image_${Math.random()}`,
+            },
+          ],
+        }),
+      ]);
+
+      // Update user's post counts
+      await User.findByIdAndUpdate(user._id, {
+        postCount: 3,
+        resolvedCount: 1,
+        unresolvedCount: 2,
       });
-      posts.push(post);
-    }
 
-    // Update breezy's post counts
-    await User.findByIdAndUpdate(breezyUser._id, {
-      postCount: 5,
-      resolvedCount: Math.ceil(5 / 2),
-      unresolvedCount: Math.floor(5 / 2),
-    });
-
-    // Create comments and notifications
-    console.log("Creating comments and notifications...");
-    for (const post of posts) {
-      for (let i = 0; i < 5; i++) {
-        const commenter = users[i]; // users[0] through users[4] (excluding breezy)
+      // For each post, create one comment from a different user
+      for (const post of userPosts) {
+        // Get a random user that isn't the post owner
+        const commenter = regularUsers.find(
+          (u) => u._id.toString() !== post.userId.toString()
+        );
 
         // Create comment
         const comment = await Comment.create({
@@ -161,12 +168,10 @@ const seedDatabase = async () => {
           userId: commenter._id,
           username: commenter.username,
           userProfilePic: commenter.profilePic,
-          text: `Comment ${i + 1} on post ${post.title} from ${
-            commenter.username
-          }`,
+          text: `Test comment from ${commenter.username}`,
         });
 
-        // Create notification
+        // Create notification since commenter isn't post owner
         await Notification.create({
           userId: post.userId,
           postId: post._id,
@@ -178,15 +183,15 @@ const seedDatabase = async () => {
         await Post.findByIdAndUpdate(post._id, {
           $inc: { commentCount: 1 },
         });
+
+        // Update notification count for post owner
+        await User.findByIdAndUpdate(post.userId, {
+          $inc: { notificationCount: 1 },
+        });
       }
     }
 
-    // Update breezy's notification count
-    await User.findByIdAndUpdate(breezyUser._id, {
-      $inc: { notificationCount: 25 }, // 5 comments * 5 posts
-    });
-
-    console.log("Database seeded successfully");
+    console.log("Database seeded successfully!");
 
     // Log final counts
     const userCount = await User.countDocuments();
@@ -194,11 +199,13 @@ const seedDatabase = async () => {
     const commentCount = await Comment.countDocuments();
     const notificationCount = await Notification.countDocuments();
 
-    console.log(`Final counts:
-    Users: ${userCount} (should be 7)
-    Posts: ${postCount} (should be 5)
-    Comments: ${commentCount} (should be 25)
-    Notifications: ${notificationCount} (should be 25)`);
+    console.log(`
+      Final counts:
+      Users: ${userCount} (4 regular + 1 admin = 5)
+      Posts: ${postCount} (4 users × 3 posts = 12)
+      Comments: ${commentCount} (12 posts × 1 comment = 12) 
+      Notifications: ${notificationCount} (12 comments = 12)
+    `);
   } catch (error) {
     console.error("Error seeding database:", error);
   } finally {
@@ -208,6 +215,4 @@ const seedDatabase = async () => {
   }
 };
 
-// Execute the seed function
-console.log("Starting seed script...");
 seedDatabase();
