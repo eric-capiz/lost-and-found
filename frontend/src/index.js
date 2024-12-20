@@ -5,6 +5,7 @@ import App from "./App";
 import { AuthProvider } from "./contexts/auth/AuthContext";
 import { UserProvider } from "./contexts/user/UserContext";
 import { PostProvider } from "./contexts/post/PostContext";
+import { CommentProvider } from "./contexts/comment/CommentContext";
 import { SearchProvider } from "./contexts/search/SearchContext";
 import { FilterProvider } from "./contexts/filter/FilterContext";
 import reportWebVitals from "./reportWebVitals";
@@ -15,11 +16,13 @@ root.render(
     <AuthProvider>
       <UserProvider>
         <PostProvider>
-          <SearchProvider>
-            <FilterProvider>
-              <App />
-            </FilterProvider>
-          </SearchProvider>
+          <CommentProvider>
+            <SearchProvider>
+              <FilterProvider>
+                <App />
+              </FilterProvider>
+            </SearchProvider>
+          </CommentProvider>
         </PostProvider>
       </UserProvider>
     </AuthProvider>

@@ -200,9 +200,20 @@
 
   // Comments Section
   .comments-section {
+    display: none;
     margin-top: 1rem;
     padding-top: 1rem;
     border-top: 1px solid #eee;
+
+    &.show {
+      display: block;
+    }
+
+    .loading-comments {
+      text-align: center;
+      padding: 1rem;
+      color: #666;
+    }
 
     .comment {
       padding: 1rem;

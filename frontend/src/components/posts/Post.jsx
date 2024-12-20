@@ -1,7 +1,8 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { FaRegComment, FaEdit, FaTrash } from "react-icons/fa";
 import { AuthContext } from "../../contexts/auth/AuthContext";
 import { usePosts } from "../../contexts/post/PostContext";
+import { useComments } from "../../contexts/comment/CommentContext";
 import { format } from "date-fns";
 import ImageModal from "../modals/ImageModal";
 import ConfirmModal from "../modals/ConfirmModal";
@@ -9,14 +10,32 @@ import defaultAvatar from "../../assets/images/avatar.png";
 import EditPost from "../modals/EditPost";
 
 function Post({ post }) {
-  const [showComments, setShowComments] = useState(false);
+  const [isCommentsVisible, setIsCommentsVisible] = useState(false);
+  const [hasLoadedComments, setHasLoadedComments] = useState(false);
+  const [comments, setComments] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const { user } = useContext(AuthContext);
   const { deletePost } = usePosts();
+  const { getComments, loading: commentsLoading } = useComments();
 
   const isOwner = user?._id === post.userId._id;
+
+  useEffect(() => {
+    if (isCommentsVisible && !hasLoadedComments) {
+      const fetchComments = async () => {
+        try {
+          const fetchedComments = await getComments(post._id);
+          setComments(fetchedComments);
+          setHasLoadedComments(true);
+        } catch (error) {
+          console.error("Error fetching comments:", error);
+        }
+      };
+      fetchComments();
+    }
+  }, [isCommentsVisible, hasLoadedComments, post._id, getComments]);
 
   const handleDelete = () => {
     deletePost(post._id);
@@ -114,7 +133,7 @@ function Post({ post }) {
         <span className="comment-count">{post.commentCount} Comments</span>
         <button
           className="comment-button"
-          onClick={() => setShowComments(!showComments)}
+          onClick={() => setIsCommentsVisible(!isCommentsVisible)}
         >
           <FaRegComment className="comment-icon" />
           <span>Comment</span>
@@ -128,40 +147,43 @@ function Post({ post }) {
         />
       )}
       {/* Comments Section */}
-      {showComments && (
-        <div className="comments-section">
-          {post.comments && post.comments.length > 0 ? (
-            post.comments.map((comment) => (
-              <div key={comment._id} className="comment">
-                <div className="comment-header">
-                  <img
-                    src={comment.userId?.profilePic?.url || defaultAvatar}
-                    alt={comment.userId?.username}
-                    className="comment-profile-pic"
-                  />
-                  <div className="comment-user-info">
-                    <h4>{comment.userId?.username}</h4>
-                    <span className="comment-timestamp">
-                      {format(new Date(comment.createdAt), "MM/dd/yyyy")}
-                    </span>
+      <div className={`comments-section ${isCommentsVisible ? "show" : ""}`}>
+        {isCommentsVisible && (
+          <>
+            {commentsLoading ? (
+              <div className="loading-comments">Loading comments...</div>
+            ) : comments.length > 0 ? (
+              comments.map((comment) => (
+                <div key={comment._id} className="comment">
+                  <div className="comment-header">
+                    <img
+                      src={comment.userProfilePic?.url || defaultAvatar}
+                      alt={comment.username}
+                      className="comment-profile-pic"
+                    />
+                    <div className="comment-user-info">
+                      <h4>{comment.username}</h4>
+                      <span className="comment-timestamp">
+                        {format(new Date(comment.createdAt), "MM/dd/yyyy")}
+                      </span>
+                    </div>
                   </div>
+                  <p className="comment-text">{comment.text}</p>
                 </div>
-                <p className="comment-text">{comment.text}</p>
-              </div>
-            ))
-          ) : (
-            <p className="no-comments">
-              No comments yet. Be the first to comment!
-            </p>
-          )}
+              ))
+            ) : (
+              <p className="no-comments">
+                No comments yet. Be the first to comment!
+              </p>
+            )}
 
-          {/* Comment Input - we'll add functionality later */}
-          <div className="comment-input">
-            <input type="text" placeholder="Write a comment..." disabled />
-            <button disabled>Post</button>
-          </div>
-        </div>
-      )}
+            <div className="comment-input">
+              <input type="text" placeholder="Write a comment..." disabled />
+              <button disabled>Post</button>
+            </div>
+          </>
+        )}
+      </div>
 
       <ConfirmModal
         isOpen={showDeleteModal}
