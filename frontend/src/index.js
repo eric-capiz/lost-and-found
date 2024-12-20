@@ -9,6 +9,7 @@ import { CommentProvider } from "./contexts/comment/CommentContext";
 import { SearchProvider } from "./contexts/search/SearchContext";
 import { FilterProvider } from "./contexts/filter/FilterContext";
 import reportWebVitals from "./reportWebVitals";
+import { NotificationProvider } from "./contexts/notification/NotificationContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -17,11 +18,13 @@ root.render(
       <UserProvider>
         <PostProvider>
           <CommentProvider>
-            <SearchProvider>
-              <FilterProvider>
-                <App />
-              </FilterProvider>
-            </SearchProvider>
+            <NotificationProvider>
+              <SearchProvider>
+                <FilterProvider>
+                  <App />
+                </FilterProvider>
+              </SearchProvider>
+            </NotificationProvider>
           </CommentProvider>
         </PostProvider>
       </UserProvider>

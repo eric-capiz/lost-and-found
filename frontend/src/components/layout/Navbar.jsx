@@ -124,7 +124,11 @@ function Navbar() {
               <span onClick={() => setIsPostModalOpen(true)}>Post Item</span>
               <div className="icon-wrapper">
                 <FiBell />
-                <span className="notification-badge">3</span>
+                {user?.notificationCount > 0 && (
+                  <span className="notification-badge">
+                    {user.notificationCount}
+                  </span>
+                )}
               </div>
               <Link to="/profile" className="user-profile">
                 {user?.profilePic?.url ? (
