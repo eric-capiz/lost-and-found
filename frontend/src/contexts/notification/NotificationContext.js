@@ -1,5 +1,6 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { notificationService } from "../../services/notificationService";
+import { AuthContext } from "../auth/AuthContext";
 
 const NotificationContext = createContext();
 
@@ -17,6 +18,30 @@ export const NotificationProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [notificationCount, setNotificationCount] = useState(0);
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchInitialNotifications = async () => {
+      if (user?._id) {
+        setLoading(true);
+        try {
+          const notifications = await notificationService.getUserNotifications(
+            user._id
+          );
+          const unviewedCount = notifications.filter((n) => !n.viewed).length;
+          setNotificationCount(unviewedCount);
+          setLoading(false);
+        } catch (err) {
+          setError(
+            err.response?.data?.message || "Error fetching notifications"
+          );
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchInitialNotifications();
+  }, [user?._id]);
 
   const getUserNotifications = async (userId) => {
     setLoading(true);
@@ -25,7 +50,6 @@ export const NotificationProvider = ({ children }) => {
         userId
       );
       setLoading(false);
-      // Update notification count based on unviewed notifications
       const unviewedCount = notifications.filter((n) => !n.viewed).length;
       setNotificationCount(unviewedCount);
       return notifications;
@@ -40,7 +64,7 @@ export const NotificationProvider = ({ children }) => {
     setLoading(true);
     try {
       await notificationService.markNotificationsAsViewed(userId);
-      setNotificationCount(0); // Reset count when all are marked as viewed
+      setNotificationCount(0);
       setLoading(false);
     } catch (err) {
       setError(
@@ -69,7 +93,6 @@ export const NotificationProvider = ({ children }) => {
     setLoading(true);
     try {
       await notificationService.deleteNotification(notificationId);
-      // Decrease notification count if the deleted notification was unviewed
       setNotificationCount((prev) => Math.max(0, prev - 1));
       setLoading(false);
     } catch (err) {

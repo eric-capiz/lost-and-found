@@ -126,6 +126,21 @@ function Post({ post, id, openComments, highlightCommentId }) {
     }
   };
 
+  const handleCommentButtonClick = async () => {
+    const newVisibility = !isCommentsVisible;
+    setIsCommentsVisible(newVisibility);
+
+    if (newVisibility && !hasLoadedComments) {
+      try {
+        const fetchedComments = await getComments(post._id);
+        setComments(fetchedComments);
+        setHasLoadedComments(true);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    }
+  };
+
   return (
     <article className="post" id={id}>
       <div className="post-header">
@@ -193,10 +208,7 @@ function Post({ post, id, openComments, highlightCommentId }) {
 
       <div className="post-footer">
         <span className="comment-count">{localCommentCount} Comments</span>
-        <button
-          className="comment-button"
-          onClick={() => setIsCommentsVisible(!isCommentsVisible)}
-        >
+        <button className="comment-button" onClick={handleCommentButtonClick}>
           <FaRegComment className="comment-icon" />
           <span>Comment</span>
         </button>
