@@ -28,15 +28,22 @@ function Post({ post, id, openComments, highlightCommentId }) {
     loading: commentsLoading,
   } = useComments();
   const [localCommentCount, setLocalCommentCount] = useState(post.commentCount);
+  const [activeHighlightId, setActiveHighlightId] =
+    useState(highlightCommentId);
 
   const isOwner = user?._id === post.userId._id;
 
   useEffect(() => {
-    console.log("Post mounted with ID:", id);
     if (openComments) {
       setIsCommentsVisible(true);
     }
   }, [id, openComments]);
+
+  useEffect(() => {
+    if (highlightCommentId) {
+      setActiveHighlightId(highlightCommentId);
+    }
+  }, [highlightCommentId]);
 
   useEffect(() => {
     if (openComments) {
@@ -48,10 +55,10 @@ function Post({ post, id, openComments, highlightCommentId }) {
             setComments(fetchedComments);
             setHasLoadedComments(true);
 
-            if (highlightCommentId) {
+            if (activeHighlightId) {
               setTimeout(() => {
                 const commentElement =
-                  document.getElementById(highlightCommentId);
+                  document.getElementById(activeHighlightId);
                 if (commentElement) {
                   commentElement.scrollIntoView({ behavior: "smooth" });
                 }
@@ -64,7 +71,7 @@ function Post({ post, id, openComments, highlightCommentId }) {
         fetchComments();
       }
     }
-  }, [openComments, highlightCommentId]);
+  }, [openComments, activeHighlightId]);
 
   const handleDelete = () => {
     deletePost(post._id);
@@ -224,42 +231,44 @@ function Post({ post, id, openComments, highlightCommentId }) {
             {commentsLoading && !comments.length ? (
               <div className="loading-comments">Loading comments...</div>
             ) : comments.length > 0 ? (
-              comments.map((comment) => (
-                <div
-                  key={comment._id}
-                  id={comment._id}
-                  className={`comment ${
-                    comment._id === highlightCommentId
-                      ? "highlighted-comment"
-                      : ""
-                  }`}
-                >
-                  <div className="comment-header">
-                    <div className="comment-user-info-wrapper">
-                      <img
-                        src={comment.userProfilePic?.url || defaultAvatar}
-                        alt={comment.username}
-                        className="comment-profile-pic"
-                      />
-                      <div className="comment-user-info">
-                        <h4>{comment.username}</h4>
-                        <span className="comment-timestamp">
-                          {format(new Date(comment.createdAt), "MM/dd/yyyy")}
-                        </span>
+              comments.map((comment) => {
+                return (
+                  <div
+                    key={comment._id}
+                    id={comment._id}
+                    className={`comment ${
+                      comment._id === activeHighlightId
+                        ? "highlighted-comment"
+                        : ""
+                    }`}
+                  >
+                    <div className="comment-header">
+                      <div className="comment-user-info-wrapper">
+                        <img
+                          src={comment.userProfilePic?.url || defaultAvatar}
+                          alt={comment.username}
+                          className="comment-profile-pic"
+                        />
+                        <div className="comment-user-info">
+                          <h4>{comment.username}</h4>
+                          <span className="comment-timestamp">
+                            {format(new Date(comment.createdAt), "MM/dd/yyyy")}
+                          </span>
+                        </div>
                       </div>
+                      {(user?._id === comment.userId || isOwner) && (
+                        <button
+                          className="delete-comment-button"
+                          onClick={() => handleDeleteComment(comment._id)}
+                        >
+                          <FaTrash />
+                        </button>
+                      )}
                     </div>
-                    {(user?._id === comment.userId || isOwner) && (
-                      <button
-                        className="delete-comment-button"
-                        onClick={() => handleDeleteComment(comment._id)}
-                      >
-                        <FaTrash />
-                      </button>
-                    )}
+                    <p className="comment-text">{comment.text}</p>
                   </div>
-                  <p className="comment-text">{comment.text}</p>
-                </div>
-              ))
+                );
+              })
             ) : (
               <p className="no-comments">
                 No comments yet. Be the first to comment!

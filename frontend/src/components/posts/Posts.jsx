@@ -15,21 +15,14 @@ function Posts({ view = "all", posts: userPosts }) {
 
   useEffect(() => {
     if (location.state?.scrollToPostId && !loading) {
-      console.log("Scroll effect triggered");
-      console.log("Loading state:", loading);
-      console.log("Target post ID:", location.state.scrollToPostId);
-
       setTimeout(() => {
         const postElement = document.getElementById(
           location.state.scrollToPostId
         );
-        console.log("Found post element:", postElement);
 
         if (postElement) {
-          console.log("Scrolling to post...");
-          postElement.scrollIntoView({ behavior: "smooth", block: "center" });
+          postElement.scrollIntoView({ behavior: "smooth", block: "end" });
         } else {
-          console.log("Post element not found in DOM");
         }
 
         navigate(location.pathname, { replace: true });
@@ -68,13 +61,6 @@ function Posts({ view = "all", posts: userPosts }) {
 
   // Finally apply sidebar filters
   const finalFilteredPosts = applyFilters(searchFilteredPosts);
-
-  console.log(
-    "Final filtered posts:",
-    finalFilteredPosts.map((p) => p._id)
-  );
-  console.log("Looking for post:", location.state?.scrollToPostId);
-
   return (
     <div className="posts-wrapper">
       <div className="posts-container">
@@ -88,7 +74,6 @@ function Posts({ view = "all", posts: userPosts }) {
           </div>
         ) : (
           finalFilteredPosts.map((post) => {
-            console.log("Rendering post:", post._id);
             return (
               <div id={post._id} key={post._id}>
                 <Post

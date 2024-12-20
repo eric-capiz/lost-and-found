@@ -18,7 +18,6 @@ const NotificationMenu = ({ userId, onClose }) => {
     const fetchNotifications = async () => {
       try {
         const fetchedNotifications = await getUserNotifications(userId);
-        console.log("Fetched notifications:", fetchedNotifications);
         setNotifications(fetchedNotifications);
         await markNotificationsAsViewed(userId);
       } catch (error) {
