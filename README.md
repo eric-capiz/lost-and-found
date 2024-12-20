@@ -1,91 +1,69 @@
-# Lost & Found App
+# Lost & Found Application
 
-## Overview
+A full-stack web application that helps users report and find lost items. The platform allows users to create posts about lost or found items, interact through comments, and receive notifications about their posts.
 
-A full-stack application for managing lost and found items. Users can post items they've lost or found, interact through comments, and help reunite items with their owners.
+## Live Demo
 
-## Backend Implementation
+- Frontend: [https://lost-and-found-rosy.vercel.app/](https://lost-and-found-rosy.vercel.app/)
+- Backend API: [https://lost-and-found-api.fly.dev](https://lost-and-found-api.fly.dev)
 
-### Technology Stack
+## Project Structure
+
+This project is split into two main parts:
+
+### Frontend
+
+- Built with React.js
+- Deployed on Vercel
+- Features:
+  - User authentication
+  - Post management with image uploads
+  - Comment system
+  - Notification tracking
+  - Category-based filtering
+  - Location-based search (for logged-in users)
+  - Profile management
+  - Admin dashboard
+
+### Backend
+
+- Built with Node.js/Express
+- MongoDB database
+- Deployed on Fly.io
+- Features:
+  - RESTful API
+  - JWT authentication
+  - Image upload handling
+  - Notification system
+  - Admin controls
+  - Data validation
+
+## Technologies Used
+
+### Frontend
+
+- React.js
+- Context API
+- Axios
+- React Router
+- Cloudinary for images
+
+### Backend
 
 - Node.js
 - Express
 - MongoDB
-- JWT Authentication
-- Cloudinary (Image Management)
+- JWT
+- Cloudinary
+- Bcrypt
 
-### Authentication & Authorization
+## Getting Started
 
-- JWT-based authentication
-- Protected routes
-- Role-based access (Admin/User)
-- Token verification middleware
+See individual README files in the frontend and backend directories for detailed setup instructions:
 
-### API Routes
+- [Frontend README](./frontend/README.md)
+- [Backend README](./backend/README.md)
 
-#### Auth Routes
+## License
 
-- `POST /api/auth/register` - Register new user (with optional profile picture)
-- `POST /api/auth/login` - User login
-
-#### User Routes
-
-- `GET /api/users/:id` - Get user profile
-- `PUT /api/users/:id` - Update user profile
-- `PUT /api/users/:id/profile-picture` - Update profile picture
-
-#### Upload Routes
-
-- `POST /api/upload/profile` - Upload profile picture
-- `POST /api/upload/post` - Upload post images (max 3)
-
-#### Post Routes
-
-- `GET /api/posts` - Get all posts
-- `POST /api/posts` - Create new post with images
-- `PUT /api/posts/:id` - Update post and images
-- `DELETE /api/posts/:id` - Delete post and cleanup images
-
-#### Comment Routes
-
-- `POST /api/posts/:id/comments` - Add comment
-- `DELETE /api/posts/:id/comments/:commentId` - Delete comment
-
-#### Admin Routes
-
-- `GET /api/admin/users` - Get all users
-- `GET /api/admin/stats` - Get statistics
-- `POST /api/admin/create` - Create new admin
-- `DELETE /api/admin/users/:id` - Delete user and cleanup associated images
-
-#### Notification Routes
-
-- `GET /api/notifications/user/:id` - Get user's notifications
-- `PUT /api/notifications/user/:id/viewed` - Mark notifications as viewed
-- `DELETE /api/notifications/:id` - Delete specific notification
-
-### Database Models
-
-- User (includes profile picture)
-- Post (includes multiple images)
-- Comment
-- Notification
-
-### Image Management
-
-- Cloudinary integration for image storage
-- Profile picture upload and management
-- Multiple image upload for posts (max 3)
-- Automatic image cleanup on deletion
-- Image validation and optimization
-- Secure image upload handling
-
-### Notification System
-
-- Automatic notifications when users receive comments on their posts
-- Notification count tracking
-- Auto-cleanup of old notifications (3-day TTL)
-- Cascade deletion with posts and comments
-- Last viewed timestamp tracking
-
-[Frontend documentation to be added after completion]
+This project is licensed under the MIT License - see the LICENSE file for details
