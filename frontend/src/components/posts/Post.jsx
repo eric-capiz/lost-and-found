@@ -141,7 +141,7 @@ function Post({ post }) {
 
       <div className="post-content">
         <h2>
-          {post.itemType.toUpperCase()}: {post.title}
+          {post.itemType.toUpperCase()} {post.title.toUpperCase()}:
         </h2>
         <p>{post.description}</p>
         {renderImages()}
