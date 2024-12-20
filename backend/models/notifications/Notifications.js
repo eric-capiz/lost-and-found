@@ -5,7 +5,7 @@ const notificationSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
-    index: true, // For efficient querying of user's notifications
+    index: true,
   },
   postId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -24,7 +24,7 @@ const notificationSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    index: true, // For efficient cleanup of old notifications
+    index: true,
   },
 });
 

@@ -19,6 +19,12 @@
       margin-bottom: 1rem;
       color: #1f2937;
     }
+    &.popular-locations {
+      display: none;
+      @media (min-width: 1024px) {
+        display: block;
+      }
+    }
   }
 
   // Stats Grid

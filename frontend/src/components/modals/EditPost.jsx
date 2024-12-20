@@ -52,18 +52,10 @@ const EditPost = ({ isOpen, onClose, post }) => {
 
     try {
       const formDataToSend = new FormData();
-      console.log("Original post:", post);
-      console.log("Current form data:", formData);
 
       // Only append fields that have changed
       Object.keys(formData).forEach((key) => {
         if (formData[key] !== post[key]) {
-          console.log(
-            `Field ${key} changed from`,
-            post[key],
-            "to",
-            formData[key]
-          );
           if (key === "tags") {
             const tagsArray = formData.tags
               .split(",")
@@ -78,21 +70,12 @@ const EditPost = ({ isOpen, onClose, post }) => {
 
       // Append existing images
       formDataToSend.append("existingImages", JSON.stringify(existingImages));
-      console.log("Existing images:", existingImages);
 
       // Append new images
       newImages.forEach((image) => {
         formDataToSend.append("images", image);
       });
-      console.log("New images:", newImages);
-
-      console.log("FormData entries:");
-      for (let pair of formDataToSend.entries()) {
-        console.log(pair[0], pair[1]);
-      }
-
-      const updatedPost = await updatePost(post._id, formDataToSend);
-      console.log("Server response:", updatedPost);
+      await updatePost(post._id, formDataToSend);
       onClose();
     } catch (err) {
       console.error("Error in handleSubmit:", err);

@@ -2,7 +2,7 @@ import LeftSidebar from "../components/layout/LeftSidebar";
 import RightSidebar from "../components/layout/RightSidebar";
 
 function Admin() {
-  // We can pass props to control what content shows in the sidebars
+  // pass props to control what content shows in the sidebars
   const leftSidebarContent = {
     sections: [
       {

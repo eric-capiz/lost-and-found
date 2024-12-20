@@ -14,6 +14,7 @@
       color: #60a5fa;
       font-size: 1.5rem;
       font-weight: bold;
+      text-decoration: none;
     }
 
     .menu-toggle {
@@ -38,6 +39,9 @@
 
     &.open {
       display: flex;
+      @media (min-width: 1024px) {
+        display: none;
+      }
     }
 
     a,
@@ -101,16 +105,12 @@
   }
 
   @media (min-width: 768px) {
-    .navbar-mobile {
-      display: none;
-    }
-
     .mobile-menu {
       display: none;
     }
 
     .navbar-content {
-      display: flex;
+      display: none;
       align-items: center;
       gap: 2rem;
       margin-bottom: 1rem;

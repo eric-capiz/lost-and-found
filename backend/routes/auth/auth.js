@@ -41,18 +41,6 @@ router.post("/register", upload, async (req, res) => {
     let profilePic = { url: "", publicId: "" };
     if (req.file) {
       try {
-        console.log("Cloudinary config check:", {
-          hasCloudName: !!process.env.CLOUDINARY_CLOUD_NAME,
-          hasApiKey: !!process.env.CLOUDINARY_API_KEY,
-          hasApiSecret: !!process.env.CLOUDINARY_API_SECRET,
-        });
-
-        console.log("Attempting to upload file:", {
-          mimetype: req.file.mimetype,
-          size: req.file.size,
-          originalname: req.file.originalname,
-        });
-
         const result = await uploadToCloudinary(req.file, "profiles");
 
         if (!result) {

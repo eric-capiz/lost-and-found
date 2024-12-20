@@ -64,10 +64,6 @@ const AuthModal = ({ isOpen, onClose }) => {
           formDataToSend.append("coverPic", coverPic);
         }
 
-        for (let pair of formDataToSend.entries()) {
-          console.log(pair[0], pair[1]);
-        }
-
         await signup(formDataToSend);
       } else {
         await login({
@@ -187,13 +183,16 @@ const AuthModal = ({ isOpen, onClose }) => {
           </button>
         </form>
 
-        <p style={{ color: "white" }}>
+        <p style={{ color: "white", marginTop: "1.5rem" }}>
           {isSignup ? (
             <>
               Already have an account?{" "}
               <span
                 onClick={() => setIsSignup(false)}
-                style={{ cursor: "pointer", color: "#60a5fa" }}
+                style={{
+                  cursor: "pointer",
+                  color: "#60a5fa",
+                }}
               >
                 Login
               </span>
@@ -203,7 +202,10 @@ const AuthModal = ({ isOpen, onClose }) => {
               Don't have an account?{" "}
               <span
                 onClick={() => setIsSignup(true)}
-                style={{ cursor: "pointer", color: "#60a5fa" }}
+                style={{
+                  cursor: "pointer",
+                  color: "#60a5fa",
+                }}
               >
                 Sign Up
               </span>

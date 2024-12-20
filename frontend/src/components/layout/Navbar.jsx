@@ -50,11 +50,23 @@ function Navbar() {
     window.location.href = "/";
   };
 
+  const closeMobileMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <>
       <nav className="navbar">
         <div className="navbar-mobile">
-          <h1 className="logo">Lost & Found</h1>
+          <Link
+            to="/"
+            className="logo"
+            onClick={() => {
+              closeMobileMenu();
+            }}
+          >
+            Lost & Found
+          </Link>
           <button
             className="menu-toggle"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -66,18 +78,34 @@ function Navbar() {
         <div className={`mobile-menu ${isMenuOpen ? "open" : ""}`}>
           {isAuthenticated ? (
             <>
-              <Link to="/profile">
+              <Link to="/profile" onClick={closeMobileMenu}>
                 <FiUser /> Profile
               </Link>
-              <span onClick={() => setIsPostModalOpen(true)}>
+              <span
+                onClick={() => {
+                  setIsPostModalOpen(true);
+                  closeMobileMenu();
+                }}
+              >
                 <FiPlusCircle /> Post Item
               </span>
-              <span className="logout-button" onClick={handleLogout}>
+              <span
+                className="logout-button"
+                onClick={() => {
+                  handleLogout();
+                  closeMobileMenu();
+                }}
+              >
                 <FiLogOut /> Logout
               </span>
             </>
           ) : (
-            <button onClick={() => setIsAuthModalOpen(true)}>
+            <button
+              onClick={() => {
+                setIsAuthModalOpen(true);
+                closeMobileMenu();
+              }}
+            >
               Login / Signup
             </button>
           )}
