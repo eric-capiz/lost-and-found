@@ -197,6 +197,104 @@
       }
     }
   }
+
+  // Comments Section
+  .comments-section {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+
+    .comment {
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid #eee;
+
+      .comment-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+
+        .comment-profile-pic {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          margin-right: 0.75rem;
+          object-fit: cover;
+        }
+
+        .comment-user-info {
+          display: flex;
+          flex-direction: column;
+
+          h4 {
+            margin: 0;
+            font-size: 0.875rem;
+            color: #333;
+          }
+
+          .comment-timestamp {
+            color: #666;
+            font-size: 0.75rem;
+          }
+        }
+      }
+
+      .comment-text {
+        margin: 0;
+        color: #4b5563;
+        font-size: 0.875rem;
+        line-height: 1.5;
+      }
+    }
+
+    .no-comments {
+      text-align: center;
+      color: #666;
+      font-style: italic;
+      padding: 1rem;
+    }
+
+    .comment-input {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+
+      input {
+        flex: 1;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: 1px solid #eee;
+        font-size: 0.875rem;
+
+        &:disabled {
+          background: #f8f9fa;
+          cursor: not-allowed;
+        }
+      }
+
+      button {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        background: #0095f6;
+        color: white;
+        border: none;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover:not(:disabled) {
+          background: #0077c2;
+        }
+
+        &:disabled {
+          background: #ccc;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
 }
 
 // Tablet (768px)
@@ -230,6 +328,19 @@
     .post-content {
       .post-images {
         gap: 0.75rem;
+      }
+    }
+
+    .comments-section {
+      .comment {
+        padding: 1.25rem;
+
+        .comment-header {
+          .comment-profile-pic {
+            width: 36px;
+            height: 36px;
+          }
+        }
       }
     }
   }

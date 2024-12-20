@@ -127,6 +127,41 @@ function Post({ post }) {
           onClose={() => setSelectedImage(null)}
         />
       )}
+      {/* Comments Section */}
+      {showComments && (
+        <div className="comments-section">
+          {post.comments && post.comments.length > 0 ? (
+            post.comments.map((comment) => (
+              <div key={comment._id} className="comment">
+                <div className="comment-header">
+                  <img
+                    src={comment.userId?.profilePic?.url || defaultAvatar}
+                    alt={comment.userId?.username}
+                    className="comment-profile-pic"
+                  />
+                  <div className="comment-user-info">
+                    <h4>{comment.userId?.username}</h4>
+                    <span className="comment-timestamp">
+                      {format(new Date(comment.createdAt), "MM/dd/yyyy")}
+                    </span>
+                  </div>
+                </div>
+                <p className="comment-text">{comment.text}</p>
+              </div>
+            ))
+          ) : (
+            <p className="no-comments">
+              No comments yet. Be the first to comment!
+            </p>
+          )}
+
+          {/* Comment Input - we'll add functionality later */}
+          <div className="comment-input">
+            <input type="text" placeholder="Write a comment..." disabled />
+            <button disabled>Post</button>
+          </div>
+        </div>
+      )}
 
       <ConfirmModal
         isOpen={showDeleteModal}
