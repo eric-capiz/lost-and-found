@@ -18,12 +18,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://lost-and-found-rosy.vercel.app",
-      "https://lost-and-found-git-main-eric-capizs-projects.vercel.app",
-      "https://lost-and-found-a07korgs9-eric-capizs-projects.vercel.app",
-    ],
+    origin: "*",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
