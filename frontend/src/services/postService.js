@@ -1,9 +1,9 @@
-import axios from "axios";
+import api from "../config/axiosConfig";
 
 export const postService = {
   // Create post
   createPost: async (formData) => {
-    const response = await axios.post("/api/posts", formData, {
+    const response = await api.post("/api/posts", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -12,17 +12,17 @@ export const postService = {
   },
 
   getAllPosts: async () => {
-    const response = await axios.get("/api/posts");
+    const response = await api.get("/api/posts");
     return response.data;
   },
 
   getPost: async (postId) => {
-    const response = await axios.get(`/api/posts/${postId}`);
+    const response = await api.get(`/api/posts/${postId}`);
     return response.data;
   },
 
   updatePost: async (postId, formData) => {
-    const response = await axios.put(`/api/posts/${postId}`, formData, {
+    const response = await api.put(`/api/posts/${postId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -31,14 +31,14 @@ export const postService = {
   },
 
   updatePostStatus: async (postId, status) => {
-    const response = await axios.patch(`/api/posts/${postId}/status`, {
+    const response = await api.patch(`/api/posts/${postId}/status`, {
       status,
     });
     return response.data;
   },
 
   deletePost: async (postId) => {
-    const response = await axios.delete(`/api/posts/${postId}`);
+    const response = await api.delete(`/api/posts/${postId}`);
     return response.data;
   },
 };

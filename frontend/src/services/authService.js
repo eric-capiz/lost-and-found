@@ -1,24 +1,20 @@
-import axios from "axios";
-
-// Set base URL for all axios requests
-axios.defaults.baseURL =
-  process.env.REACT_APP_API_URL || "http://localhost:5000";
+import api from "../config/axiosConfig";
 
 export const authService = {
   verifyToken: async () => {
     const token = localStorage.getItem("token");
     if (!token) return null;
 
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    const response = await axios.get("/api/auth/verify");
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    const response = await api.get("/api/auth/verify");
     return response.data;
   },
 
   login: async (credentials) => {
-    const response = await axios.post("/api/auth/login", credentials);
+    const response = await api.post("/api/auth/login", credentials);
     if (response.data.token) {
       localStorage.setItem("token", response.data.token);
-      axios.defaults.headers.common[
+      api.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${response.data.token}`;
     }
@@ -26,14 +22,14 @@ export const authService = {
   },
 
   signup: async (formData) => {
-    const response = await axios.post("api/auth/register", formData, {
+    const response = await api.post("/api/auth/register", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
     if (response.data.token) {
       localStorage.setItem("token", response.data.token);
-      axios.defaults.headers.common[
+      api.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${response.data.token}`;
     }
@@ -42,6 +38,6 @@ export const authService = {
 
   logout: () => {
     localStorage.removeItem("token");
-    delete axios.defaults.headers.common["Authorization"];
+    delete api.defaults.headers.common["Authorization"];
   },
 };
