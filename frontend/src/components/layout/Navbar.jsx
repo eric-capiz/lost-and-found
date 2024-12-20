@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/auth/AuthContext";
 import { useSearch } from "../../contexts/search/SearchContext";
+import { useNotifications } from "../../contexts/notification/NotificationContext";
 import {
   FiSearch,
   FiBell,
@@ -18,6 +19,7 @@ import NotificationMenu from "../notification/NotificationMenu";
 function Navbar() {
   const { isAuthenticated, logout, user, loading } = useContext(AuthContext);
   const { setSearchQuery } = useSearch();
+  const { notificationCount } = useNotifications();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
@@ -118,9 +120,7 @@ function Navbar() {
             Lost & Found
           </Link>
           {loading ? (
-            <div className="loading-spinner">
-              {/* You can add a spinner component here */}
-            </div>
+            <div className="loading-spinner"></div>
           ) : isAuthenticated ? (
             <>
               <span onClick={() => setIsPostModalOpen(true)}>Post Item</span>
@@ -129,9 +129,9 @@ function Navbar() {
                   onClick={() => setShowNotifications(!showNotifications)}
                 >
                   <FiBell />
-                  {user?.notificationCount > 0 && (
+                  {notificationCount > 0 && (
                     <span className="notification-badge">
-                      {user.notificationCount}
+                      {notificationCount}
                     </span>
                   )}
                 </button>

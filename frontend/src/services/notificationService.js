@@ -13,6 +13,12 @@ export const notificationService = {
     return response.data;
   },
 
+  // Mark single notification as viewed
+  markNotificationAsViewed: async (notificationId) => {
+    const response = await api.put(`/api/notifications/${notificationId}/view`);
+    return response.data;
+  },
+
   // Delete a notification
   deleteNotification: async (notificationId) => {
     const response = await api.delete(`/api/notifications/${notificationId}`);

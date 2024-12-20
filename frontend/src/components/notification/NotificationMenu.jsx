@@ -8,8 +8,10 @@ const NotificationMenu = ({ userId, onClose }) => {
   const {
     getUserNotifications,
     markNotificationsAsViewed,
+    markNotificationAsViewed,
     deleteNotification,
     loading,
+    updateNotificationCount,
   } = useNotifications();
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
@@ -19,7 +21,12 @@ const NotificationMenu = ({ userId, onClose }) => {
       try {
         const fetchedNotifications = await getUserNotifications(userId);
         setNotifications(fetchedNotifications);
-        await markNotificationsAsViewed(userId);
+
+        // Count unread notifications
+        const unreadCount = fetchedNotifications.filter(
+          (n) => !n.viewed
+        ).length;
+        updateNotificationCount(unreadCount);
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }
@@ -31,13 +38,45 @@ const NotificationMenu = ({ userId, onClose }) => {
   const handleDeleteNotification = async (notificationId) => {
     try {
       await deleteNotification(notificationId);
-      setNotifications((prev) => prev.filter((n) => n._id !== notificationId));
+
+      // Update local state
+      setNotifications((prev) => {
+        const updatedNotifications = prev.filter(
+          (n) => n._id !== notificationId
+        );
+        // Update count after deletion
+        const unreadCount = updatedNotifications.filter(
+          (n) => !n.viewed
+        ).length;
+        updateNotificationCount(unreadCount);
+        return updatedNotifications;
+      });
     } catch (error) {
       console.error("Error deleting notification:", error);
     }
   };
 
-  const handleNotificationClick = (notification) => {
+  const handleNotificationClick = async (notification) => {
+    // If notification hasn't been viewed, mark it as viewed
+    if (!notification.viewed) {
+      try {
+        await markNotificationAsViewed(notification._id);
+        setNotifications((prev) =>
+          prev.map((n) =>
+            n._id === notification._id ? { ...n, viewed: true } : n
+          )
+        );
+
+        // Update notification count
+        const unreadCount = notifications.filter(
+          (n) => !n.viewed && n._id !== notification._id
+        ).length;
+        updateNotificationCount(unreadCount);
+      } catch (error) {
+        console.error("Error marking notification as viewed:", error);
+      }
+    }
+
     navigate("/", {
       state: {
         scrollToPostId: notification.postId._id,
@@ -63,7 +102,12 @@ const NotificationMenu = ({ userId, onClose }) => {
             const username = notification.message.split(" ")[0];
 
             return (
-              <div key={notification._id} className="notification-item">
+              <div
+                key={notification._id}
+                className={`notification-item ${
+                  !notification.viewed ? "unread" : ""
+                }`}
+              >
                 <div
                   className="notification-content"
                   onClick={() => handleNotificationClick(notification)}

@@ -29,6 +29,27 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
+      transition: background-color 0.2s ease;
+
+      // New styles for unread notifications
+      &.unread {
+        background-color: #2d3748;
+        border-left: 3px solid #60a5fa;
+
+        .notification-content {
+          p {
+            color: #fff; // Brighter text for unread
+
+            &.notification-comment {
+              color: #e5e7eb; // Brighter comment text
+            }
+          }
+
+          .notification-time {
+            color: #9ca3af; // Slightly brighter time
+          }
+        }
+      }
 
       &:hover {
         background: #374151;

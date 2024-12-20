@@ -21,6 +21,11 @@ const notificationSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  viewed: {
+    type: Boolean,
+    default: false,
+    index: true, // Add index for faster queries
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -35,5 +40,8 @@ notificationSchema.index(
     expireAfterSeconds: 259200,
   }
 );
+
+// Compound index for faster queries of unviewed notifications
+notificationSchema.index({ userId: 1, viewed: 1 });
 
 module.exports = mongoose.model("Notification", notificationSchema);
