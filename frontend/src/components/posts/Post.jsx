@@ -13,12 +13,18 @@ function Post({ post }) {
   const [isCommentsVisible, setIsCommentsVisible] = useState(false);
   const [hasLoadedComments, setHasLoadedComments] = useState(false);
   const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const { user } = useContext(AuthContext);
   const { deletePost } = usePosts();
-  const { getComments, loading: commentsLoading } = useComments();
+  const {
+    getComments,
+    addComment,
+    deleteComment,
+    loading: commentsLoading,
+  } = useComments();
 
   const isOwner = user?._id === post.userId._id;
 
@@ -62,6 +68,30 @@ function Post({ post }) {
         ))}
       </div>
     );
+  };
+
+  const handleAddComment = async (e) => {
+    e.preventDefault();
+    if (!newComment.trim()) return;
+
+    try {
+      const addedComment = await addComment(post._id, newComment.trim());
+      setComments((prevComments) => [addedComment, ...prevComments]);
+      setNewComment(""); // Clear input after successful comment
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await deleteComment(post._id, commentId);
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment._id !== commentId)
+      );
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
   };
 
   return (
@@ -150,23 +180,49 @@ function Post({ post }) {
       <div className={`comments-section ${isCommentsVisible ? "show" : ""}`}>
         {isCommentsVisible && (
           <>
-            {commentsLoading ? (
+            <div className="comment-input">
+              <input
+                type="text"
+                placeholder={user ? "Write a comment..." : "Login to comment"}
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                disabled={!user || commentsLoading}
+              />
+              <button
+                onClick={handleAddComment}
+                disabled={!user || !newComment.trim() || commentsLoading}
+              >
+                {commentsLoading ? "Posting..." : "Post"}
+              </button>
+            </div>
+
+            {commentsLoading && !comments.length ? (
               <div className="loading-comments">Loading comments...</div>
             ) : comments.length > 0 ? (
               comments.map((comment) => (
                 <div key={comment._id} className="comment">
                   <div className="comment-header">
-                    <img
-                      src={comment.userProfilePic?.url || defaultAvatar}
-                      alt={comment.username}
-                      className="comment-profile-pic"
-                    />
-                    <div className="comment-user-info">
-                      <h4>{comment.username}</h4>
-                      <span className="comment-timestamp">
-                        {format(new Date(comment.createdAt), "MM/dd/yyyy")}
-                      </span>
+                    <div className="comment-user-info-wrapper">
+                      <img
+                        src={comment.userProfilePic?.url || defaultAvatar}
+                        alt={comment.username}
+                        className="comment-profile-pic"
+                      />
+                      <div className="comment-user-info">
+                        <h4>{comment.username}</h4>
+                        <span className="comment-timestamp">
+                          {format(new Date(comment.createdAt), "MM/dd/yyyy")}
+                        </span>
+                      </div>
                     </div>
+                    {(user?._id === comment.userId || isOwner) && (
+                      <button
+                        className="delete-comment-button"
+                        onClick={() => handleDeleteComment(comment._id)}
+                      >
+                        <FaTrash />
+                      </button>
+                    )}
                   </div>
                   <p className="comment-text">{comment.text}</p>
                 </div>
@@ -176,11 +232,6 @@ function Post({ post }) {
                 No comments yet. Be the first to comment!
               </p>
             )}
-
-            <div className="comment-input">
-              <input type="text" placeholder="Write a comment..." disabled />
-              <button disabled>Post</button>
-            </div>
           </>
         )}
       </div>
