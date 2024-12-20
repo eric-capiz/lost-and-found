@@ -16,8 +16,18 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors()); //allows cross-origin requests
-app.use(helmet()); //prevents various attacks
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://lost-and-found-rosy.vercel.app/", // Add your Vercel domain
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+app.use(helmet());
 
 // Additional security headers
 app.use((req, res, next) => {
