@@ -164,6 +164,7 @@ function Post({ post, id, openComments, highlightCommentId }) {
               <div className="meta-row">
                 <span className="status">{post.status.toUpperCase()}</span>
                 <span className="category">{post.category.toUpperCase()}</span>
+                <span className="item-type">{post.itemType.toUpperCase()}</span>
               </div>
             </div>
           </div>
@@ -187,9 +188,7 @@ function Post({ post, id, openComments, highlightCommentId }) {
       </div>
 
       <div className="post-content">
-        <h2>
-          {post.itemType.toUpperCase()} {post.title.toUpperCase()}:
-        </h2>
+        <h2> {post.title.toUpperCase()}:</h2>
         <p>{post.description}</p>
         {renderImages()}
         {post.tags && post.tags.length > 0 && (

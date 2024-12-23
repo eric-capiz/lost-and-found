@@ -63,6 +63,9 @@
               &.category {
                 color: #10b981;
               }
+              &.item-type {
+                color: #cd00f6;
+              }
 
               &:not(:last-child)::after {
                 content: "•";
