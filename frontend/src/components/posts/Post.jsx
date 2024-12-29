@@ -267,7 +267,7 @@ function Post({ post, id, openComments, highlightCommentId }) {
                           </span>
                         </div>
                       </div>
-                      {(user?._id === comment.userId || isOwner) && (
+                      {user?._id === comment.userId && (
                         <button
                           className="delete-comment-button"
                           onClick={() => handleDeleteComment(comment._id)}
