@@ -28,7 +28,6 @@
     display: none;
   }
 
-  // Desktop (1024px)
   @media (min-width: 1024px) {
     grid-template-columns: 240px 1fr 240px;
     max-width: 1200px;
@@ -46,7 +45,6 @@
     }
   }
 
-  // Larger screens (1440px+)
   @media (min-width: 1440px) {
     grid-template-columns: 280px minmax(600px, 2fr) 280px;
     max-width: 2100px;

@@ -5,7 +5,6 @@
   padding: 1.25rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
-  // Post Header
   .post-header {
     display: flex;
     justify-content: space-between;
@@ -104,7 +103,6 @@
     }
   }
 
-  // Post Content
   .post-content {
     p {
       margin-bottom: 1rem;
@@ -134,7 +132,6 @@
     }
   }
 
-  // Post Footer
   .post-footer {
     border-top: 1px solid #eee;
     padding-top: 0.75rem;
@@ -168,7 +165,6 @@
     }
   }
 
-  // Post Tags
   .post-tags {
     margin-top: 1rem;
     padding-top: 0.75rem;
@@ -201,7 +197,6 @@
     }
   }
 
-  // Comments Section
   .comments-section {
     display: none;
     margin-top: 1rem;
@@ -353,7 +348,6 @@
   }
 }
 
-// Tablet (768px)
 @media (min-width: 768px) {
   .post {
     max-width: 100%;
@@ -402,7 +396,6 @@
   }
 }
 
-// Desktop (1024px)
 @media (min-width: 1024px) {
   .post {
     max-width: 100%;
@@ -410,7 +403,6 @@
   }
 }
 
-// Image Modal Styles
 .image-modal-overlay {
   position: fixed;
   top: 0;
@@ -469,7 +461,6 @@
   }
 }
 
-// Tablet breakpoint
 @media (min-width: 768px) {
   .post-content {
     .post-images {
@@ -488,7 +479,6 @@
   }
 }
 
-// Desktop breakpoint
 @media (min-width: 1024px) {
   .image-modal-content {
     width: 85%;
@@ -499,7 +489,6 @@
   }
 }
 
-// Large Desktop breakpoint
 @media (min-width: 1440px) {
   .image-modal-content {
     width: 80%;

@@ -27,7 +27,6 @@
     }
   }
 
-  // Stats Grid
   .stats-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -53,7 +52,6 @@
     }
   }
 
-  // Tags
   .tags-container {
     display: flex;
     flex-wrap: wrap;
@@ -73,7 +71,6 @@
     }
   }
 
-  // Quick Filters
   .filter-buttons {
     display: flex;
     flex-direction: column;
@@ -99,7 +96,6 @@
     }
   }
 
-  // Location List
   .location-list {
     list-style: none;
     padding: 0;
@@ -111,7 +107,6 @@
     }
   }
 
-  // Tips Container
   .tips-container {
     .tip {
       margin-bottom: 1rem;
@@ -144,7 +139,6 @@
     }
   }
 
-  // Right sidebar specific styles
   &.sidebar-right {
     .about-us-image {
       width: 100%;

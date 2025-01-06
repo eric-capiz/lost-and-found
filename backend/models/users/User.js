@@ -19,30 +19,30 @@ const UserSchema = new mongoose.Schema(
     profilePic: {
       url: {
         type: String,
-        default: "", // Optional
+        default: "",
       },
       publicId: {
         type: String,
-        default: "", // Optional
+        default: "",
       },
     },
     coverPic: {
       url: {
         type: String,
-        default: "", // Optional
+        default: "",
       },
       publicId: {
         type: String,
-        default: "", // Optional
+        default: "",
       },
     },
     city: {
       type: String,
-      required: false, // Optional
+      required: false,
     },
     state: {
       type: String,
-      required: false, // Optional
+      required: false,
     },
     postCount: {
       type: Number,

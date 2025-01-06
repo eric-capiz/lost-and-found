@@ -9,10 +9,8 @@
     display: grid;
     gap: 2rem;
 
-    // Mobile first - single column
     grid-template-columns: 1fr;
 
-    // Tablet and up - three columns
     @media (min-width: 768px) {
       grid-template-columns: repeat(3, 1fr);
       gap: 4rem;
