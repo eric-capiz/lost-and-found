@@ -35,14 +35,9 @@ const PostItem = ({ isOpen, onClose }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "tags") {
-      const cleanedValue = value.replace(/[\[\]"]/g, "");
-      const tagsArray = cleanedValue
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter((tag) => tag);
       setFormData((prev) => ({
         ...prev,
-        tags: tagsArray,
+        tags: value,
       }));
     } else {
       setFormData((prev) => ({
@@ -69,7 +64,11 @@ const PostItem = ({ isOpen, onClose }) => {
 
       Object.keys(formData).forEach((key) => {
         if (key === "tags") {
-          formDataToSend.append("tags", JSON.stringify(formData.tags));
+          const tagsArray = formData.tags
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter((tag) => tag);
+          formDataToSend.append("tags", tagsArray);
         } else if (key !== "images") {
           formDataToSend.append(key, formData[key]);
         }

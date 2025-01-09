@@ -78,8 +78,14 @@ export const PostProvider = ({ children }) => {
   };
 
   // Delete post
-  const deletePost = (postId) => {
-    setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
+  const deletePost = async (postId) => {
+    try {
+      await postService.deletePost(postId);
+      setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      throw error;
+    }
   };
 
   const value = {
