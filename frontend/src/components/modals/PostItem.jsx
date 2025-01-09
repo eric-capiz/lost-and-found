@@ -35,7 +35,8 @@ const PostItem = ({ isOpen, onClose }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "tags") {
-      const tagsArray = value
+      const cleanedValue = value.replace(/[\[\]"]/g, "");
+      const tagsArray = cleanedValue
         .split(",")
         .map((tag) => tag.trim())
         .filter((tag) => tag);
