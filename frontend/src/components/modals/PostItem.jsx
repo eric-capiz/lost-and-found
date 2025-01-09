@@ -16,7 +16,7 @@ const PostItem = ({ isOpen, onClose }) => {
     state: "",
     itemType: "lost",
     category: "",
-    tags: [],
+    tags: "",
     images: [],
   });
   const [selectedImages, setSelectedImages] = useState([]);
@@ -92,7 +92,7 @@ const PostItem = ({ isOpen, onClose }) => {
         state: "",
         itemType: "lost",
         category: "",
-        tags: [],
+        tags: "",
         images: [],
       });
       setSelectedImages([]);
