@@ -219,7 +219,7 @@ const PostItem = ({ isOpen, onClose }) => {
             <input
               type="text"
               name="tags"
-              value={formData.tags.join(", ")}
+              value={formData.tags}
               onChange={handleChange}
               placeholder="Enter tags separated by commas"
             />
