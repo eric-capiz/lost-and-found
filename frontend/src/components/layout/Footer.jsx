@@ -39,13 +39,13 @@ function Footer() {
         <div className="footer-section">
           <h4>Connect With Us</h4>
           <div className="social-links">
-            <a href="#" aria-label="Github">
+            <a href="https://github.com" aria-label="Github">
               <FaGithub />
             </a>
-            <a href="#" aria-label="Twitter">
+            <a href="https://twitter.com" aria-label="Twitter">
               <FaTwitter />
             </a>
-            <a href="#" aria-label="LinkedIn">
+            <a href="https://linkedin.com" aria-label="LinkedIn">
               <FaLinkedin />
             </a>
             <a href="mailto:contact@example.com" aria-label="Email">

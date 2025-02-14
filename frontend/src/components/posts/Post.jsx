@@ -34,12 +34,6 @@ function Post({ post, id, openComments, highlightCommentId }) {
   const isOwner = user?._id === post.userId._id;
 
   useEffect(() => {
-    if (openComments) {
-      setIsCommentsVisible(true);
-    }
-  }, [id, openComments]);
-
-  useEffect(() => {
     if (highlightCommentId) {
       setActiveHighlightId(highlightCommentId);
     }

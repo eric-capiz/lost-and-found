@@ -1,9 +1,6 @@
-import { useContext } from "react";
 import { useFilter } from "../../contexts/filter/FilterContext";
-import { AuthContext } from "../../contexts/auth/AuthContext";
 
 function LeftSidebar() {
-  const { isAuthenticated } = useContext(AuthContext);
   const { filters, updateFilters } = useFilter();
 
   const handleFilterChange = (e) => {
@@ -47,7 +44,6 @@ function LeftSidebar() {
         >
           <option value="recent">Date Posted (Newest)</option>
           <option value="oldest">Date Posted (Oldest)</option>
-          {isAuthenticated && <option value="nearMe">Near Me</option>}
         </select>
       </div>
 
