@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 const NotificationMenu = ({ userId, onClose }) => {
   const {
     getUserNotifications,
-    markNotificationsAsViewed,
     markNotificationAsViewed,
     deleteNotification,
     loading,
