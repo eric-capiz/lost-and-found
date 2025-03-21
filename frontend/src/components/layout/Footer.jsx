@@ -57,8 +57,15 @@ function Footer() {
 
       <div className="footer-bottom">
         <p>
-          Made with <FaHeart className="heart-icon" /> by Your Team ©{" "}
-          {new Date().getFullYear()}
+          Developed by{" "}
+          <a
+            href="https://www.ericcapiz.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Eric Capiz
+          </a>{" "}
+          © {new Date().getFullYear()}
         </p>
       </div>
     </footer>
