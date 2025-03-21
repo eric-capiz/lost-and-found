@@ -84,6 +84,17 @@
     font-size: 0.9rem;
     color: #9ca3af;
 
+    a {
+      color: #d1d5db;
+      text-decoration: none;
+      transition: color 0.2s ease;
+      font-weight: 500;
+
+      &:hover {
+        color: #60a5fa;
+      }
+    }
+
     .heart-icon {
       color: #ef4444;
       display: inline-block;
