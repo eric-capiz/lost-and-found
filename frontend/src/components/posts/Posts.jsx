@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { usePosts } from "../../contexts/post/PostContext";
 import { useSearch } from "../../contexts/search/SearchContext";
 import { useFilter } from "../../contexts/filter/FilterContext";
@@ -36,6 +36,35 @@ function Posts({ view = "all", posts: userPosts }) {
     location.pathname,
   ]);
 
+  // Memoize all filtering operations
+  const finalFilteredPosts = useMemo(() => {
+    if (loading || error) return [];
+
+    // First filter by view type (all/profile)
+    const viewFilteredPosts =
+      view === "profile"
+        ? userPosts
+        : location.state?.includeResolved
+        ? posts // If includeResolved is true, show all posts
+        : posts.filter((post) => post.status === "unresolved");
+
+    // Then apply search filter
+    const searchFilteredPosts = searchPosts(viewFilteredPosts, searchQuery);
+
+    // Finally apply sidebar filters
+    return applyFilters(searchFilteredPosts);
+  }, [
+    view,
+    userPosts,
+    posts,
+    location.state?.includeResolved,
+    searchQuery,
+    searchPosts,
+    applyFilters,
+    loading,
+    error,
+  ]);
+
   if (loading) {
     return (
       <div className="loading-container">
@@ -48,19 +77,6 @@ function Posts({ view = "all", posts: userPosts }) {
     return <div className="error-message">{error}</div>;
   }
 
-  // First filter by view type (all/profile)
-  const viewFilteredPosts =
-    view === "profile"
-      ? userPosts
-      : location.state?.includeResolved
-      ? posts // If includeResolved is true, show all posts
-      : posts.filter((post) => post.status === "unresolved");
-
-  // Then apply search filter
-  const searchFilteredPosts = searchPosts(viewFilteredPosts, searchQuery);
-
-  // Finally apply sidebar filters
-  const finalFilteredPosts = applyFilters(searchFilteredPosts);
   return (
     <div className="posts-wrapper">
       <div className="posts-container">
