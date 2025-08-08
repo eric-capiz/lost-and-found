@@ -67,4 +67,3 @@ See individual README files in the frontend and backend directories for detailed
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details
-test
