@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for lost-and-found-api on 2024-12-17T16:35:52-06:00
+# fly.toml app configuration file generated for lost-and-found-new on 2024-12-17T16:35:52-06:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'lost-and-found-api'
+app = 'lost-and-found-new'
 primary_region = 'ewr'
 
 [build]
