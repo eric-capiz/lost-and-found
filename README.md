@@ -5,7 +5,7 @@ A full-stack web application that helps users report and find lost items. The pl
 ## Live Demo
 
 - Frontend: [https://lost-and-found-rosy.vercel.app/](https://lost-and-found-rosy.vercel.app/)
-- Backend API: [https://lost-and-found-new.fly.dev/](https://lost-and-found-new.fly.dev/)
+- Backend API: [https://lost-and-found-new.fly.dev](https://lost-and-found-api.fly.dev)
 
 ## Project Structure
 
