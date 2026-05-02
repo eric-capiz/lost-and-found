@@ -1,43 +1,39 @@
 .posts-wrapper {
   width: 100%;
   padding: 1rem;
-  background-color: #1f2937;
-  border-radius: 8px;
-
+  background: transparent;
+  border-radius: 14px;
   margin: 0 auto;
 
-  @media (min-width: 768px) {
-    padding: 1.5rem;
-    max-width: 600px;
-  }
+  // Feed/list: comfortable reading column (tiles use multi-column grid instead)
+  &--feed {
+    max-width: min(720px, 100%);
+    margin-inline: auto;
+    padding-inline: clamp(0.5rem, 2vw, 1rem);
 
-  @media (min-width: 1024px) {
-    padding: 2rem;
-    max-width: 800px;
-  }
-
-  @media (min-width: 1440px) {
-    max-width: 900px;
+    @media (min-width: 768px) {
+      padding-block: 1rem;
+    }
   }
 }
 
 .posts-container {
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
   margin: 0 auto;
 }
 
 .no-posts {
   text-align: center;
   padding: 2rem;
-  color: #e5e7eb;
-  font-size: 1.1rem;
-  background-color: #374151;
-  border-radius: 8px;
+  color: #8b9cb3;
+  font-size: 1rem;
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px dashed rgba(148, 163, 184, 0.22);
+  border-radius: 14px;
   margin: 1rem 0;
 
   @media (min-width: 768px) {
-    font-size: 1.2rem;
-    padding: 3rem;
+    font-size: 1.05rem;
+    padding: 2.5rem;
   }
 }

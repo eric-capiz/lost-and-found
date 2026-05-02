@@ -18,28 +18,12 @@ import NotificationMenu from "../notification/NotificationMenu";
 
 function Navbar() {
   const { isAuthenticated, logout, user, loading } = useContext(AuthContext);
-  const { setSearchQuery } = useSearch();
+  const { searchQuery, setSearchQuery } = useSearch();
   const { notificationCount } = useNotifications();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-
-  const debounce = (func, wait) => {
-    let timeout;
-    return function executedFunction(...args) {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
-  };
-
-  const handleSearch = debounce((value) => {
-    setSearchQuery(value);
-  }, 300);
 
   const closeAuthModal = () => {
     setIsAuthModalOpen(false);
@@ -115,18 +99,46 @@ function Navbar() {
           )}
         </div>
 
+        <div className="navbar-search navbar-search--mobile" role="search">
+          <FiSearch className="search-icon" aria-hidden />
+          <input
+            type="search"
+            placeholder="Search listings…"
+            aria-label="Search listings"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
         <div className="navbar-content">
           <Link to="/" className="logo">
             Lost & Found
           </Link>
+
+          <div className="navbar-search navbar-search--desktop" role="search">
+            <FiSearch className="search-icon" aria-hidden />
+            <input
+              type="search"
+              placeholder="Search listings…"
+              aria-label="Search listings"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
           {loading ? (
-            <div className="loading-spinner"></div>
+            <div className="navbar-actions navbar-actions--loading">
+              <div className="loading-spinner" />
+            </div>
           ) : isAuthenticated ? (
-            <>
+            <div className="navbar-actions">
               <span onClick={() => setIsPostModalOpen(true)}>Post Item</span>
               <div className="icon-wrapper">
                 <button
+                  type="button"
                   onClick={() => setShowNotifications(!showNotifications)}
+                  aria-expanded={showNotifications}
+                  aria-label="Notifications"
                 >
                   <FiBell />
                   {notificationCount > 0 && (
@@ -155,27 +167,26 @@ function Navbar() {
                   </span>
                 )}
               </Link>
-              <button onClick={handleLogout} className="logout-button">
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="logout-button"
+                aria-label="Log out"
+              >
                 <FiLogOut />
               </button>
-            </>
+            </div>
           ) : (
-            <button
-              className="login-signup-button"
-              onClick={() => setIsAuthModalOpen(true)}
-            >
-              Login / Signup
-            </button>
+            <div className="navbar-actions">
+              <button
+                type="button"
+                className="login-signup-button"
+                onClick={() => setIsAuthModalOpen(true)}
+              >
+                Login / Signup
+              </button>
+            </div>
           )}
-        </div>
-
-        <div className="search-bar">
-          <FiSearch className="search-icon" />
-          <input
-            type="text"
-            placeholder="Search for items..."
-            onChange={(e) => handleSearch(e.target.value)}
-          />
         </div>
       </nav>
 

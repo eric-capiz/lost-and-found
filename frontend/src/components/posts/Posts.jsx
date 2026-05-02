@@ -6,7 +6,11 @@ import Post from "./Post";
 import { Spinner } from "../common";
 import { useLocation, useNavigate } from "react-router-dom";
 
-function Posts({ view = "all", posts: userPosts }) {
+function Posts({
+  view = "all",
+  posts: userPosts,
+  layout = "list",
+}) {
   const { posts, loading, error } = usePosts();
   const { searchQuery, searchPosts } = useSearch();
   const { applyFilters } = useFilter();
@@ -77,9 +81,20 @@ function Posts({ view = "all", posts: userPosts }) {
     return <div className="error-message">{error}</div>;
   }
 
+  const tilesMode = layout === "tiles";
+  const profileGrid = layout === "profileGrid";
+
   return (
-    <div className="posts-wrapper">
-      <div className="posts-container">
+    <div
+      className={`posts-wrapper${
+        tilesMode ? " posts-wrapper--tiles" : " posts-wrapper--feed"
+      }${profileGrid ? " posts-wrapper--profile-grid" : ""}`}
+    >
+      <div
+        className={`posts-container${
+          tilesMode ? " posts-container--tiles" : ""
+        }${profileGrid ? " posts-container--profile-grid" : ""}`}
+      >
         {finalFilteredPosts.length === 0 ? (
           <div className="no-posts">
             {searchQuery
@@ -96,6 +111,7 @@ function Posts({ view = "all", posts: userPosts }) {
                   post={post}
                   openComments={post._id === location.state?.scrollToPostId}
                   highlightCommentId={location.state?.highlightCommentId}
+                  profileCompact={profileGrid && view === "profile"}
                 />
               </div>
             );

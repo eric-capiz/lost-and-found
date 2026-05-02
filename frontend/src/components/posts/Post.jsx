@@ -3,13 +3,19 @@ import { FaRegComment, FaEdit, FaTrash } from "react-icons/fa";
 import { AuthContext } from "../../contexts/auth/AuthContext";
 import { usePosts } from "../../contexts/post/PostContext";
 import { useComments } from "../../contexts/comment/CommentContext";
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import ImageModal from "../modals/ImageModal";
 import ConfirmModal from "../modals/ConfirmModal";
 import defaultAvatar from "../../assets/images/avatar.png";
 import EditPost from "../modals/EditPost";
 
-function Post({ post, id, openComments, highlightCommentId }) {
+function Post({
+  post,
+  id,
+  openComments,
+  highlightCommentId,
+  profileCompact = false,
+}) {
   const [isCommentsVisible, setIsCommentsVisible] = useState(
     openComments || false
   );
@@ -136,68 +142,116 @@ function Post({ post, id, openComments, highlightCommentId }) {
   };
 
   return (
-    <article className="post" id={id}>
-      <div className="post-header">
-        <div className="user-info">
-          <img
-            src={post?.userId?.profilePic?.url || defaultAvatar}
-            alt={post.userId.username}
-            className="profile-pic"
-          />
-          <div className="user-details">
-            <h3>{post?.userId?.username?.toUpperCase()}</h3>
-            <div className="post-meta">
-              <div className="meta-row">
-                <span className="date">
-                  {format(new Date(post.createdAt), "MM/dd/yyyy")}
-                </span>
-                <span className="location">
-                  {post.city}, {post.state}
-                </span>
-              </div>
-              <div className="meta-row">
-                <span className="status">{post.status.toUpperCase()}</span>
-                <span className="category">{post.category.toUpperCase()}</span>
-                <span className="item-type">{post.itemType.toUpperCase()}</span>
+    <article
+      className={`post${profileCompact ? " post--profile-compact" : ""}`}
+      id={id}
+    >
+      {profileCompact ? (
+        <div className="post-header post-header--profile-compact">
+          <div className="post-header-compact__meta" aria-label="Post details">
+            <span className="date">
+              {formatDistanceToNow(new Date(post.createdAt), {
+                addSuffix: true,
+              })}
+            </span>
+            <span className="location">
+              {post.city}, {post.state}
+            </span>
+            <span className={`item-type item-type--${post.itemType}`}>
+              {post.itemType.toUpperCase()}
+            </span>
+            <span className="status">{post.status.toUpperCase()}</span>
+            <span className="category">{post.category.toUpperCase()}</span>
+          </div>
+          {isOwner && (
+            <div className="post-actions">
+              <button
+                className="icon-button"
+                type="button"
+                onClick={() => setShowEditModal(true)}
+                aria-label="Edit post"
+              >
+                <FaEdit className="edit-icon" />
+              </button>
+              <button
+                className="icon-button"
+                type="button"
+                onClick={() => setShowDeleteModal(true)}
+                aria-label="Delete post"
+              >
+                <FaTrash className="delete-icon" />
+              </button>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="post-header">
+          <div className="user-info">
+            <img
+              src={post?.userId?.profilePic?.url || defaultAvatar}
+              alt={post.userId.username}
+              className="profile-pic"
+            />
+            <div className="user-details">
+              <h3>{post?.userId?.username?.toUpperCase()}</h3>
+              <div className="post-meta">
+                <div className="meta-row">
+                  <span className="date">
+                    {format(new Date(post.createdAt), "MM/dd/yyyy")}
+                  </span>
+                  <span className="location">
+                    {post.city}, {post.state}
+                  </span>
+                </div>
+                <div className="meta-row">
+                  <span className="status">{post.status.toUpperCase()}</span>
+                  <span className="category">
+                    {post.category.toUpperCase()}
+                  </span>
+                  <span className="item-type">
+                    {post.itemType.toUpperCase()}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
+          {isOwner && (
+            <div className="post-actions">
+              <button
+                className="icon-button"
+                onClick={() => setShowEditModal(true)}
+              >
+                <FaEdit className="edit-icon" />
+              </button>
+              <button
+                className="icon-button"
+                onClick={() => setShowDeleteModal(true)}
+              >
+                <FaTrash className="delete-icon" />
+              </button>
+            </div>
+          )}
         </div>
-        {isOwner && (
-          <div className="post-actions">
-            <button
-              className="icon-button"
-              onClick={() => setShowEditModal(true)}
-            >
-              <FaEdit className="edit-icon" />
-            </button>
-            <button
-              className="icon-button"
-              onClick={() => setShowDeleteModal(true)}
-            >
-              <FaTrash className="delete-icon" />
-            </button>
-          </div>
-        )}
-      </div>
+      )}
 
       <div className="post-content">
-        <h2> {post.title.toUpperCase()}:</h2>
-        <p>{post.description}</p>
+        <h2 className="post-title">{post.title.toUpperCase()}:</h2>
+        <p className="post-description">{post.description}</p>
         {renderImages()}
-        {post.tags && post.tags.length > 0 && (
-          <div className="post-tags">
-            <span className="tags-label">Tags:</span>
-            <div className="tags-container">
-              {post.tags.map((tag, index) => (
-                <span key={index} className="tag-pill">
-                  #{tag.toUpperCase()}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
+
+      {post.tags && post.tags.length > 0 && (
+        <div className="post-tags" aria-label="Tags">
+          <span className="tags-label">Tags</span>
+          <div className="tags-container">
+            {post.tags.map((tag, index) => (
+              <span key={index} className="tag-pill">
+                #{tag.toUpperCase()}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="post-footer">
         <span className="comment-count">{localCommentCount} Comments</span>
@@ -217,27 +271,39 @@ function Post({ post, id, openComments, highlightCommentId }) {
       <div className={`comments-section ${isCommentsVisible ? "show" : ""}`}>
         {isCommentsVisible && (
           <>
-            <div className="comment-input">
-              <input
-                type="text"
-                placeholder={user ? "Write a comment..." : "Login to comment"}
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                disabled={!user || commentsLoading}
-              />
-              <button
-                onClick={handleAddComment}
-                disabled={!user || !newComment.trim() || commentsLoading}
-              >
-                {commentsLoading ? "Posting..." : "Post"}
-              </button>
+            <div className="comment-composer">
+              <div className="comment-input">
+                <input
+                  type="text"
+                  placeholder={
+                    user ? "Write a comment..." : "Login to comment"
+                  }
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleAddComment(e);
+                    }
+                  }}
+                  disabled={!user || commentsLoading}
+                  aria-label="Comment text"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddComment}
+                  disabled={!user || !newComment.trim() || commentsLoading}
+                >
+                  {commentsLoading ? "Posting..." : "Post"}
+                </button>
+              </div>
             </div>
 
             {commentsLoading && !comments.length ? (
               <div className="loading-comments">Loading comments...</div>
             ) : comments.length > 0 ? (
-              comments.map((comment) => {
-                return (
+              <div className="comment-list">
+                {comments.map((comment) => (
                   <div
                     key={comment._id}
                     id={comment._id}
@@ -257,14 +323,19 @@ function Post({ post, id, openComments, highlightCommentId }) {
                         <div className="comment-user-info">
                           <h4>{comment.username}</h4>
                           <span className="comment-timestamp">
-                            {format(new Date(comment.createdAt), "MM/dd/yyyy")}
+                            {format(
+                              new Date(comment.createdAt),
+                              "MM/dd/yyyy"
+                            )}
                           </span>
                         </div>
                       </div>
                       {user?._id === comment.userId && (
                         <button
+                          type="button"
                           className="delete-comment-button"
                           onClick={() => handleDeleteComment(comment._id)}
+                          aria-label="Delete comment"
                         >
                           <FaTrash />
                         </button>
@@ -272,8 +343,8 @@ function Post({ post, id, openComments, highlightCommentId }) {
                     </div>
                     <p className="comment-text">{comment.text}</p>
                   </div>
-                );
-              })
+                ))}
+              </div>
             ) : (
               <p className="no-comments">
                 No comments yet. Be the first to comment!
