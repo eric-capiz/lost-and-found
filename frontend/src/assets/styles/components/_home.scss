@@ -134,19 +134,34 @@
   }
 
   .luxe-hero__head {
-    display: grid;
-    gap: 1rem;
-    align-items: center;
-
-    @media (min-width: 768px) {
-      grid-template-columns: minmax(0, 1fr) minmax(100px, 132px);
-      gap: clamp(1rem, 3vw, 2rem);
-    }
+    display: block;
   }
 
   .luxe-hero__masthead {
+    position: relative;
     padding-bottom: 0.35rem;
     border-bottom: 1px solid var(--line);
+
+    @media (min-width: 768px) {
+      padding-left: clamp(1rem, 2.5vw, 1.35rem);
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.2rem;
+        bottom: 0.45rem;
+        width: 3px;
+        border-radius: 3px;
+        background: linear-gradient(
+          180deg,
+          var(--cyan) 0%,
+          var(--violet) 55%,
+          rgba(94, 234, 212, 0.85) 100%
+        );
+        box-shadow: 0 0 22px rgba(34, 211, 238, 0.28);
+      }
+    }
 
     @media (max-width: 767px) {
       text-align: center;
@@ -280,59 +295,6 @@
     color: var(--muted);
   }
 
-  .luxe-hero__medallion {
-    position: relative;
-    width: min(124px, 36vw);
-    aspect-ratio: 1;
-    margin-left: auto;
-    margin-right: auto;
-
-    @media (min-width: 768px) {
-      margin-right: 0;
-      margin-left: auto;
-    }
-  }
-
-  .luxe-hero__medallion-ring {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 1px solid rgba(148, 163, 184, 0.22);
-    animation: luxe-orbit 22s linear infinite;
-
-    &--lag {
-      inset: 10%;
-      border-color: rgba(34, 211, 238, 0.35);
-      border-width: 2px;
-      animation-direction: reverse;
-      animation-duration: 28s;
-      box-shadow: 0 0 28px rgba(34, 211, 238, 0.15);
-    }
-  }
-
-  .luxe-hero__medallion-core {
-    position: absolute;
-    inset: 22%;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--l-mono);
-    font-size: clamp(0.72rem, 2.4vw, 0.82rem);
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    color: var(--ink);
-    background: linear-gradient(
-      145deg,
-      rgba(30, 41, 59, 0.95),
-      rgba(15, 23, 42, 0.98)
-    );
-    border: 1px solid rgba(56, 189, 248, 0.25);
-    box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.12),
-      0 12px 40px rgba(0, 0, 0, 0.55),
-      inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  }
-
   .luxe-stage {
     display: flex;
     flex-direction: column;
@@ -393,11 +355,70 @@
       max-height: calc(100vh - 2rem);
       overflow-y: auto;
       overscroll-behavior: contain;
+
+      // Steel–signal themed scrollbars (Firefox)
+      scrollbar-width: thin;
+      scrollbar-color: rgba(34, 211, 238, 0.5) rgba(6, 11, 22, 0.88);
+
+      &::-webkit-scrollbar {
+        width: 7px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: rgba(3, 7, 17, 0.55);
+        border-radius: 100px;
+        margin: 6px 0 6px 0;
+        box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.08);
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 100px;
+        background: linear-gradient(
+          180deg,
+          rgba(34, 211, 238, 0.55) 0%,
+          rgba(99, 102, 241, 0.5) 100%
+        );
+        box-shadow: 0 0 10px rgba(34, 211, 238, 0.12),
+          inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(15, 23, 42, 0.5);
+      }
+
+      &::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(
+          180deg,
+          rgba(103, 232, 249, 0.9) 0%,
+          rgba(129, 140, 248, 0.75) 100%
+        );
+        box-shadow: 0 0 16px rgba(34, 211, 238, 0.28);
+      }
+
+      &::-webkit-scrollbar-corner {
+        background: transparent;
+      }
     }
 
     &--west {
       @media (min-width: 1180px) {
         grid-column: 1;
+        scrollbar-color: rgba(34, 211, 238, 0.55) rgba(6, 11, 22, 0.88);
+
+        &::-webkit-scrollbar-thumb {
+          background: linear-gradient(
+            180deg,
+            rgba(34, 211, 238, 0.65) 0%,
+            rgba(129, 140, 248, 0.55) 100%
+          );
+          box-shadow: 0 0 12px rgba(34, 211, 238, 0.18),
+            inset 0 1px 0 rgba(255, 255, 255, 0.14);
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(
+            180deg,
+            #67e8f9 0%,
+            #a5b4fc 100%
+          );
+        }
       }
 
       &::before {
@@ -421,6 +442,25 @@
     &--east {
       @media (min-width: 1180px) {
         grid-column: 3;
+        scrollbar-color: rgba(167, 139, 250, 0.55) rgba(6, 11, 22, 0.88);
+
+        &::-webkit-scrollbar-thumb {
+          background: linear-gradient(
+            180deg,
+            rgba(167, 139, 250, 0.6) 0%,
+            rgba(45, 212, 191, 0.5) 100%
+          );
+          box-shadow: 0 0 12px rgba(129, 140, 248, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(
+            180deg,
+            #c4b5fd 0%,
+            #5eead4 100%
+          );
+        }
       }
 
       &::before {
@@ -623,8 +663,16 @@
     background: transparent;
     padding: 0;
     margin: 0;
-    max-width: none;
     width: 100%;
+  }
+
+  .posts-wrapper--tiles {
+    max-width: none;
+  }
+
+  .posts-wrapper--feed {
+    max-width: min(720px, 100%);
+    margin-inline: auto;
   }
 
   .posts-container {
@@ -635,6 +683,7 @@
 
   .posts-container--tiles {
     display: grid;
+    align-items: start;
     grid-template-columns: repeat(
       auto-fill,
       minmax(min(100%, clamp(260px, 26vw, 380px)), 1fr)
@@ -644,9 +693,12 @@
     > div {
       min-width: 0;
       display: flex;
+      flex-direction: column;
+      align-self: start;
+      width: 100%;
 
       > .post {
-        flex: 1;
+        flex: 0 0 auto;
         width: 100%;
       }
     }
@@ -750,8 +802,6 @@
   }
 
   .post-tags {
-    border-top-color: var(--line);
-
     .tag-pill {
       background: rgba(15, 23, 42, 0.75);
       color: var(--ink);
@@ -760,8 +810,6 @@
   }
 
   .comments-section {
-    border-top-color: var(--line);
-
     .comment-input input {
       background: rgba(3, 7, 17, 0.75);
       border: 1px solid var(--line);
@@ -841,16 +889,6 @@
   }
 }
 
-@keyframes luxe-orbit {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .home-page--luxe .post {
     transition: none;
@@ -858,9 +896,5 @@
 
   .home-page--luxe .luxe-hero__cue:hover {
     transform: none;
-  }
-
-  .home-page--luxe .luxe-hero__medallion-ring {
-    animation: none;
   }
 }

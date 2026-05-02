@@ -16,211 +16,41 @@
     }
   }
 
-  // Home feed must stay transparent over hero layout
+  // Home: tiles stay full-bleed in column; feed gets a readable measure
   .home-page--luxe .posts-wrapper {
     background: transparent !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
+  }
+
+  .home-page--luxe .posts-wrapper--tiles {
     max-width: none !important;
+    margin-inline: 0 !important;
+  }
+
+  .home-page--luxe .posts-wrapper--feed {
+    max-width: min(720px, 100%) !important;
+    margin-inline: auto !important;
+    padding-left: clamp(0.25rem, 2vw, 1rem) !important;
+    padding-right: clamp(0.25rem, 2vw, 1rem) !important;
   }
 
   .profile-page {
-    font-family: "Outfit", system-ui, sans-serif;
-    padding: clamp(1rem, 3vw, 2rem);
-    max-width: min(1200px, 100%);
-    margin: 0 auto;
-    background: rgba(12, 18, 32, 0.45);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(148, 163, 184, 0.14);
-    border-radius: 18px;
-    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35),
-      inset 0 1px 0 rgba(255, 255, 255, 0.04);
-
-    .profile-info {
-      .cover-photo {
-        border-radius: 14px;
-        border: 1px solid rgba(148, 163, 184, 0.18);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-      }
-
-      .user-avatar {
-        border: 3px solid rgba(34, 211, 238, 0.35);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-      }
-
-      h2 {
-        color: #e8eef5;
-        font-family: "Cormorant Garamond", Georgia, serif;
-        font-weight: 500;
-        letter-spacing: 0.02em;
-      }
-
-      .button-group {
-        flex-wrap: wrap;
-
-        .edit-profile-button,
-        .create-post-button {
-          background: linear-gradient(
-            135deg,
-            #67e8f9 0%,
-            #22d3ee 45%,
-            #2563eb 100%
-          );
-          color: #041016;
-          border: none;
-          border-radius: 10px;
-          font-weight: 600;
-          padding: 0.55rem 1.1rem;
-          min-height: 44px;
-
-          &:hover {
-            filter: brightness(1.08);
-            box-shadow: 0 0 24px rgba(34, 211, 238, 0.35);
-          }
-
-          svg {
-            color: inherit;
-          }
-        }
-      }
-    }
-
-    .subsections {
-      gap: 1.5rem;
-
-      @media (min-width: 1440px) {
-        flex-direction: row;
-        align-items: flex-start;
-
-        .posts-section {
-          margin-left: 0;
-          flex: 1;
-          min-width: 0;
-        }
-
-        .user-stats {
-          flex: 0 0 min(320px, 32%);
-        }
-      }
-    }
-
-    .user-stats {
-      background: rgba(3, 7, 17, 0.65);
-      border: 1px solid rgba(148, 163, 184, 0.14);
-      border-radius: 14px;
-      color: #e8eef5;
-
-      h3 {
-        font-family: "Syne", "Outfit", sans-serif;
-        font-size: 0.75rem;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: rgba(165, 180, 252, 0.9);
-      }
-
-      .stats-grid {
-        .stat-card {
-          background: rgba(15, 23, 42, 0.85);
-          border: 1px solid rgba(148, 163, 184, 0.12);
-          border-radius: 12px;
-
-          h4 {
-            color: #8b9cb3;
-            font-size: 0.85rem;
-          }
-
-          p {
-            background: linear-gradient(135deg, #67e8f9, #a5b4fc);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            word-break: break-word;
-          }
-        }
-      }
-    }
-
-    .posts-section {
-      background: rgba(3, 7, 17, 0.45);
-      border: 1px solid rgba(148, 163, 184, 0.12);
-      border-radius: 14px;
-      padding: clamp(1rem, 2.5vw, 1.35rem);
-
-      h3 {
-        color: #e8eef5;
-        font-family: "Cormorant Garamond", Georgia, serif;
-      }
-
-      .posts-controls {
-        .filter-button {
-          background: rgba(34, 211, 238, 0.1);
-          color: #e8eef5;
-          border: 1px solid rgba(34, 211, 238, 0.28);
-          border-radius: 10px;
-          min-height: 44px;
-
-          &:hover {
-            background: rgba(34, 211, 238, 0.18);
-          }
-
-          svg {
-            color: #67e8f9;
-          }
-        }
-
-        .filter-container .filter-menu {
-          background: rgba(12, 18, 32, 0.96);
-          border: 1px solid rgba(148, 163, 184, 0.18);
-          border-radius: 12px;
-          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-
-          .filter-section label {
-            color: #cbd5e1;
-          }
-
-          .filter-section select {
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            color: #e8eef5;
-            border-radius: 8px;
-
-            &:focus {
-              border-color: rgba(34, 211, 238, 0.45);
-              outline: none;
-            }
-          }
-
-          .apply-filters {
-            background: linear-gradient(
-              135deg,
-              #67e8f9 0%,
-              #22d3ee 50%,
-              #2563eb 100%
-            );
-            color: #041016;
-            font-weight: 600;
-            border-radius: 9px;
-
-            &:hover {
-              filter: brightness(1.06);
-            }
-          }
-        }
-      }
-
-      > p {
-        color: #8b9cb3;
-        text-align: center;
-        padding: 2rem 1rem;
-      }
-    }
-
     .posts-wrapper {
       background: transparent !important;
       padding: 0 !important;
-      max-width: none !important;
       margin: 0 !important;
+    }
+
+    .posts-wrapper--tiles {
+      max-width: none !important;
+    }
+
+    // Center column — profile grid uses full width of main; list feed unchanged
+    .profile-main .posts-wrapper--feed.posts-wrapper--profile-grid {
+      max-width: none !important;
+      margin-inline: 0 !important;
+      width: 100% !important;
     }
 
     .posts-container {

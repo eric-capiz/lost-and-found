@@ -30,7 +30,7 @@ function Home() {
         <div className="luxe-hero__wrap">
           <div className="luxe-hero__head">
             <div className="luxe-hero__masthead">
-              <p className="luxe-hero__eyebrow">Signal · Registry</p>
+              <p className="luxe-hero__eyebrow">Community listings</p>
               <h1 className="luxe-hero__title">Lost &amp; Found</h1>
               <span className="luxe-hero__rule" aria-hidden="true" />
               <p className="luxe-hero__tagline">
@@ -38,16 +38,11 @@ function Home() {
                 command view—search, calibrate, hand off without the noise.
               </p>
             </div>
-            <div className="luxe-hero__medallion" aria-hidden="true">
-              <span className="luxe-hero__medallion-ring" />
-              <span className="luxe-hero__medallion-ring luxe-hero__medallion-ring--lag" />
-              <span className="luxe-hero__medallion-core">LF</span>
-            </div>
           </div>
           <ul className="luxe-hero__cue-cards" aria-label="Quick cues">
             <li className="luxe-hero__cue luxe-hero__cue--indigo">
               <span className="luxe-hero__cue-label">Scan</span>
-              <p>Pull signal from the header—titles, blurbs, instant reads.</p>
+              <p>Use the search bar—scan titles and descriptions fast.</p>
             </li>
             <li className="luxe-hero__cue luxe-hero__cue--rose">
               <span className="luxe-hero__cue-label">Calibrate</span>
