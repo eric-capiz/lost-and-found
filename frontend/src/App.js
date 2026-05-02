@@ -34,24 +34,30 @@ const AdminWrapper = () => {
   return isAdmin ? <Outlet /> : <Navigate to="/" />;
 };
 
+function AppShell() {
+  return (
+    <div className="app app--luxe">
+      <Navbar />
+      <div className="page-container">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route element={<AuthWrapper />}>
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+          <Route element={<AdminWrapper />}>
+            <Route path="/admin" element={<Admin />} />
+          </Route>
+        </Routes>
+      </div>
+      <Footer />
+    </div>
+  );
+}
+
 function App() {
   return (
     <Router>
-      <div className="app">
-        <Navbar />
-        <div className="page-container">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route element={<AuthWrapper />}>
-              <Route path="/profile" element={<Profile />} />
-            </Route>
-            <Route element={<AdminWrapper />}>
-              <Route path="/admin" element={<Admin />} />
-            </Route>
-          </Routes>
-        </div>
-        <Footer />
-      </div>
+      <AppShell />
     </Router>
   );
 }
