@@ -3,9 +3,7 @@ import {
   FaTwitter,
   FaLinkedin,
   FaEnvelope,
-  FaHeart,
 } from "react-icons/fa";
-
 function Footer() {
   return (
     <footer className="footer">
@@ -22,16 +20,16 @@ function Footer() {
           <h4>Quick Links</h4>
           <ul>
             <li>
-              <a href="/about">About Us</a>
+              <span className="footer-plain-text">About Us</span>
             </li>
             <li>
-              <a href="/privacy">Privacy Policy</a>
+              <span className="footer-plain-text">Privacy Policy</span>
             </li>
             <li>
-              <a href="/terms">Terms of Service</a>
+              <span className="footer-plain-text">Terms of Service</span>
             </li>
             <li>
-              <a href="/contact">Contact Us</a>
+              <span className="footer-plain-text">Contact Us</span>
             </li>
           </ul>
         </div>
@@ -39,18 +37,18 @@ function Footer() {
         <div className="footer-section">
           <h4>Connect With Us</h4>
           <div className="social-links">
-            <a href="https://github.com" aria-label="Github">
+            <span className="social-icon" aria-hidden="true">
               <FaGithub />
-            </a>
-            <a href="https://twitter.com" aria-label="Twitter">
+            </span>
+            <span className="social-icon" aria-hidden="true">
               <FaTwitter />
-            </a>
-            <a href="https://linkedin.com" aria-label="LinkedIn">
+            </span>
+            <span className="social-icon" aria-hidden="true">
               <FaLinkedin />
-            </a>
-            <a href="mailto:contact@example.com" aria-label="Email">
+            </span>
+            <span className="social-icon" aria-hidden="true">
               <FaEnvelope />
-            </a>
+            </span>
           </div>
         </div>
       </div>

@@ -48,15 +48,9 @@
       li {
         margin-bottom: 0.75rem;
 
-        a {
+        .footer-plain-text {
           color: #d1d5db;
-          text-decoration: none;
-          transition: color 0.2s ease;
           font-size: 0.9rem;
-
-          &:hover {
-            color: #60a5fa;
-          }
         }
       }
     }
@@ -65,14 +59,10 @@
       display: flex;
       gap: 1rem;
 
-      a {
+      .social-icon {
         color: #d1d5db;
         font-size: 1.5rem;
-        transition: color 0.2s ease;
-
-        &:hover {
-          color: #60a5fa;
-        }
+        display: inline-flex;
       }
     }
   }
